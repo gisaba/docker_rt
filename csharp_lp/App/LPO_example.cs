@@ -1,8 +1,7 @@
-using System;
+using System.Diagnostics;
 using Google.OrTools.LinearSolver;
-using Serilog;
 
-namespace ApiSupport;
+namespace realtime;
 
 public static class LPO_example
 {
@@ -18,6 +17,9 @@ public static class LPO_example
     ********/
     public static void Solve()
     {
+        var stopwatch = new Stopwatch();
+        stopwatch.Start();
+
         // Create the linear solver with the GLOP backend.
         Solver solver = Solver.CreateSolver("GLOP");
         if (solver is null)
@@ -29,14 +31,14 @@ public static class LPO_example
         Variable x = solver.MakeNumVar(0.0, 1.0, "x");
         Variable y = solver.MakeNumVar(0.0, 2.0, "y");
 
-        Log.Information("Number of variables = " + solver.NumVariables());
+        //Console.WriteLine("Number of variables = " + solver.NumVa riables());
 
         // Create a linear constraint, 0 <= x + y <= 2.
         Constraint ct = solver.MakeConstraint(0.0, 2.0, "ct");
         ct.SetCoefficient(x, 1);
         ct.SetCoefficient(y, 1);
 
-        Log.Information("Number of constraints = " + solver.NumConstraints());
+        //Console.WriteLine("Number of constraints = " + solver.NumConstraints());
 
         // Create the objective function, 3 * x + y.
         Objective objective = solver.Objective();
@@ -46,10 +48,14 @@ public static class LPO_example
 
         solver.Solve();
 
-        Log.Information("Solution:");
-        Log.Information("Objective value = " + solver.Objective().Value());
-        Log.Information("x = " + x.SolutionValue());
-        Log.Information("y = " + y.SolutionValue());
+        stopwatch.Stop();
+        double elapsed = stopwatch.Elapsed.TotalMilliseconds;
+        Console.WriteLine($"Task executed in ({elapsed} ms)");
+
+        //Console.WriteLine("Solution:");
+        //Console.WriteLine("Objective value = " + solver.Objective().Value());
+        //Console.WriteLine("x = " + x.SolutionValue());
+        //Console.WriteLine("y = " + y.SolutionValue());
     }
 
 }

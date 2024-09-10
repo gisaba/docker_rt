@@ -1,9 +1,9 @@
 services:
-  docker_realtime:
+  docker_realtime_csharp:
     build:
-      context: ./python_lp
+      context: ./csharp_lp/App
       dockerfile: Dockerfile
-    container_name: realtime_docker
+    container_name: realtime_docker_csharp
     tty: true
     cap_add:
       - SYS_NICE

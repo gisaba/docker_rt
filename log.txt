@@ -1,0 +1,10 @@
+Attaching to realtime_docker_csharp
+realtime_docker_csharp  | [?1h=Number of variables = 2
+realtime_docker_csharp  | Number of constraints = 1
+realtime_docker_csharp  | Solution:
+realtime_docker_csharp  | Objective value = 4
+realtime_docker_csharp  | x = 1
+realtime_docker_csharp  | y = 1
+realtime_docker_csharp  | Solve, Ok!
+realtime_docker_csharp  | Task executed in (21 ms)
+[Krealtime_docker_csharp exited with code 0
