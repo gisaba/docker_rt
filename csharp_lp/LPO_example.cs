@@ -6,7 +6,7 @@ namespace ApiSupport;
 
 public static class LPO_example
 {
-    /*******
+    /********
     https://developers.google.com/optimization/introduction/dotnet
     
     Maximize 3x + y subject to the following constraints:
