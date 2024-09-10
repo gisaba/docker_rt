@@ -17,7 +17,7 @@ RUN adduser --disabled-password --home /usr/src/app --gecos '' \
     --gid 2000 \
     "rtuser" 
 
-RUN chown -R appuser:appgroup  /usr/src/app /tmp
+RUN chown -R rtuser:rtgroup  /usr/src/app /tmp
 
 USER rtuser:rtgroup
 
