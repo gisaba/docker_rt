@@ -11,4 +11,11 @@ services:
       rtprio: 99
       rttime: -1
       memlock: 8428281856
-    network_mode: host
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 100M
+        reservations:
+          cpus: '1'
+          memory: 10M
