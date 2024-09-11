@@ -8,10 +8,7 @@ internal class Program
         Console.WriteLine("Google.OrTools version: " + OrToolsVersion.VersionString());
         
         for (int i = 0;i<10;i++){
-            
-            Lp.Solve();
-            //LPO_example.Solve();
-            
+            Lp.Solve();            
         }
     }
 }

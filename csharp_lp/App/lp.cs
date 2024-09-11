@@ -26,17 +26,22 @@ public static class Lp
         // x and y are continuous non-negative variables.
         Variable x = solver.MakeNumVar(0.0, double.PositiveInfinity, "x");
         Variable y = solver.MakeNumVar(0.0, double.PositiveInfinity, "y");
+        Variable z = solver.MakeNumVar(0.0, double.PositiveInfinity, "z");
 
         Console.WriteLine("Number of variables = " + solver.NumVariables());
 
-        // x + 2y <= 14.
-        solver.Add(x + 2 * y <= 14.0);
+        /********
+        Esempio: Minimizza una funzione con 3 variabili soggetta a:
+        x + y + z <= 30
+        2x + 3y + z <= 60
+        x, y, z >= 0
+        ********/
 
-        // 3x - y >= 0.
-        solver.Add(3 * x - y >= 0.0);
+        solver.Add(x + y + z <= 30.0);
 
-        // x - y <= 2.
-        solver.Add(x - y <= 2.0);
+        solver.Add(2 * x + 3 * y + z <= 60.0);
+
+        solver.Add(x + y + z >= 0);
 
         Console.WriteLine("Number of constraints = " + solver.NumConstraints());
 
@@ -55,6 +60,7 @@ public static class Lp
         Console.WriteLine("Objective value = " + solver.Objective().Value());
         Console.WriteLine("x = " + x.SolutionValue());
         Console.WriteLine("y = " + y.SolutionValue());
+        Console.WriteLine("y = " + z.SolutionValue());
 
         Console.WriteLine("\nAdvanced usage:");
         Console.WriteLine("Problem solved in " + solver.WallTime() + " milliseconds");
