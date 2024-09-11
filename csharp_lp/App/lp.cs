@@ -61,19 +61,22 @@ public static class Lp
             Console.WriteLine("The problem does not have an optimal solution!");
             return;
         }
-        Console.WriteLine("Solution:");
+
+        stopwatch.Stop();
+        double elapsed = stopwatch.Elapsed.TotalMilliseconds;
+        Console.WriteLine("*****************************************");
+        Console.WriteLine($"* Task executed in ({elapsed} ms)      *");
+        Console.WriteLine("*****************************************");
+        Console.WriteLine("*********Solution:");
         Console.WriteLine("Objective value = " + solver.Objective().Value());
         Console.WriteLine("x = " + x.SolutionValue());
         Console.WriteLine("y = " + y.SolutionValue());
         Console.WriteLine("z = " + z.SolutionValue());
 
+        /*
         Console.WriteLine("\nAdvanced usage:");
         Console.WriteLine("Problem solved in " + solver.WallTime() + " milliseconds");
         Console.WriteLine("Problem solved in " + solver.Iterations() + " iterations");
-    
-
-        stopwatch.Stop();
-        double elapsed = stopwatch.Elapsed.TotalMilliseconds;
-        Console.WriteLine($"Task executed in ({elapsed} ms)");
+        */
     }
 }
