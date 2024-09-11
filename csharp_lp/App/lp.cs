@@ -19,7 +19,7 @@ public static class Lp
         return random.NextDouble() * (maximum - minimum) + minimum;
     }
 
-    public static void Solve()
+    public static double Solve()
     {
         var stopwatch = new Stopwatch();
         stopwatch.Start();
@@ -27,7 +27,7 @@ public static class Lp
         Solver solver = Solver.CreateSolver("GLOP");
         if (solver is null)
         {
-            return;
+            return -1;
         }
         // x and y are continuous non-negative variables.
         Variable x = solver.MakeNumVar(GetRandomNumber(1,10), double.PositiveInfinity, "x");
@@ -59,24 +59,17 @@ public static class Lp
         if (resultStatus != Solver.ResultStatus.OPTIMAL)
         {
             Console.WriteLine("The problem does not have an optimal solution!");
-            return;
+            return -1;
         }
 
         stopwatch.Stop();
         double elapsed = stopwatch.Elapsed.TotalMilliseconds;
-        Console.WriteLine("*****************************************");
-        Console.WriteLine($"* Task executed in ({elapsed} ms)      *");
-        Console.WriteLine("*****************************************");
         Console.WriteLine("*********Solution:");
         Console.WriteLine("Objective value = " + solver.Objective().Value());
         Console.WriteLine("x = " + x.SolutionValue());
         Console.WriteLine("y = " + y.SolutionValue());
         Console.WriteLine("z = " + z.SolutionValue());
 
-        /*
-        Console.WriteLine("\nAdvanced usage:");
-        Console.WriteLine("Problem solved in " + solver.WallTime() + " milliseconds");
-        Console.WriteLine("Problem solved in " + solver.Iterations() + " iterations");
-        */
+        return elapsed;
     }
 }

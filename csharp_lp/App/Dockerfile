@@ -21,6 +21,8 @@ RUN adduser --disabled-password --home /App --gecos '' \
     --gid 2000 \
     "rtuser" 
 
+RUN usermod -a -G rtgroup rtuser
+
 RUN chown -R rtuser:rtgroup  /App /tmp
 
 USER rtuser:rtgroup
