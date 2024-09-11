@@ -13,7 +13,7 @@ internal class Program
             
             if (Lp.Solve() < tempo_massimo) 
             {
-                Console.WriteLine($"La funzione è stata eseguita entro il limite di {tempo_massimo} con {tempo_esecuzione} ms");
+                Console.WriteLine($"La funzione è stata eseguita entro il limite di {tempo_massimo} ms con {tempo_esecuzione} ms");
             } 
             else 
             {
