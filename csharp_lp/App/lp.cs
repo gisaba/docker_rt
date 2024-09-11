@@ -13,6 +13,12 @@ public static class Lp
      x, y, z >= 0
     ********/
 
+    public static double GetRandomNumber(double minimum, double maximum)
+    { 
+        Random random = new Random();
+        return random.NextDouble() * (maximum - minimum) + minimum;
+    }
+
     public static void Solve()
     {
         var stopwatch = new Stopwatch();
@@ -24,9 +30,9 @@ public static class Lp
             return;
         }
         // x and y are continuous non-negative variables.
-        Variable x = solver.MakeNumVar(0.0, double.PositiveInfinity, "x");
-        Variable y = solver.MakeNumVar(0.0, double.PositiveInfinity, "y");
-        Variable z = solver.MakeNumVar(0.0, double.PositiveInfinity, "z");
+        Variable x = solver.MakeNumVar(GetRandomNumber(1,10), double.PositiveInfinity, "x");
+        Variable y = solver.MakeNumVar(GetRandomNumber(1,10), double.PositiveInfinity, "y");
+        Variable z = solver.MakeNumVar(GetRandomNumber(1,10), double.PositiveInfinity, "z");
 
         Console.WriteLine("Number of variables = " + solver.NumVariables());
 
@@ -38,15 +44,14 @@ public static class Lp
         ********/
 
         solver.Add(x + y + z <= 30.0);
-
         solver.Add(2 * x + 3 * y + z <= 60.0);
-
         solver.Add(x + y + z >= 0);
 
         Console.WriteLine("Number of constraints = " + solver.NumConstraints());
 
-        // Objective function: 3x + 4y.
-        solver.Maximize(3 * x + 4 * y);
+        // Objective function: 
+        solver.Minimize(x + y + z);
+        solver.Minimize(2 * x + 3 * y + z);
 
         Solver.ResultStatus resultStatus = solver.Solve();
 
@@ -60,7 +65,7 @@ public static class Lp
         Console.WriteLine("Objective value = " + solver.Objective().Value());
         Console.WriteLine("x = " + x.SolutionValue());
         Console.WriteLine("y = " + y.SolutionValue());
-        Console.WriteLine("y = " + z.SolutionValue());
+        Console.WriteLine("z = " + z.SolutionValue());
 
         Console.WriteLine("\nAdvanced usage:");
         Console.WriteLine("Problem solved in " + solver.WallTime() + " milliseconds");
