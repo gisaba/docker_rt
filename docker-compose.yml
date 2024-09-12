@@ -1,14 +1,35 @@
 services:
-  docker_realtime:
+  # docker_realtime:
+  #   build:
+  #     context: ./python_lp
+  #     dockerfile: Dockerfile
+  #   container_name: realtime_docker
+  #   tty: true
+  #   cap_add:
+  #     - SYS_NICE
+  #   ulimits:
+  #     rtprio: 99
+  #     rttime: -1
+  #     memlock: 8428281856
+  #   network_mode: host
+
+  c-realtime:
     build:
-      context: ./python_lp
+      context: ./c_lp
       dockerfile: Dockerfile
-    container_name: realtime_docker
-    tty: true
     cap_add:
-      - SYS_NICE
+      - SYS_NICE  # Permesso per impostare priorità
+    devices:
+      - /dev/cpu:/dev/cpu  # Accesso diretto al kernel per CPU real-time
+    stdin_open: true
+    tty: true
     ulimits:
       rtprio: 99
       rttime: -1
       memlock: 8428281856
-    network_mode: host
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+        reservations:
+          cpus: '1'
