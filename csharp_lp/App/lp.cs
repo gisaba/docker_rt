@@ -60,7 +60,7 @@ public static class Lp
 
         stopwatch.Stop();
         double elapsed = stopwatch.Elapsed.TotalMilliseconds;
-
+/*
         Console.WriteLine("Number of variables = " + solver.NumVariables());
 
         Console.WriteLine("Number of constraints = " + solver.NumConstraints());
@@ -70,7 +70,7 @@ public static class Lp
         Console.WriteLine("x = " + x.SolutionValue());
         Console.WriteLine("y = " + y.SolutionValue());
         Console.WriteLine("z = " + z.SolutionValue());
-
+*/
         return elapsed;
     }
 }
