@@ -34,8 +34,6 @@ public static class Lp
         Variable y = solver.MakeNumVar(GetRandomNumber(1,10), double.PositiveInfinity, "y");
         Variable z = solver.MakeNumVar(GetRandomNumber(1,10), double.PositiveInfinity, "z");
 
-        Console.WriteLine("Number of variables = " + solver.NumVariables());
-
         /********
         Esempio: Minimizza una funzione con 3 variabili soggetta a:
         x + y + z <= 30
@@ -46,8 +44,6 @@ public static class Lp
         solver.Add(x + y + z <= 30.0);
         solver.Add(2 * x + 3 * y + z <= 60.0);
         solver.Add(x + y + z >= 0);
-
-        Console.WriteLine("Number of constraints = " + solver.NumConstraints());
 
         // Objective function: 
         solver.Minimize(x + y + z);
@@ -64,7 +60,12 @@ public static class Lp
 
         stopwatch.Stop();
         double elapsed = stopwatch.Elapsed.TotalMilliseconds;
-        Console.WriteLine("*********Solution:");
+
+        Console.WriteLine("Number of variables = " + solver.NumVariables());
+
+        Console.WriteLine("Number of constraints = " + solver.NumConstraints());
+
+        Console.WriteLine("********* Solution:");
         Console.WriteLine("Objective value = " + solver.Objective().Value());
         Console.WriteLine("x = " + x.SolutionValue());
         Console.WriteLine("y = " + y.SolutionValue());
