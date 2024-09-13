@@ -1,27 +1,9 @@
 %% Analisi dei Dati
 
-% Algoritmo 
-% Per ogni test effettuato
-        % Carico Table con il test da analizzare
-        
-        % Analizzo i dati creando le distibuzioni statistiche
-        
-        % Memorizzo i dati caratteristici del test in un vettore 
-        
-        % Memorizzo in un vetttore i parametri caratteristici della
-        % distribuzione e dati caratteristici (Moda,media ,varianza ecc)
-
-        % Plot Condizione test --> postprocessing 
-
-        % cercare la curva che mminimizza errore quadratico medio 
-% FINE CICLO
-
-clear all;
-clc;
+%linguaggio = 'python';
+%linguaggio = 'csharp';
 
 path_table_misure = './';
-linguaggio = 'python';
-%linguaggio = 'csharp';
 
 modaTimestep = [];
 mediaTimestep = [];
@@ -52,14 +34,14 @@ stdOverRun = [];
 
     disp(['Analizzo i dati del test'])
 
-    % Jitter
+    % Timestep
 
     Timestep = TableFile.timestep;
 
     Timestep(Timestep==0) = mean(Timestep);
     pd = fitdist(Timestep,'Lognormal');
-    %pd = fitdist(Jitter,'Weibull');
-    %pd = fitdist(Jitter,'Normal')
+    %pd = fitdist(Timestep,'Weibull');
+    %pd = fitdist(Timestep,'Normal')
     
     x_pdf = 0:0.01:max(Timestep);
     y = pdf(pd,x_pdf);
@@ -72,7 +54,6 @@ stdOverRun = [];
     x = x_pdf(idx);
     modaTimestep = [modaTimestep;  x];
 
-%datagramUDPSize = Test';
 Table = table(modaTimestep, mediaTimestep,varTimestep,devStdTimestep);    
 overrun = Timestep(Timestep>=10);
 clearvars -except linguaggio overrun T Table mediaTimestep varTimestep devStdTimestep varTimestep;
@@ -129,6 +110,6 @@ txt = ['\leftarrow ' num2str(moda) ' ms'];
 text(moda,y_max,txt,'Color','red','FontWeight','Bold','FontSize',20);
 grid on
 xlabel("TimeStep (ms)");
-clearvars -except overrun mediaTimestepPD devStdTimestepPD varTimestepPD moda mediaTimestep varTimestep devStdTimestep;
+clearvars -except linguaggio overrun mediaTimestepPD devStdTimestepPD varTimestepPD moda mediaTimestep varTimestep devStdTimestep;
 
 
