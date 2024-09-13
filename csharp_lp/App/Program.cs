@@ -23,12 +23,13 @@ internal class Program
 
         //Console.WriteLine("Google.OrTools version: " + OrToolsVersion.VersionString());
         double tempo_massimo = 10;
-        var primaEsecuzione = Lp.Solve();
+        var primaEsecuzione = fft.FFT(false,2048);
 
-        for (int i = 0;i<100000;i++) {
-            
-            Console.WriteLine($"*********** {BLUE}Esecuzione numero {i}{NORMAL} ***********");
-            var tempo_esecuzione = Lp.Solve();
+        for (int i = 0;i<100000;i++) 
+        {    
+            //Console.WriteLine($"*********** {BLUE}Esecuzione numero {i}{NORMAL} ***********");
+            //var tempo_esecuzione = Lp.Solve();
+            var tempo_esecuzione = fft.FFT(true,2048);
             
             if (tempo_esecuzione < tempo_massimo) 
             {

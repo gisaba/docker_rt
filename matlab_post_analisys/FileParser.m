@@ -5,7 +5,8 @@ clc;
 
     %linguaggio = 'python';
     linguaggio = 'csharp';
-    fid = fopen(['./time_' linguaggio '.log'],'r');
+    fid = fopen(['./time_' linguaggio '_fft.log'],'r');
+    %fid = fopen(['./time_' linguaggio '.log'],'r');
     
     disp_line = 0;
     
