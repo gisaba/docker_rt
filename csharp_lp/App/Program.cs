@@ -33,11 +33,11 @@ internal class Program
             
             if (tempo_esecuzione < tempo_massimo) 
             {
-                Console.WriteLine($"{GREEN}OK: La funzione è stata eseguita entro il limite di {tempo_massimo} ms con {tempo_esecuzione} ms{NORMAL}");
+                Console.WriteLine($"{GREEN}OK: La funzione è stata eseguita entro il limite di {tempo_massimo} ms con {tempo_esecuzione}   ms{NORMAL}");
             } 
             else 
             {
-                Console.WriteLine($"{RED}OverRun: La funzione ha superato il limite di {tempo_massimo} ms con {tempo_esecuzione} ms{NORMAL}");
+                Console.WriteLine($"{RED}OverRun: La funzione ha superato il limite di {tempo_massimo} ms con {tempo_esecuzione}           ms{NORMAL}");
             }
         }
     }
