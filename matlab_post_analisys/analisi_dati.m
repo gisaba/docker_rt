@@ -20,6 +20,8 @@ clear all;
 clc;
 
 path_table_misure = './';
+linguaggio = 'python';
+%linguaggio = 'csharp';
 
 modaTimestep = [];
 mediaTimestep = [];
@@ -45,7 +47,7 @@ stdOverRun = [];
     opts.MissingRule = "omitrow";
      
     % Import the data
-    filename = strcat(path_table_misure, 'data_parsed.txt');
+    filename = strcat(path_table_misure, ['data_parsed_' linguaggio '.txt']);
     TableFile = readtable(filename, opts);
 
     disp(['Analizzo i dati del test'])
@@ -72,13 +74,14 @@ stdOverRun = [];
 
 %datagramUDPSize = Test';
 Table = table(modaTimestep, mediaTimestep,varTimestep,devStdTimestep);    
-clearvars -except T Table mediaTimestep varTimestep devStdTimestep varTimestep;
+overrun = Timestep(Timestep>=10);
+clearvars -except linguaggio overrun T Table mediaTimestep varTimestep devStdTimestep varTimestep;
 
 %% TimeStep
 
 datagramSize = ['Time Step'];
 
-path_table_misure = './data_parsed.txt';
+path_table_misure =  ['./' 'data_parsed_' linguaggio '.txt'];
 opts = delimitedTextImportOptions("NumVariables", 2);
 opts.DataLines = [2, Inf];
 opts.Delimiter = ["\t", ","];
@@ -126,6 +129,6 @@ txt = ['\leftarrow ' num2str(moda) ' ms'];
 text(moda,y_max,txt,'Color','red','FontWeight','Bold','FontSize',20);
 grid on
 xlabel("TimeStep (ms)");
-clearvars -except mediaTimestepPD devStdTimestepPD varTimestepPD moda mediaTimestep varTimestep devStdTimestep;
+clearvars -except overrun mediaTimestepPD devStdTimestepPD varTimestepPD moda mediaTimestep varTimestep devStdTimestep;
 
 
