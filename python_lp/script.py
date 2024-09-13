@@ -34,7 +34,7 @@ def minimize_linear_function(num_variables, constraint_coefficients, constraint_
         prob += lpSum([coeffs[j] * variables[j] for j in range(num_variables)]) <= constraint_constants[i]
     
     # Risolvi il problema
-    prob.solve()
+    prob.solve(PULP_CBC_CMD(msg=False))
     
     # Raccogli i risultati
     results = {
@@ -69,12 +69,13 @@ def funzione_da_testare():
     
     result = minimize_linear_function(num_vars, constraint_coeffs, constraint_constants)
     
-    print("Coefficienti casuali della funzione obiettivo:", result["objective_coefficients"])
-    print("Stato della soluzione:", result["status"])
-    print("Valore minimo della funzione obiettivo:", result["objective_value"])
-    print("Valori ottimali delle variabili:")
-    for var, value in result["variables"].items():
-        print(f"  {var} = {value}")
+    
+    #print("Coefficienti casuali della funzione obiettivo:", result["objective_coefficients"])
+    #print("Stato della soluzione:", result["status"])
+    #print("Valore minimo della funzione obiettivo:", result["objective_value"])
+    #print("Valori ottimali delle variabili:")
+    #for var, value in result["variables"].items():
+    #    print(f"  {var} = {value}")
 
 
     # Simula un'operazione che richiede tempo
@@ -90,11 +91,11 @@ def verifica_tempo_esecuzione(funzione, tempo_massimo):
 
     tempo_esecuzione = (fine - inizio) * 1000  # Converti in millisecondi
 
-    print(f"Tempo di esecuzione: {tempo_esecuzione:.2f} ms")
+    #print(f"Tempo di esecuzione: {tempo_esecuzione:.2f} ms")
     if tempo_esecuzione <= tempo_massimo:
-        print(f"\033[92mLa funzione è stata eseguita entro il limite di {tempo_massimo} ms\033[0m")
+        print(f"\033[92mOK: La funzione è stata eseguita entro il limite di {tempo_massimo} ms con {tempo_esecuzione} ms\033[0m")
     else:
-        print(f"\033[91mLa funzione ha superato il limite di {tempo_massimo} ms\033[0m")
+        print(f"\033[91mOverRun: La funzione ha superato il limite di {tempo_massimo} ms con {tempo_esecuzione} ms\033[0m")
 
 
 
@@ -102,8 +103,8 @@ if __name__ == "__main__":
     tempo_massimo_ms = 10  # Tempo massimo consentito in millisecondi
     
     i = 0
-    for i in range(1,21):
-        print(f"iterazione {i}")
+    for i in range(1,100000):
+        #print(f"iterazione {i}")
         i+=1
         verifica_tempo_esecuzione(funzione_da_testare, tempo_massimo_ms)
         
