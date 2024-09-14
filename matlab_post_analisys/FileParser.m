@@ -3,9 +3,16 @@
 clear all;
 clc;
 
+    test = 'lpo';
+    %test = 'fft';
+
     %linguaggio = 'python';
     linguaggio = 'csharp';
-    fid = fopen(['./time_' linguaggio '_fft.log'],'r');
+    
+    so = 'linux';
+    %so = 'macos';
+    
+    fid = fopen(['./time_' linguaggio '_' test '.' so],'r');
     %fid = fopen(['./time_' linguaggio '.log'],'r');
     
     disp_line = 0;
@@ -48,4 +55,4 @@ clc;
     
     fclose(fid);
 
-clearvars -except linguaggio T timestep overrun error;
+clearvars -except test linguaggio so T timestep overrun error;
