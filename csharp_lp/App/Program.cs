@@ -21,22 +21,23 @@ internal class Program
         string REVERSE     = Console.IsOutputRedirected ? "" : "\x1b[7m";
         string NOREVERSE   = Console.IsOutputRedirected ? "" : "\x1b[27m";
 
-        Console.WriteLine("Google.OrTools version: " + OrToolsVersion.VersionString());
+        //Console.WriteLine("Google.OrTools version: " + OrToolsVersion.VersionString());
         double tempo_massimo = 10;
-        var primaEsecuzione = Lp.Solve();
+        var primaEsecuzione = fft.FFT(false,2048);
 
-        for (int i = 0;i<10;i++) {
-            
-            Console.WriteLine($"*********** {BLUE}Esecuzione numero {i}{NORMAL} ***********");
-            var tempo_esecuzione = Lp.Solve();
+        for (int i = 0;i<100000;i++) 
+        {    
+            //Console.WriteLine($"*********** {BLUE}Esecuzione numero {i}{NORMAL} ***********");
+            //var tempo_esecuzione = Lp.Solve();
+            var tempo_esecuzione = fft.FFT(true,2048);
             
             if (tempo_esecuzione < tempo_massimo) 
             {
-                Console.WriteLine($"{GREEN}OK: La funzione è stata eseguita entro il limite di {tempo_massimo} ms con {tempo_esecuzione} ms{NORMAL}");
+                Console.WriteLine($"{GREEN}OK: La funzione è stata eseguita entro il limite di {tempo_massimo} ms con {tempo_esecuzione}   ms{NORMAL}");
             } 
             else 
             {
-                Console.WriteLine($"{RED} OverRun: La funzione ha superato il limite di {tempo_massimo} ms{NORMAL}");
+                Console.WriteLine($"{RED}OverRun: La funzione ha superato il limite di {tempo_massimo} ms con {tempo_esecuzione}           ms{NORMAL}");
             }
         }
     }
