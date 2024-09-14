@@ -23,14 +23,19 @@ internal class Program
 
         //Console.WriteLine("Google.OrTools version: " + OrToolsVersion.VersionString());
         double tempo_massimo = 10;
-        var primaEsecuzione = fft.FFT(false,2048);
+        var primaEsecuzione = fft.FFT(true,50,1000,100,true); 
+        // f = 50 Hz , fc = 1 KHz , 100 periodi del segnale => CampioniSegnale = fc/f * Nperiodi
+        // Campioni FFT = prima potenza di 2 > Nperiodi (Zero padding)
 
         for (int i = 0;i<100000;i++) 
         {    
             //Console.WriteLine($"*********** {BLUE}Esecuzione numero {i}{NORMAL} ***********");
             //var tempo_esecuzione = Lp.Solve();
-            var tempo_esecuzione = fft.FFT(true,2048);
-            
+
+            var tempo_esecuzione = fft.FFT(true,50,1000,100,false); 
+            // f = 50 Hz , fc = 1 KHz , 100 periodi del segnale => CampioniSegnale = fc/f * Nperiodi
+            // Campioni FFT = prima potenza di 2 > Nperiodi (Zero padding)
+
             if (tempo_esecuzione < tempo_massimo) 
             {
                 Console.WriteLine($"{GREEN}OK: La funzione è stata eseguita entro il limite di {tempo_massimo} ms con {tempo_esecuzione}   ms{NORMAL}");
