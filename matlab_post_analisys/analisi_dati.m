@@ -56,11 +56,9 @@ stdOverRun = [];
 
 Table = table(modaTimestep, mediaTimestep,varTimestep,devStdTimestep);    
 overrun = Timestep(Timestep>=10);
-clearvars -except linguaggio overrun T Table mediaTimestep varTimestep devStdTimestep varTimestep;
+clearvars -except test so linguaggio overrun T Table mediaTimestep varTimestep devStdTimestep varTimestep;
 
 %% TimeStep
-
-datagramSize = ['Time Step'];
 
 path_table_misure =  ['./' 'data_parsed_' linguaggio '.txt'];
 opts = delimitedTextImportOptions("NumVariables", 2);
@@ -99,7 +97,7 @@ varTimestepPD = var(pd);
 FigH = figure;
 
 set(FigH, 'NumberTitle', 'off', ...
-'Name', ['Datagram Size: ' datagramSize]);
+'Name', ['Analisi dei Tempi di esecuzione Size: ' test '-' linguaggio '-' so]);
 
 [y_max, idx] = max(y);
 moda = x_pdf(idx);
@@ -110,6 +108,6 @@ txt = ['\leftarrow ' num2str(moda) ' ms'];
 text(moda,y_max,txt,'Color','red','FontWeight','Bold','FontSize',20);
 grid on
 xlabel("TimeStep (ms)");
-clearvars -except linguaggio overrun mediaTimestepPD devStdTimestepPD varTimestepPD moda mediaTimestep varTimestep devStdTimestep;
+clearvars -except test linguaggio so overrun mediaTimestepPD devStdTimestepPD varTimestepPD moda mediaTimestep varTimestep devStdTimestep;
 
 
