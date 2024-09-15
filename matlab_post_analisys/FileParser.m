@@ -3,8 +3,8 @@
 clear all;
 clc;
 
-    test = 'lpo';
-    %test = 'fft';
+    %test = 'lpo';
+    test = 'fft';
 
     %linguaggio = 'python';
     linguaggio = 'csharp';
