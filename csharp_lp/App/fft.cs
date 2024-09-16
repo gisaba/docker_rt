@@ -33,20 +33,10 @@ public static double FFT(bool shape_window,int frequency,int sampleRate,int peri
         // calculate the power spectral density using FFT
         System.Numerics.Complex[] spectrum = FftSharp.FFT.Forward(signal);
         double[] power = FftSharp.FFT.Power(spectrum);                             // power spectral density (dB)
-
-        /*
-        for (int i = 0; i < spectrum.Length/2; i++)
-            Log.Information($"Indice: {i} Frequency: {freq[i]}, Power: {Math.Round(power[i],3)}");
         
-        //Log.Information($"CC Frequency: {freq[0]} Hz, Power: {Math.Round(psd[0],3)} dB");
-        //Log.Information($"Fodamentale Frequency: {freq[1]} Hz, Power: {Math.Round(psd[1],3)} dB");
-        Log.Information("********************************************************");
-        */
-
-        /***********************************************************/
-
         stopwatch.Stop();
         double elapsed = stopwatch.Elapsed.TotalMilliseconds;
+        /***********************************************************/
 
         if (DEBUG)
         {

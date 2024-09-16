@@ -5,12 +5,13 @@ clc;
 
     %test = 'lpo';
     test = 'fft';
+    deadline = '1';
 
     %linguaggio = 'python';
     linguaggio = 'csharp';
     
-    so = 'linux';
-    %so = 'macos';
+    %so = 'linux';
+    so = 'macos';
     
     fid = fopen(['./time_' linguaggio '_' test '.' so],'r');
     %fid = fopen(['./time_' linguaggio '.log'],'r');
@@ -18,6 +19,7 @@ clc;
     disp_line = 0;
     
     timestep = [];
+    periodo = [];
     
     tline = fgetl(fid); 
     
@@ -33,15 +35,29 @@ clc;
                     idxKO = regexp(tline,'OverRun: La funzione ha superato il limite di');
                     
                     if (idxOK > 0)
-                        l = 'eseguita entro il limite di 10 ms con';
+
+                        l = ['eseguita entro il limite di ' deadline ' ms con'];
                         start = regexp(tline,l) + strlength(l)+1;
                         stop = start + 3;
-                        timestep = [timestep; tline(start:stop)];    
+                        timestep = [timestep; tline(start:stop)];   
+                        
+                        l = '- periodo: ms';
+                        start = regexp(tline,l) + strlength(l)+1;
+                        stop = start + 3;
+                        periodo = [periodo; tline(start:stop)];
+
                     elseif (idxKO > 0)
-                        l = 'superato il limite di 10 ms con';
+                        
+                        l = ['superato il limite di ' deadline ' ms con'];
                         start = regexp(tline,l) + strlength(l)+1;
                         stop = start + 3;
-                        timestep = [timestep; tline(start:stop)]; 
+                        timestep = [timestep; tline(start:stop)];
+
+                        l = '- periodo: ms';
+                        start = regexp(tline,l) + strlength(l)+1;
+                        stop = start + 3;
+                        periodo = [periodo; tline(start:stop)];
+
                     end
                 end
                 
@@ -50,9 +66,9 @@ clc;
 
     L = height(timestep);       
     rownumber = (1:L)';
-    T = table(rownumber,timestep);
+    T = table(rownumber,timestep,periodo);
     writetable(T,['./' 'data_parsed_' linguaggio '.txt']);
     
     fclose(fid);
 
-clearvars -except test linguaggio so T timestep overrun error;
+clearvars -except deadline periodo test linguaggio so T timestep overrun error;

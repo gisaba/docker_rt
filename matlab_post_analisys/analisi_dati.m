@@ -1,5 +1,7 @@
 %% Analisi dei Dati
 
+t_deadline = 1;
+
 %linguaggio = 'python';
 %linguaggio = 'csharp';
 
@@ -18,8 +20,8 @@ stdOverRun = [];
     opts = delimitedTextImportOptions("NumVariables", 2);
     opts.DataLines = [2, Inf];
     opts.Delimiter = ["\t", ","];
-    opts.VariableNames = ["rownumber","timestep"];
-    opts.VariableTypes = ["uint16", "double"];
+    opts.VariableNames = ["rownumber","timestep","periodo"];
+    opts.VariableTypes = ["uint16", "double","double"];
     opts.ExtraColumnsRule = "ignore";
     opts.EmptyLineRule = "skip";
     opts.ConsecutiveDelimitersRule = "join";
@@ -37,6 +39,7 @@ stdOverRun = [];
     % Timestep
 
     Timestep = TableFile.timestep;
+    Periodo = TableFile.periodo;
 
     Timestep(Timestep==0) = mean(Timestep);
     pd = fitdist(Timestep,'Lognormal');
@@ -55,8 +58,12 @@ stdOverRun = [];
     modaTimestep = [modaTimestep;  x];
 
 Table = table(modaTimestep, mediaTimestep,varTimestep,devStdTimestep);    
-overrun = Timestep(Timestep>=10);
-clearvars -except test so linguaggio overrun T Table mediaTimestep varTimestep devStdTimestep varTimestep;
+overrun = Timestep(Timestep>=t_deadline);
+WCET = max(Timestep(Timestep<t_deadline));
+BCET = min(Timestep(Timestep<t_deadline));
+PeriodoMAX = max(Periodo);
+PeriodoMIN = min(Periodo);
+clearvars -except PeriodoMAX PeriodoMIN WCET BCET test so linguaggio overrun T Table mediaTimestep varTimestep devStdTimestep varTimestep;
 
 %% TimeStep
 
@@ -108,6 +115,6 @@ txt = ['\leftarrow ' num2str(moda) ' ms'];
 text(moda,y_max,txt,'Color','red','FontWeight','Bold','FontSize',20);
 grid on
 xlabel("TimeStep (ms)");
-clearvars -except test linguaggio so overrun mediaTimestepPD devStdTimestepPD varTimestepPD moda mediaTimestep varTimestep devStdTimestep;
+clearvars -except PeriodoMAX PeriodoMIN WCET BCET test linguaggio so overrun mediaTimestepPD devStdTimestepPD varTimestepPD moda mediaTimestep varTimestep devStdTimestep;
 
 

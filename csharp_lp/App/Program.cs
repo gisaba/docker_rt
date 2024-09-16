@@ -1,5 +1,6 @@
 ﻿using Google.OrTools.Init;
 using realtime;
+using System.Diagnostics;
 
 internal class Program
 {
@@ -22,28 +23,64 @@ internal class Program
         string NOREVERSE   = Console.IsOutputRedirected ? "" : "\x1b[27m";
 
         //Console.WriteLine("Google.OrTools version: " + OrToolsVersion.VersionString());
-        double tempo_massimo = 10;
-        var primaEsecuzione = fft.FFT(true,50,1000,100,true); 
+        const double time_period = 2; // ms
+        //const double deadline = 1;  // ms
+        double tempo_esecuzione = 0; 
+
+        /***********************************************************/
+        var stopwatch = new Stopwatch();
+        stopwatch.Start();
+        var primaEsecuzione = fft.FFT(true,50,1000,100,false); 
         // f = 50 Hz , fc = 1 KHz , 100 periodi del segnale => CampioniSegnale = fc/f * Nperiodi
         // Campioni FFT = prima potenza di 2 > Nperiodi (Zero padding)
+        stopwatch.Stop();
+        double fi = stopwatch.Elapsed.TotalMilliseconds;
+        /***********************************************************/
 
-        for (int i = 0;i<100000;i++) 
+        Console.WriteLine("rownumber,timestep,periodo");
+        stopwatch.Reset();
+
+        for (int idx_task = 0;idx_task<100000;idx_task++) 
         {    
-            //Console.WriteLine($"*********** {BLUE}Esecuzione numero {i}{NORMAL} ***********");
-            //var tempo_esecuzione = Lp.Solve();
-
-            var tempo_esecuzione = fft.FFT(true,50,1000,100,false); 
+            stopwatch.Start();
+            /*********************FFT**************************************/
             // f = 50 Hz , fc = 1 KHz , 100 periodi del segnale => CampioniSegnale = fc/f * Nperiodi
             // Campioni FFT = prima potenza di 2 > Nperiodi (Zero padding)
+            tempo_esecuzione = fft.FFT(true,50,1000,100,false); 
+            /**************************************************************/
 
-            if (tempo_esecuzione < tempo_massimo) 
-            {
-                Console.WriteLine($"{GREEN}OK: La funzione è stata eseguita entro il limite di {tempo_massimo} ms con {tempo_esecuzione}   ms{NORMAL}");
+            /*********************LPO**************************************
+            var tempo_esecuzione = Lp.Solve();
+            **************************************************************/
+            
+            while (stopwatch.Elapsed.TotalMilliseconds < time_period);
+            Console.WriteLine($"{idx_task},{tempo_esecuzione.ToString().Replace(",",".")},{stopwatch.Elapsed.TotalMilliseconds}");
+            stopwatch.Reset();
+            
+            /*** DEBUG ****
+            if (tempo_esecuzione <= deadline) 
+            {               
+                while (stopwatch.Elapsed.TotalMilliseconds < time_period);
+                period = stopwatch.Elapsed.TotalMilliseconds;
+                //Console.WriteLine($"{GREEN}OK: La funzione è stata eseguita entro il limite di {deadline} ms con {tempo_esecuzione} ms{NORMAL} - periodo: ms {period}      ");
+                //Console.WriteLine($"OK: La funzione è stata eseguita entro il limite di {deadline} ms con {tempo_esecuzione} ms - periodo: ms {period}      ");
+                stopwatch.Reset();
             } 
-            else 
+            else if ((tempo_esecuzione > deadline) && (tempo_esecuzione < time_period))
             {
-                Console.WriteLine($"{RED}OverRun: La funzione ha superato il limite di {tempo_massimo} ms con {tempo_esecuzione}           ms{NORMAL}");
+                while (stopwatch.Elapsed.TotalMilliseconds < time_period);
+                period = stopwatch.Elapsed.TotalMilliseconds;
+                //Console.WriteLine($"{RED}OverRun: La funzione ha superato il limite di {deadline} ms con {tempo_esecuzione} ms{NORMAL} - periodo: ms {period}      ");
+                Console.WriteLine($"OverRun: La funzione ha superato il limite di {deadline} ms con {tempo_esecuzione} ms - periodo: ms {period}      ");
+                stopwatch.Reset();
+            } else if (tempo_esecuzione > time_period)
+            {
+                while (stopwatch.Elapsed.TotalMilliseconds < time_period);
+                period = stopwatch.Elapsed.TotalMilliseconds;
+                Console.WriteLine($"OverRun: La funzione ha superato il limite di {deadline} ms con {tempo_esecuzione} ms - periodo: ms {period}      ");
+                stopwatch.Reset();
             }
+            */
         }
     }
 }
