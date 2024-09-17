@@ -1,16 +1,19 @@
 %% Analisi dei Dati
 
+clear all;
+clc;
+
 t_deadline = 1;
 
-    test = 'lpo';
-    %test = 'fft';
-    profile = 'real-time';
-    %profile = 'balanced';
-    %linguaggio = 'python';
-    linguaggio = 'csharp';
-    
-    so = 'linux';
-    %so = 'macos';
+%test = 'lpo';
+test = 'fft';
+%profile = 'real-time';
+profile = 'balanced';
+%linguaggio = 'python';
+linguaggio = 'csharp';
+
+so = 'linux';
+%so = 'macos';
 
 path_table_misure = './misure/linux/';
 
@@ -70,11 +73,10 @@ WCET = max(Timestep(Timestep<t_deadline));
 BCET = min(Timestep(Timestep<t_deadline));
 PeriodoMAX = max(Periodo);
 PeriodoMIN = min(Periodo);
-clearvars -except PeriodoMAX PeriodoMIN WCET BCET test so linguaggio overrun T Table mediaTimestep varTimestep devStdTimestep varTimestep;
+clearvars -except profile filename path_table_misure PeriodoMAX PeriodoMIN WCET BCET test so linguaggio overrun T Table mediaTimestep varTimestep devStdTimestep varTimestep;
 
 %% TimeStep
 
-path_table_misure =  ['./' 'data_parsed_' linguaggio '.txt'];
 opts = delimitedTextImportOptions("NumVariables", 2);
 opts.DataLines = [2, Inf];
 opts.Delimiter = ["\t", ","];
@@ -89,7 +91,6 @@ opts.ImportErrorRule = "omitrow";
 opts.MissingRule = "omitrow";
  
 % Import the data
-filename = strcat(path_table_misure);
 TableFile = readtable(filename, opts);
 
 step = 0.001;
@@ -111,7 +112,7 @@ varTimestepPD = var(pd);
 FigH = figure;
 
 set(FigH, 'NumberTitle', 'off', ...
-'Name', ['Analisi dei Tempi di esecuzione Size: ' test '-' linguaggio '-' so]);
+'Name', ['Analisi dei Tempi di esecuzione Size: ' test '-' linguaggio '-' so ' ' profile]);
 
 [y_max, idx] = max(y);
 moda = x_pdf(idx);
