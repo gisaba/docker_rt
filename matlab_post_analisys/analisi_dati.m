@@ -5,8 +5,8 @@ clc;
 
 t_deadline = 1;
 
-test = 'lpo';
-%test = 'fft';
+%test = 'lpo';
+test = 'fft';
 %profile = 'real-time';
 profile = 'balanced';
 %linguaggio = 'python';
@@ -73,7 +73,7 @@ WCET = max(Timestep(Timestep<t_deadline));
 BCET = min(Timestep(Timestep<t_deadline));
 PeriodoMAX = max(Periodo);
 PeriodoMIN = min(Periodo);
-clearvars -except profile filename path_table_misure PeriodoMAX PeriodoMIN WCET BCET test so linguaggio overrun T Table mediaTimestep varTimestep devStdTimestep varTimestep;
+clearvars -except profile t_deadline filename path_table_misure PeriodoMAX PeriodoMIN WCET BCET test so linguaggio overrun T Table mediaTimestep varTimestep devStdTimestep varTimestep;
 
 %% TimeStep
 
@@ -112,7 +112,7 @@ varTimestepPD = var(pd);
 FigH = figure;
 
 set(FigH, 'NumberTitle', 'off', ...
-'Name', ['Analisi dei Tempi di esecuzione Task : ' test '-' linguaggio '-' so ' ' profile]);
+'Name', ['Tempi di esecuzione Task : ' test '-' linguaggio '-' so '-' profile ' Deadline: 1 ms']);
 
 [y_max, idx] = max(y);
 moda = x_pdf(idx);
