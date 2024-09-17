@@ -1,6 +1,4 @@
- Container realtime_docker_csharp  Created
-Attaching to realtime_docker_csharp
-[?1h=rownumber,timestep,periodo
+rownumber,timestep,periodo
 0,1.3876,11.3984
 1,1.329,4.3361
 2,1.3233,2.0062
@@ -100001,4 +99999,3 @@ Attaching to realtime_docker_csharp
 99997,0.7618,2.0018
 99998,0.7604,2.0017
 99999,0.7594,2.0016
-realtime_docker_csharp exited with code 0
