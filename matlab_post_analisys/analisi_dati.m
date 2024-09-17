@@ -2,10 +2,17 @@
 
 t_deadline = 1;
 
-%linguaggio = 'python';
-%linguaggio = 'csharp';
+    test = 'lpo';
+    %test = 'fft';
+    profile = 'real-time';
+    %profile = 'balanced';
+    %linguaggio = 'python';
+    linguaggio = 'csharp';
+    
+    so = 'linux';
+    %so = 'macos';
 
-path_table_misure = './';
+path_table_misure = './misure/linux/';
 
 modaTimestep = [];
 mediaTimestep = [];
@@ -31,7 +38,7 @@ stdOverRun = [];
     opts.MissingRule = "omitrow";
      
     % Import the data
-    filename = strcat(path_table_misure, ['data_parsed_' linguaggio '.txt']);
+    filename = strcat(path_table_misure, [profile '_' linguaggio '_' test '.' so]);
     TableFile = readtable(filename, opts);
 
     disp(['Analizzo i dati del test'])
