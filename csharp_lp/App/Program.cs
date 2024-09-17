@@ -30,13 +30,14 @@ internal class Program
         /***********************************************************/
         var stopwatch = new Stopwatch();
         stopwatch.Start();
-        var primaEsecuzione = fft.FFT(true,50,1000,100,false); 
+        var primaEsecuzione = Lp.Solve();
+        // var primaEsecuzione = fft.FFT(true,50,1000,100,false); 
         // f = 50 Hz , fc = 1 KHz , 100 periodi del segnale => CampioniSegnale = fc/f * Nperiodi
         // Campioni FFT = prima potenza di 2 > Nperiodi (Zero padding)
         stopwatch.Stop();
         double fi = stopwatch.Elapsed.TotalMilliseconds;
         /***********************************************************/
-
+        Console.WriteLine("LPO");
         Console.WriteLine("rownumber,timestep,periodo");
         stopwatch.Reset();
 
@@ -46,12 +47,12 @@ internal class Program
             /*********************FFT**************************************/
             // f = 50 Hz , fc = 1 KHz , 100 periodi del segnale => CampioniSegnale = fc/f * Nperiodi
             // Campioni FFT = prima potenza di 2 > Nperiodi (Zero padding)
-            tempo_esecuzione = fft.FFT(true,50,1000,100,false); 
+            //tempo_esecuzione = fft.FFT(true,50,1000,100,false); 
             /**************************************************************/
 
-            /*********************LPO**************************************
-            var tempo_esecuzione = Lp.Solve();
-            **************************************************************/
+            /*********************LPO**************************************/
+            tempo_esecuzione = Lp.Solve();
+            /**************************************************************/
             
             while (stopwatch.Elapsed.TotalMilliseconds < time_period);
             Console.WriteLine($"{idx_task},{tempo_esecuzione.ToString().Replace(",",".")},{stopwatch.Elapsed.TotalMilliseconds}");
