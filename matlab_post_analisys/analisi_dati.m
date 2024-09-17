@@ -5,8 +5,8 @@ clc;
 
 t_deadline = 1;
 
-%test = 'lpo';
-test = 'fft';
+test = 'lpo';
+%test = 'fft';
 %profile = 'real-time';
 profile = 'balanced';
 %linguaggio = 'python';
@@ -112,7 +112,7 @@ varTimestepPD = var(pd);
 FigH = figure;
 
 set(FigH, 'NumberTitle', 'off', ...
-'Name', ['Analisi dei Tempi di esecuzione Size: ' test '-' linguaggio '-' so ' ' profile]);
+'Name', ['Analisi dei Tempi di esecuzione Task : ' test '-' linguaggio '-' so ' ' profile]);
 
 [y_max, idx] = max(y);
 moda = x_pdf(idx);
