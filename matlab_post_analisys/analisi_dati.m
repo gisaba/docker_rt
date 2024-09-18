@@ -5,17 +5,17 @@ clc;
 
 t_deadline = 1;
 
-%test = 'lpo';
-test = 'fft';
-%profile = 'real-time';
-profile = 'balanced';
+test = 'lpo';
+%test = 'fft';
+profile = 'real-time';
+%profile = 'balanced';
 %linguaggio = 'python';
 linguaggio = 'csharp';
 
-so = 'linux';
-%so = 'macos';
+%so = 'linux';
+so = 'macos';
 
-path_table_misure = './misure/linux/';
+path_table_misure = ['./misure/' so '/'];
 
 modaTimestep = [];
 mediaTimestep = [];
