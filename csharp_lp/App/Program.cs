@@ -6,6 +6,7 @@ internal class Program
 {
     private static void Main(string[] args)
     {
+        /*COLORI*
         string NL          = Environment.NewLine; // shortcut
         string NORMAL      = Console.IsOutputRedirected ? "" : "\x1b[39m";
         string RED         = Console.IsOutputRedirected ? "" : "\x1b[91m";
@@ -21,27 +22,44 @@ internal class Program
         string NOUNDERLINE = Console.IsOutputRedirected ? "" : "\x1b[24m";
         string REVERSE     = Console.IsOutputRedirected ? "" : "\x1b[7m";
         string NOREVERSE   = Console.IsOutputRedirected ? "" : "\x1b[27m";
+        **/
+        
+        var TASK_TIME_PERIOD = Environment.GetEnvironmentVariable("TASK_TIME_PERIOD");
+        var TASK = Environment.GetEnvironmentVariable("TASK");
+        int iteration = int.Parse(Environment.GetEnvironmentVariable("ITERATIONS"));
 
-        //Console.WriteLine("Google.OrTools version: " + OrToolsVersion.VersionString());
-        const double time_period = 2; // ms
-        //const double deadline = 1;  // ms
-        double tempo_esecuzione = 0; 
+        Console.WriteLine($"TASK: {TASK}");
+        Console.WriteLine($"TASK_TIME_PERIOD: {TASK_TIME_PERIOD}");
+
+        double time_period = double.Parse(TASK_TIME_PERIOD); // ms
+        double tempo_esecuzione = 0;  
+
+        foreach (var arg in args)
+         Console.WriteLine("args: ", arg);
 
         /***********************************************************/
         var stopwatch = new Stopwatch();
         stopwatch.Start();
-        var primaEsecuzione = Lp.Solve();
-        // var primaEsecuzione = fft.FFT(true,50,1000,100,false); 
-        // f = 50 Hz , fc = 1 KHz , 100 periodi del segnale => CampioniSegnale = fc/f * Nperiodi
-        // Campioni FFT = prima potenza di 2 > Nperiodi (Zero padding)
+        
+        if (TASK.Equals("FFT"))
+        {
+            Console.WriteLine("FftSharp ");
+            var primaEsecuzione = fft.FFT(true,50,1000,100,false); 
+            // f = 50 Hz , fc = 1 KHz , 100 periodi del segnale => CampioniSegnale = fc/f * Nperiodi
+            // Campioni FFT = prima potenza di 2 > Nperiodi (Zero padding)
+        } else
+        {
+            Console.WriteLine("Google.OrTools version: " + OrToolsVersion.VersionString());
+            var primaEsecuzione = Lp.Solve();
+        }
+        
         stopwatch.Stop();
         double fi = stopwatch.Elapsed.TotalMilliseconds;
         /***********************************************************/
-        Console.WriteLine("LPO");
         Console.WriteLine("rownumber,timestep,periodo");
         stopwatch.Reset();
 
-        for (int idx_task = 0;idx_task<100000;idx_task++) 
+        for (int idx_task = 0;idx_task<iteration;idx_task++) 
         {    
             stopwatch.Start();
             /*********************FFT**************************************/
@@ -49,12 +67,12 @@ internal class Program
             // Campioni FFT = prima potenza di 2 > Nperiodi (Zero padding)
             //tempo_esecuzione = fft.FFT(true,50,1000,100,false); 
             /**************************************************************/
-
             /*********************LPO**************************************/
-            tempo_esecuzione = Lp.Solve();
+            tempo_esecuzione = TASK.Equals("FFT") ? fft.FFT(true,50,1000,100,false) : Lp.Solve();
             /**************************************************************/
             
             while (stopwatch.Elapsed.TotalMilliseconds < time_period);
+            
             Console.WriteLine($"{idx_task},{tempo_esecuzione.ToString().Replace(",",".")},{stopwatch.Elapsed.TotalMilliseconds}");
             stopwatch.Reset();
             
