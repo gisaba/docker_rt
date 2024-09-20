@@ -7,7 +7,7 @@ using Google.OrTools.LinearSolver;
 
 namespace realtime;
 
-public static class fft
+public static class Calcolo_FFT
 {
 
 public static double FFT(bool shape_window,int frequency,int sampleRate,int periodi,bool DEBUG)
@@ -64,7 +64,7 @@ public static double FFT(bool shape_window,int frequency,int sampleRate,int peri
         short[] buffer3 = new short[l_fft];
         double[] signal = new double[l_fft];
 
-        double amplitude = Lp.GetRandomNumber(220,221)*Math.Sqrt(2);
+        double amplitude = Calcolo_LPO.GetRandomNumber(220,221)*Math.Sqrt(2);
         double samplePeriod = sampleRate / frequency;
 
         for (int n = 0; n < lengh_signal; n++)

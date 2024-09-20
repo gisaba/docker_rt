@@ -44,13 +44,13 @@ internal class Program
         if (TASK.Equals("FFT"))
         {
             Console.WriteLine("FftSharp ");
-            var primaEsecuzione = fft.FFT(true,50,1000,100,false); 
+            var primaEsecuzione = Calcolo_FFT.FFT(true,50,1000,100,false); 
             // f = 50 Hz , fc = 1 KHz , 100 periodi del segnale => CampioniSegnale = fc/f * Nperiodi
             // Campioni FFT = prima potenza di 2 > Nperiodi (Zero padding)
         } else
         {
             Console.WriteLine("Google.OrTools version: " + OrToolsVersion.VersionString());
-            var primaEsecuzione = Lp.Solve();
+            var primaEsecuzione = Calcolo_LPO.Solve();
         }
         
         stopwatch.Stop();
@@ -68,7 +68,7 @@ internal class Program
             //tempo_esecuzione = fft.FFT(true,50,1000,100,false); 
             /**************************************************************/
             /*********************LPO**************************************/
-            tempo_esecuzione = TASK.Equals("FFT") ? fft.FFT(true,50,1000,100,false) : Lp.Solve();
+            tempo_esecuzione = TASK.Equals("FFT") ? Calcolo_FFT.FFT(true,50,1000,100,false) : Calcolo_LPO.Solve();
             /**************************************************************/
             
             while (stopwatch.Elapsed.TotalMilliseconds < time_period);

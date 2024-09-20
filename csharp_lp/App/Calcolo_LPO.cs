@@ -4,7 +4,7 @@ using Google.OrTools.LinearSolver;
 
 namespace realtime;
 
-public static class Lp
+public static class Calcolo_LPO
 {
     /********
      Esempio: Minimizza una funzione con 3 variabili soggetta a:
