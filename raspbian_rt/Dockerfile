@@ -45,21 +45,30 @@ RUN ./scripts/config --enable CONFIG_PREEMPT_RT
 RUN ./scripts/config --disable CONFIG_RCU_EXPERT
 RUN ./scripts/config --enable CONFIG_RCU_BOOST
 RUN ./scripts/config --set-val CONFIG_RCU_BOOST_DELAY 500
+RUN ./scripts/config --enable CONFIG_NO_HZ_FULL
+RUN ./scripts/config --enable CONFIG_HZ_1000
 
 RUN make -j6 Image.gz modules dtbs
 # RUN make INSTALL_MOD_PATH=/raspi-linux-fs modules_install
 
+WORKDIR /rpi-kernel
+RUN tar czf linux66_rt.tar.gz ./linux
+RUN mv linux66_rt.tar.gz /tmp/
 
-RUN wget https://downloads.raspberrypi.com/raspios_lite_armhf/images/raspios_lite_armhf-${RASPIOS_TS}/${RASPIOS_TS}-raspios-bookworm-armhf-lite.img.xz
-RUN xz -d ${RASPIOS_TS}-raspios-bookworm-armhf-lite.img.xz
+# Comando da eseguire all'avvio del container
+RUN echo "Built kernel"
+CMD ["/bin/sh", "-c", "cp /tmp/linux66_rt.tar.gz /data/linux66_rt.tar.gz"]
 
-# Image offset is calculated by sector size (512 bytes) * start sector of first partition in image (8192), so 512*8192 = 4194304
+# RUN wget https://downloads.raspberrypi.com/raspios_lite_armhf/images/raspios_lite_armhf-${RASPIOS_TS}/${RASPIOS_TS}-raspios-bookworm-armhf-lite.img.xz
+# RUN xz -d ${RASPIOS_TS}-raspios-bookworm-armhf-lite.img.xz
 
-RUN apt-get install -y qemu-system-aarch64
+# # Image offset is calculated by sector size (512 bytes) * start sector of first partition in image (8192), so 512*8192 = 4194304
 
-ENV IMAGE_OFFSET=4194304 
+# RUN apt-get install -y qemu-system-aarch64
 
-# Start sector of second partition changes according to qemu-img resize!
-ENV LINUX_FS_OFFSET=541065216
-COPY prepare_image.sh . 
-COPY post_install.sh .
+# ENV IMAGE_OFFSET=4194304 
+
+# # Start sector of second partition changes according to qemu-img resize!
+# ENV LINUX_FS_OFFSET=541065216
+# COPY prepare_image.sh . 
+# COPY post_install.sh .

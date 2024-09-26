@@ -7,23 +7,24 @@ mkdir -p /raspi-image/rt/overlays
 mount -o loop,offset=${IMAGE_OFFSET} ./${RASPIOS_TS}-raspios-bookworm-armhf-lite.img /raspi-image/
 
 cd /rpi-kernel/linux
-make INSTALL_MOD_PATH=/raspi-image/rt modules_install
+make INSTALL_MOD_PATH=_lib modules_install
+tar czf lib.tar.gz _lib
 
-
-mv /rpi-kernel/linux/arch/arm64/boot/Image.gz /raspi-image/rt/Image66_rt.img
-mv /rpi-kernel/linux/arch/arm64/boot/dts/broadcom/*.dtb /raspi-image/rt/
-mv /rpi-kernel/linux/arch/arm64/boot/dts/overlays/*.dtb* /raspi-image/rt/overlays/
-mv /rpi-kernel/linux/arch/arm64/boot/dts/overlays/README /raspi-image/rt/overlays/
+mv lib.tar.gz /raspi-image/rt/
+cp /rpi-kernel/linux/arch/arm64/boot/Image.gz /raspi-image/rt/Image66_rt.img
+cp /rpi-kernel/linux/arch/arm64/boot/dts/broadcom/*.dtb /raspi-image/rt/
+cp /rpi-kernel/linux/arch/arm64/boot/dts/overlays/*.dtb* /raspi-image/rt/overlays/
+cp /rpi-kernel/linux/arch/arm64/boot/dts/overlays/README /raspi-image/rt/overlays/
 echo "kernel=Image66_rt.img" >> /raspi-image/config.txt
 touch /raspi-image/ssh
 echo 'pi:$6$rBoByrWRKMY1EHFy$ho.LISnfm83CLBWBE/yqJ6Lq1TinRlxw/ImMTPcvvMuUfhQYcMmFnpFXUPowjy2br1NA0IACwF9JKugSNuHoe0' | tee /raspi-image/userconf
 
 
 # Copy post installation tool script
-cp post_install.sh /raspi-image/rt/post_install.sh
+cp /rpi-kernel/linux/post_install.sh /raspi-image/rt/post_install.sh
 
 chmod -R 755 /raspi-image/rt/
-
+cd
 umount /raspi-image
 
 
@@ -48,5 +49,5 @@ umount /raspi-image
 
 
 # umount /raspi-linux-fs
-mv ./${RASPIOS_TS}-raspios-bookworm-armhf-lite.img /build/${RASPIOS_TS}-raspios-bookworm-armhf-lite-rt.img
+mv /rpi-kernel/linux/${RASPIOS_TS}-raspios-bookworm-armhf-lite.img /build/${RASPIOS_TS}-raspios-bookworm-armhf-lite-rt.img
     
