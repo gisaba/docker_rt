@@ -5,7 +5,7 @@
 - A Linux distro configured with a realtime scheduler.
 - Docker installed.
 
-## INSTALLATION and USAGE
+### INSTALLATION and USAGE
 
 1. Clone this repository.
 2. Run `docker compose -f docker-compose_python.yml up docker_realtime_python --remove-orphans`
@@ -17,9 +17,10 @@
 
 You can create and a Linux 6.6 realtime kernel for Raspberry PI board(s) by running the following commands:
  
-1. Build the image (for example with `docker build . -t linux66_rt`) and run:
+1. Build the image and run it:
 ```bash
 cd debian_rt
+docker build . -t linux66_rt
 docker run -v ./build:/data --privileged linux66_rt
 ``` 
 
@@ -38,3 +39,20 @@ This will generate ./build/linux66_rt.tar.gz containing the Linux 6.6 toolchain 
 - cleanup everything after installation
 
 3. Reboot your device and you are ready to go!
+
+**PLEASE NOTE** that this setup will disable WiFi on your Rasperry device so, if you need to connect to the internet, you will need to connect it via ethernet.
+
+## RUNNING CYCLITEST ON YOUR DEVICE
+
+There's a docker image you can build from `./cyclictest` folder:
+
+```bash
+cd cyclictest
+docker build . -t cyclictest_image
+```
+
+Once your cyclitest_image is built, you can run:
+
+```
+docker run --rm --privileged cyclitest_image -m -Sp99 -i500 -h200 --duration=2m -q
+``` 

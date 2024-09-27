@@ -1,5 +1,47 @@
 #!/bin/bash
 
+
+echo "
+    ____             ____  _                   __    _                 
+   / __ \___  ____ _/ / /_(_)___ ___  ___     / /   (_)___  __  ___  __
+  / /_/ / _ \/ __  / / __/ / __  __ \/ _ \   / /   / / __ \/ / / / |/_/
+ / _, _/  __/ /_/ / / /_/ / / / / / /  __/  / /___/ / / / / /_/ />  <  
+/_/ |_|\___/\__,_/_/\__/_/_/ /_/ /_/\___/  /_____/_/_/ /_/\__,_/_/|_|
+ 
+                                                      on Raspberry Pi
+"
+
+
+# Spinner function
+spinner() {
+    local pid=$1
+    local delay=0.1
+    local spinstr='|/-\\'
+    tput civis
+    while [ "$(ps a | awk '{print $1}' | grep $pid)" ]; do
+        local temp=${spinstr#?}
+        printf " [%c]  " "$spinstr"
+        local spinstr=$temp${spinstr%"$temp"}
+        sleep $delay
+        printf "\\b\\b\\b\\b\\b\\b"
+    done
+    printf "    \\b\\b\\b\\b"
+    tput cnorm
+}
+
+# Function to run commands and show spinner
+run_with_spinner() {
+    local func="$1"
+    local description="$2"
+
+    printf "• %s... " "$description"
+    $func &  # Run the function in the background
+    pid=$!
+    spinner $pid
+    wait $pid
+    printf "\\e[32m✔\\e[0m\\n"  # Green checkmark after success
+}
+
 LINUX_KERNEL_VERSION=6.6
 LINUX_KERNEL_RT_PATCH=patch-6.6.30-rt30
 LINUX_KERNEL_BRANCH=stable_20240529
@@ -75,7 +117,7 @@ install_docker() {
     systemctl enable docker
     
     # Post installation script
-    usermod -aG docker $USER
+    usermod -aG docker $SUDO_USER
 
     
 
@@ -84,7 +126,7 @@ install_docker() {
 tune_system_for_realtime() {
 
     addgroup realtime
-    usermod -a -G realtime $USER
+    usermod -a -G realtime $SUDO_USER
     tee /etc/security/limits.conf > /dev/null << EOF 
 @realtime soft rtprio 99
 @realtime soft priority 99
@@ -169,13 +211,16 @@ cleanup() {
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 }
 
+aa() {
+    sleep 2
+}
 
-update_os
-disable_unnecessary_services
-disable_gui
-disable_power_mgmt
-install_docker
-install_rt_kernel
-tune_system_for_realtime
-enable_ethernet_over_usbc
-cleanup
+run_with_spinner update_os "Updating OS"
+run_with_spinner disable_unnecessary_services "Disabling unnecessary services"
+run_with_spinner disable_gui "Disabling GUI"
+run_with_spinner disable_power_mgmt "Disabling power management"
+run_with_spinner install_docker "Installing Docker"
+run_with_spinner install_rt_kernel "Installing RT kernel"
+run_with_spinner tune_system_for_realtime "Tuning system for realtime"
+run_with_spinner enable_ethernet_over_usbc "Enabling Ethernet over USB-C"
+run_with_spinner cleanup "Cleaning up the system"
