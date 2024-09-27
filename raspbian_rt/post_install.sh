@@ -13,12 +13,16 @@ update_os() {
 
 install_rt_kernel() {
 
-linux66_rt
-    cp /etc/skel/rt/boot/Image66_rt.img /boot/firmware/Image66_rt.img
-    cp /etc/skel/rt/boot/dts/broadcom/*.dtb /boot/firmware/
-    cp /etc/skel/rt/boot/dts/overlays/*.dtb* /boot/firmware/overlays/
-    cp /etc/skel/rt/boot/dts/overlays/README /boot/firmware/overlays/
-    cp -r /etc/skel/rt/lib/modules /lib
+    tar xzf linux66_rt.tar.gz 
+
+    cd linux
+
+    make -j$(nproc) modules_install
+
+    cp ./arch/arm64/boot/Image /boot/firmware/Image66_rt.img
+    cp ./arch/arm64/boot/dts/broadcom/*.dtb /boot/firmware/
+    cp ./arch/arm64/boot/dts/overlays/*.dtb* /boot/firmware/overlays/
+    cp ./arch/arm64/boot/dts/overlays/README /boot/firmware/overlays/
     echo "kernel=Image66_rt.img" >> /boot/firmware/config.txt
 
     # Create cpu device for realtime containers
@@ -46,7 +50,7 @@ disable_unnecessary_services() {
     systemctl disable ModemManager
     systemctl disable triggerhappy
     systemctl disable systemd-timesyncd
-    #systemctl disable wpa_supplicant
+    systemctl disable wpa_supplicant
 }
 
 # Funzione per installare Docker
