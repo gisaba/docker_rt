@@ -12,28 +12,29 @@
 3. Run `docker compose -f docker-compose_csharp.yml up docker_realtime_csharp --remove-orphans`
 
 
-## DEBIAN REALTIME ISO CREATION
 
-You can create a Debian ISO with a pre-copied realtime kernel by running the following commands:
+## CREATE A REALTIME KERNEL TOOLCHAIN
 
-1. 
+You can create and a Linux 6.6 realtime kernel for Raspberry PI board(s) by running the following commands:
+ 
+1. Build the image (for example with `docker build . -t linux66_rt`) and run:
 ```bash
 cd debian_rt
-docker build . -t precomp  # this will take some time, 15min on M2 CPU
-docker run -v ./build:/build --privileged -it precomp /bin/bash
+docker run -v ./build:/data --privileged linux66_rt
+``` 
 
-```
+This will generate ./build/linux66_rt.tar.gz containing the Linux 6.6 toolchain built for realtime kernel on a specific raspberry configuration (Raspberry Pi 3 and 4b as default)
 
-2. Inside the container, run:
+2. Copy the generated image `linux66_rt.tar.gz` and the `post_install.sh` file to your target device and, having both files in the same directory, run `sudo post_install.sh` to:
 
-```
-sh prepare_image.sh
-```
+- update debian os
+- disable unnecessary services
+- disable the gui
+- disable power management
+- install docker
+- install rt kernel from toolchain
+- tune the system for realtime
+- enable ethernet over usbc (useful to debug on the go)
+- cleanup everything after installation
 
-this generates the Raspberry OS image (Debian 12 slim) in `./debian_rt/build` 
-
-Now you can flash the image with Raspberry PI Imager (feel free to configure your settings and services)
-
-Once you are done, you can 
-
-3. Ssh into Raspberry PI and cd to `/etc/skel/rt`, in this folder you'll find a post_install.sh script that will install the realtime kernel and the necessary packages for the docker.
+3. Reboot your device and you are ready to go!

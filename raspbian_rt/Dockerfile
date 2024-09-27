@@ -46,6 +46,7 @@ RUN ./scripts/config --disable CONFIG_RCU_EXPERT
 RUN ./scripts/config --enable CONFIG_RCU_BOOST
 RUN ./scripts/config --set-val CONFIG_RCU_BOOST_DELAY 500
 RUN ./scripts/config --enable CONFIG_NO_HZ_FULL
+RUN ./scripts/config --enable CONFIG_NO_HZ_IDLE
 RUN ./scripts/config --enable CONFIG_HZ_1000
 
 RUN make -j$(nproc) Image.gz modules dtbs

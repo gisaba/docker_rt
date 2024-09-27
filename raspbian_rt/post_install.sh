@@ -28,6 +28,9 @@ install_rt_kernel() {
     # Create cpu device for realtime containers
     mkdir -p /dev/cpu
     mknod /dev/cpu/0 b 5 1
+
+    # Set C0 to avoid idle on CPUs
+    sed -i 's/rootwait/rootwait processor.max_cstate=0 intel_idle.max_cstate=0 idle=poll/' /boot/firmware/cmdline.txt
 }
 
 
@@ -46,8 +49,9 @@ disable_power_mgmt() {
 disable_unnecessary_services() {
     systemctl disable bluetooth
     #systemctl disable avahi-daemon
+    systemctl disable irqbalance
     systemctl disable cups
-    systemctl disable ModemManager
+    systemctl disable ModemManage
     systemctl disable triggerhappy
     systemctl disable systemd-timesyncd
     systemctl disable wpa_supplicant
