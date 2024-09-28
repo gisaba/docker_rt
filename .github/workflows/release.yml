@@ -1,0 +1,48 @@
+name: Create Release and Upload Linux Toolchain for Realtime archive
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    # Checkout del repository
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    # Build del Docker container dal Dockerfile presente nel repository
+    - name: Build Docker Image
+      run: |
+        docker build -t raspbian_rt_image ./raspbian_rt
+
+    # Esegui il container che genera il file `linux66_rt.tar.gz`
+    - name: Run Docker Container to Generate File
+      run: |
+        docker run --rm -v ${{ github.workspace }}/build:/data --privileged raspbian_rt_image
+
+    # Crea una release
+    - name: Create GitHub Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: v1.0.${{ github.run_number }}
+        release_name: "Release v1.0.${{ github.run_number }}"
+        draft: false
+        prerelease: false
+
+    # Carica il file generato come asset della release
+    - name: Upload Release Asset
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: build/linux66_rt.tar.gz
+        asset_name: linux66_rt.tar.gz
+        asset_content_type: application/gzip

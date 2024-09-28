@@ -48,7 +48,7 @@ There's a docker image you can build from `./cyclictest` folder:
 
 ```bash
 cd cyclictest
-docker build . -t cyclictest_image
+docker build . -t cyclitest_image
 ```
 
 Once your cyclitest_image is built, you can run:
