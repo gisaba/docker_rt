@@ -1,5 +1,5 @@
 #!/bin/bash
-
+clear
 
 echo "
     ____             ____  _                   __    _                 
@@ -62,11 +62,15 @@ run_with_spinner() {
     local description="$2"
 
     printf "• %s... " "$description"
-    $func &  # Run the function in the background
+    $func > /dev/null 2>&1 &   # Run the function in the background
     pid=$!
     spinner $pid
     wait $pid
-    printf "\\e[32m✔\\e[0m\\n"  # Green checkmark after success
+    if [ $? -eq 0 ]; then
+        printf "\\e[32m✔\\e[0m\\n"  # Green checkmark after success
+    else
+        printf "\\e[31m✖\\e[0m\\n"  # Red cross after failure
+    fi
 }
 
 LINUX_KERNEL_VERSION=6.6
@@ -76,6 +80,7 @@ HW_SPECIFIC_CONFIG=bcm2711_defconfig # Raspberry Pi 4B
 
 update_os() {
     apt-get update
+    dpkg --configure -a
     apt-get upgrade -y
     apt-get install -y git wget zip unzip fdisk curl xz-utils bash vim raspi-utils
 }
