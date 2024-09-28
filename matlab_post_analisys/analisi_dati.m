@@ -1,9 +1,21 @@
 %% Analisi dei Dati
 
-%linguaggio = 'python';
-%linguaggio = 'csharp';
+clear all;
+clc;
 
-path_table_misure = './';
+t_deadline = 1;
+
+test = 'lpo';
+%test = 'fft';
+profile = 'real-time';
+%profile = 'balanced';
+%linguaggio = 'python';
+linguaggio = 'csharp';
+
+%so = 'linux';
+so = 'macos';
+
+path_table_misure = ['./misure/' so '/'];
 
 modaTimestep = [];
 mediaTimestep = [];
@@ -18,8 +30,8 @@ stdOverRun = [];
     opts = delimitedTextImportOptions("NumVariables", 2);
     opts.DataLines = [2, Inf];
     opts.Delimiter = ["\t", ","];
-    opts.VariableNames = ["rownumber","timestep"];
-    opts.VariableTypes = ["uint16", "double"];
+    opts.VariableNames = ["rownumber","timestep","periodo"];
+    opts.VariableTypes = ["uint16", "double","double"];
     opts.ExtraColumnsRule = "ignore";
     opts.EmptyLineRule = "skip";
     opts.ConsecutiveDelimitersRule = "join";
@@ -29,7 +41,7 @@ stdOverRun = [];
     opts.MissingRule = "omitrow";
      
     % Import the data
-    filename = strcat(path_table_misure, ['data_parsed_' linguaggio '.txt']);
+    filename = strcat(path_table_misure, [profile '_' linguaggio '_' test '.' so]);
     TableFile = readtable(filename, opts);
 
     disp(['Analizzo i dati del test'])
@@ -37,6 +49,7 @@ stdOverRun = [];
     % Timestep
 
     Timestep = TableFile.timestep;
+    Periodo = TableFile.periodo;
 
     Timestep(Timestep==0) = mean(Timestep);
     pd = fitdist(Timestep,'Lognormal');
@@ -55,12 +68,15 @@ stdOverRun = [];
     modaTimestep = [modaTimestep;  x];
 
 Table = table(modaTimestep, mediaTimestep,varTimestep,devStdTimestep);    
-overrun = Timestep(Timestep>=10);
-clearvars -except test so linguaggio overrun T Table mediaTimestep varTimestep devStdTimestep varTimestep;
+overrun = Timestep(Timestep>=t_deadline);
+WCET = max(Timestep(Timestep<t_deadline));
+BCET = min(Timestep(Timestep<t_deadline));
+PeriodoMAX = max(Periodo);
+PeriodoMIN = min(Periodo);
+clearvars -except profile t_deadline filename path_table_misure PeriodoMAX PeriodoMIN WCET BCET test so linguaggio overrun T Table mediaTimestep varTimestep devStdTimestep varTimestep;
 
 %% TimeStep
 
-path_table_misure =  ['./' 'data_parsed_' linguaggio '.txt'];
 opts = delimitedTextImportOptions("NumVariables", 2);
 opts.DataLines = [2, Inf];
 opts.Delimiter = ["\t", ","];
@@ -75,7 +91,6 @@ opts.ImportErrorRule = "omitrow";
 opts.MissingRule = "omitrow";
  
 % Import the data
-filename = strcat(path_table_misure);
 TableFile = readtable(filename, opts);
 
 step = 0.001;
@@ -97,7 +112,7 @@ varTimestepPD = var(pd);
 FigH = figure;
 
 set(FigH, 'NumberTitle', 'off', ...
-'Name', ['Analisi dei Tempi di esecuzione Size: ' test '-' linguaggio '-' so]);
+'Name', ['Tempi di esecuzione Task : ' test '-' linguaggio '-' so '-' profile ' Deadline: 1 ms']);
 
 [y_max, idx] = max(y);
 moda = x_pdf(idx);
@@ -108,6 +123,6 @@ txt = ['\leftarrow ' num2str(moda) ' ms'];
 text(moda,y_max,txt,'Color','red','FontWeight','Bold','FontSize',20);
 grid on
 xlabel("TimeStep (ms)");
-clearvars -except test linguaggio so overrun mediaTimestepPD devStdTimestepPD varTimestepPD moda mediaTimestep varTimestep devStdTimestep;
+clearvars -except PeriodoMAX PeriodoMIN WCET BCET test linguaggio so overrun mediaTimestepPD devStdTimestepPD varTimestepPD moda mediaTimestep varTimestep devStdTimestep;
 
 

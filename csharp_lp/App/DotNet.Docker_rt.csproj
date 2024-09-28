@@ -10,6 +10,7 @@
   <ItemGroup>
     <PackageReference Include="FftSharp" Version="2.1.0" />
     <PackageReference Include="Google.OrTools" Version="9.10.4067" />
+    <PackageReference Include="ScottPlot" Version="5.0.39" />
   </ItemGroup>
 
 </Project>
