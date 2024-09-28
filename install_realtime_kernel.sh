@@ -251,13 +251,8 @@ cleanup() {
 request_reboot() {
     echo ""
     echo "All done."
-    echo "Press any key to reboot the system and enjoy your realtime kernel..."
-    stty -echo  # Disabilita l'eco
-    stty cbreak # Modalità carattere singolo
-    dd bs=1 count=1 >/dev/null 2>&1  # Attende un singolo input dall'utente
-    stty echo   # Riabilita l'eco
-    stty -cbreak # Torna alla modalità normale
-    reboot
+    echo "Please reboot the system and enjoy your realtime kernel!"
+    
 }
 
 
@@ -266,8 +261,8 @@ run_with_spinner disable_unnecessary_services "Disabling unnecessary services"
 run_with_spinner disable_gui "Disabling GUI"
 run_with_spinner disable_power_mgmt "Disabling power management"
 run_with_spinner install_docker "Installing Docker"
-run_with_spinner download_linux_rt "Downloading Linux 66 Realtime kernel toolchanin from GitHub repository"
-run_with_spinner install_rt_kernel "Installing RT kernel"
+run_with_spinner download_linux_rt "Downloading pre-built Linux 6.6 Realtime kernel from repository"
+run_with_spinner install_rt_kernel "Installing RT kernel (will take some minutes)"
 run_with_spinner tune_system_for_realtime "Tuning system for realtime"
 run_with_spinner enable_ethernet_over_usbc "Enabling Ethernet over USB-C"
 run_with_spinner cleanup "Cleaning up the system"
