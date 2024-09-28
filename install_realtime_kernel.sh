@@ -30,7 +30,7 @@ get_latest_release_url() {
 
 check_rpi_version() {
 
-    MODEL=$(cat /proc/cpuinfo | grep "Model" | awk '{print $4}')
+    MODEL=$(cat /proc/cpuinfo | grep "Model" | awk '{print $5}')
 
 }
 
