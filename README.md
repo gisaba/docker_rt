@@ -13,26 +13,21 @@
 
 
 
-## CREATE A REALTIME KERNEL TOOLCHAIN
+## INSTALL A REALTIME KERNEL ON YOUR RASPBERRY PI
 
-You can create and a Linux 6.6 realtime kernel for Raspberry PI board(s) by running the following commands:
- 
-1. Build the image and run it:
+Just run:
+
 ```bash
-cd debian_rt
-docker build . -t linux66_rt
-docker run -v ./build:/data --privileged linux66_rt
-``` 
-
-This will generate ./build/linux66_rt.tar.gz containing the Linux 6.6 toolchain built for realtime kernel on a specific raspberry configuration (Raspberry Pi 3 and 4b as default)
-
-2. Copy the generated image `linux66_rt.tar.gz` and the `post_install.sh` file to your target device and, having both files in the same directory, run `sudo post_install.sh` to:
+curl -sSL https://raw.githubusercontent.com/antoniopicone/docker_rt/main/install_realtime_kernel.sh | sudo sh
+```
+The script will:
 
 - update debian os
 - disable unnecessary services
 - disable the gui
 - disable power management
 - install docker
+- download the rt toolchain from latest release on GitHub
 - install rt kernel from toolchain
 - tune the system for realtime
 - enable ethernet over usbc (useful to debug on the go)

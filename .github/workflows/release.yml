@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - main
+    paths:
+      - raspbian_rt/**  # Esegui la action solo se ci sono modifiche in raspbian_rt
+
 
 jobs:
   build:

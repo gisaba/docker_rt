@@ -12,6 +12,33 @@ echo "
 "
 
 
+
+# Funzione per ottenere l'URL della release più recente
+get_latest_release_url() {
+    echo "Fetching latest release URL from GitHub..."
+
+    # Ottieni l'URL della release tramite l'API GitHub
+    RELEASE_URL=$(curl -s https://api.github.com/repos/antoniopicone/docker_rt/releases/latest | grep "tarball_url" | cut -d '"' -f 4)
+
+    if [[ -z "$RELEASE_URL" ]]; then
+        echo "Error: Could not fetch release URL."
+        exit 1
+    fi
+
+    echo "Latest release URL: $RELEASE_URL"
+}
+
+
+download_linux_rt() {
+    
+    # Ottenere l'URL della release più recente
+    get_latest_release_url
+    
+    # Scarica il file .tar.gz dalla URL della release
+    wget -O linux66_rt.tar.gz "$RELEASE_URL"
+}
+
+
 # Spinner function
 spinner() {
     local pid=$1
@@ -55,6 +82,7 @@ update_os() {
 
 install_rt_kernel() {
 
+    
     tar xzf linux66_rt.tar.gz 
 
     cd linux
@@ -209,10 +237,17 @@ cleanup() {
     apt-get remove -y --auto-remove --purge libx11-.*
     apt clean
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+    rm linux66_rt.tar.gz
+    rm -rf ./linux
+    rm -- "$0"
 }
 
-aa() {
-    sleep 2
+# Funzione per richiedere all'utente di premere un tasto per il riavvio
+request_reboot() {
+    echo ""
+    echo "All done."
+    read -n 1 -s -r -p "Press any key to reboot the system and enjoy your realtime kernel..."
+    reboot
 }
 
 run_with_spinner update_os "Updating OS"
@@ -220,7 +255,9 @@ run_with_spinner disable_unnecessary_services "Disabling unnecessary services"
 run_with_spinner disable_gui "Disabling GUI"
 run_with_spinner disable_power_mgmt "Disabling power management"
 run_with_spinner install_docker "Installing Docker"
+run_with_spinner download_linux_rt "Downloading Linux 66 Realtime kernel toolchanin from GitHub repository"
 run_with_spinner install_rt_kernel "Installing RT kernel"
 run_with_spinner tune_system_for_realtime "Tuning system for realtime"
 run_with_spinner enable_ethernet_over_usbc "Enabling Ethernet over USB-C"
 run_with_spinner cleanup "Cleaning up the system"
+request_reboot
