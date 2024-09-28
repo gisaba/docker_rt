@@ -38,6 +38,7 @@ download_linux_rt() {
     
     # Ottenere l'URL della release più recente
     get_latest_release_url
+    check_rpi_version
     
     # Controlla se il modello è Raspberry Pi 4 o 5 e scarica il file corretto
     if [[ "$MODEL" == "4" ]]; then
