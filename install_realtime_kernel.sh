@@ -41,10 +41,10 @@ download_linux_rt() {
     check_rpi_version
     
     # Controlla se il modello è Raspberry Pi 4 o 5 e scarica il file corretto
-    if [[ "$MODEL" == "4" ]]; then
+    if [ "$MODEL" = "4" ]; then
         echo "Raspberry Pi 4 detected. Downloading file for Raspberry Pi 4..."
         wget -O linux66_rt.tar.gz https://github.com/antoniopicone/docker_rt/releases/download/$RELEASE_URL/linux66_rt_bcm2711_defconfig.tar.gz
-    elif [[ "$MODEL" == "5" ]]; then
+    elif [ "$MODEL" = "5" ]; then
         echo "Raspberry Pi 5 detected. Downloading file for Raspberry Pi 5..."
         wget -O linux66_rt.tar.gz https://github.com/antoniopicone/docker_rt/releases/download/$RELEASE_URL/linux66_rt_bcm2712_defconfig.tar.gz
     else
