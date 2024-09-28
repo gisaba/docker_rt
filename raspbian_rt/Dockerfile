@@ -20,7 +20,7 @@ RUN curl https://mirrors.edge.kernel.org/pub/linux/kernel/projects/rt/${LINUX_KE
     gzip -cd /rpi-kernel/linux/${LINUX_KERNEL_RT_PATCH}.patch.gz | patch -p1 --verbose
 
 ARG RASPIOS
-ARG DEFCONFIG
+ARG DEFCONFIG=bcm2711_defconfig
 ARG KERNEL
 ARG CROSS_COMPILE
 ARG ARCH
@@ -30,7 +30,7 @@ ARG TARGET
 ENV RASPIOS=raspios_lite_arm64
 ENV KERNEL=kernel8
 ENV ARCH=arm64
-ENV DEFCONFIG=bcm2711_defconfig
+ENV DEFCONFIG=$DEFCONFIG
 ENV CROSS_COMPILE=aarch64-linux-gnu-
 ENV TARGET=arm64
 
@@ -53,9 +53,9 @@ RUN make -j$(nproc) Image.gz modules dtbs
 # RUN make INSTALL_MOD_PATH=/raspi-linux-fs modules_install
 
 WORKDIR /rpi-kernel
-RUN tar czf linux66_rt.tar.gz ./linux
-RUN mv linux66_rt.tar.gz /tmp/
+RUN tar czf linux66_rt_${DEFCONFIG}.tar.gz ./linux
+RUN mv linux66_rt_${DEFCONFIG}.tar.gz /tmp/
 
 # Comando da eseguire all'avvio del container
 RUN echo "Built kernel"
-CMD ["/bin/sh", "-c", "cp /tmp/linux66_rt.tar.gz /data/linux66_rt.tar.gz"]
+CMD ["/bin/sh", "-c", "cp /tmp/linux66_rt_${DEFCONFIG}.tar.gz /data/linux66_rt_${DEFCONFIG}.tar.gz"]
