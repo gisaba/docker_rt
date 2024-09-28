@@ -56,6 +56,7 @@ WORKDIR /rpi-kernel
 RUN tar czf linux66_rt_${DEFCONFIG}.tar.gz ./linux
 RUN mv linux66_rt_${DEFCONFIG}.tar.gz /tmp/
 
+
 # Comando da eseguire all'avvio del container
 RUN echo "Built kernel"
 CMD ["/bin/sh", "-c", "cp /tmp/linux66_rt_${DEFCONFIG}.tar.gz /data/linux66_rt_${DEFCONFIG}.tar.gz"]
