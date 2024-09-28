@@ -252,9 +252,14 @@ request_reboot() {
     echo ""
     echo "All done."
     echo "Press any key to reboot the system and enjoy your realtime kernel..."
-    read -s -r 
+    stty -echo  # Disabilita l'eco
+    stty cbreak # Modalità carattere singolo
+    dd bs=1 count=1 >/dev/null 2>&1  # Attende un singolo input dall'utente
+    stty echo   # Riabilita l'eco
+    stty -cbreak # Torna alla modalità normale
     reboot
 }
+
 
 run_with_spinner update_os "Updating OS"
 run_with_spinner disable_unnecessary_services "Disabling unnecessary services"
