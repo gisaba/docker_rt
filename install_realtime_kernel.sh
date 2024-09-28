@@ -139,7 +139,7 @@ install_docker() {
     apt install -y apt-transport-https ca-certificates curl software-properties-common
 
     # Aggiungi la chiave GPG di Docker e il repository ufficiale
-    curl -fsSL https://download.docker.com/linux/debian/gpg | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+    curl -fsSL https://download.docker.com/linux/debian/gpg | sudo tee /usr/share/keyrings/docker-archive-keyring.gpg
     echo "deb [arch=armhf signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/debian $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list
 
     # Aggiorna e installa Docker
@@ -244,14 +244,15 @@ cleanup() {
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
     rm linux66_rt.tar.gz
     rm -rf ./linux
-    rm -- "$0"
+    
 }
 
 # Funzione per richiedere all'utente di premere un tasto per il riavvio
 request_reboot() {
     echo ""
     echo "All done."
-    read -n 1 -s -r -p "Press any key to reboot the system and enjoy your realtime kernel..."
+    echo "Press any key to reboot the system and enjoy your realtime kernel..."
+    read -s -r 
     reboot
 }
 
