@@ -31,7 +31,7 @@ jobs:
         docker run --rm -v ${{ github.workspace }}/build:/data --privileged raspbian_rt_image_4
     - name: Run Docker Container to Generate File for Raspberry Pi 5
       run: |
-        docker run --rm --build-arg DEFCONFIG=bcm2712_defconfig -v ${{ github.workspace }}/build:/data --privileged raspbian_rt_image_5
+        docker run --rm -v ${{ github.workspace }}/build:/data --privileged raspbian_rt_image_5
 
     # Crea una release
     - name: Create GitHub Release
