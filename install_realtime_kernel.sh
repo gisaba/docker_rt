@@ -18,7 +18,7 @@ get_latest_release_url() {
     echo "Fetching latest release URL from GitHub..."
 
     # Ottieni l'URL della release tramite l'API GitHub
-    RELEASE_URL=$(curl -s https://api.github.com/repos/antoniopicone/docker_rt/releases/latest | grep "tarball_url" | cut -d '"' -f 4)
+    RELEASE_URL=$(curl -s https://api.github.com/repos/antoniopicone/docker_rt/releases/latest | grep "tag_name" | cut -d '"' -f 4)
 
     if [[ -z "$RELEASE_URL" ]]; then
         echo "Error: Could not fetch release URL."
@@ -35,7 +35,7 @@ download_linux_rt() {
     get_latest_release_url
     
     # Scarica il file .tar.gz dalla URL della release
-    wget -O linux66_rt.tar.gz "$RELEASE_URL"
+    wget -O linux66_rt.tar.gz https://github.com/antoniopicone/docker_rt/releases/download/$RELEASE_URL/linux66_rt.tar.gz
 }
 
 
