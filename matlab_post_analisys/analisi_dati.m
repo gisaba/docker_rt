@@ -14,8 +14,8 @@ profile = 'real-time';
 linguaggio = 'c';
 
 %so = 'linux';
-so = 'macos';
-%so = 'rasbian';
+%so = 'macos';
+so = 'rasbian';
 
 path_table_misure = ['./misure/' so '/'];
 
@@ -58,7 +58,8 @@ stdOverRun = [];
     %pd = fitdist(Timestep,'Weibull');
     %pd = fitdist(Timestep,'Normal')
     
-    x_pdf = 0:0.01:max(Timestep);
+    step = 0.001;
+    x_pdf = 0:step:max(Timestep);
     y = pdf(pd,x_pdf);
 
     mediaTimestep = [mediaTimestep;  mean(pd);];
