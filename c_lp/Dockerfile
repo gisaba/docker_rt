@@ -1,5 +1,5 @@
 # Usa una base ufficiale di Ubuntu
-FROM debian:latest
+FROM ubuntu:latest
 
 # Aggiorna il sistema e installa le dipendenze
 RUN apt-get update && apt-get install -y \
