@@ -5,16 +5,17 @@ clc;
 
 t_deadline = 1;
 
-test = 'lpo';
-%test = 'fft';
-%profile = 'real-time';
-profile = 'balanced';
+%test = 'lpo';
+test = 'fft';
+profile = 'real-time';
+%profile = 'balanced';
 %linguaggio = 'python';
-linguaggio = 'csharp';
+%linguaggio = 'csharp
+linguaggio = 'c';
 
 %so = 'linux';
-%so = 'macos';
-so = 'rasbian';
+so = 'macos';
+%so = 'rasbian';
 
 path_table_misure = ['./misure/' so '/'];
 

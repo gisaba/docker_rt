@@ -1,0 +1,53 @@
+services:
+  docker_realtime_c_fft:
+    environment:
+      TASK_TIME_PERIOD: 2
+      TASK: "FFT"
+      ITERATIONS: 100000
+    build:
+      context: ./c_fft
+      dockerfile: Dockerfile
+      args:
+        args: foo
+    container_name: realtime_docker_c_fft
+    tty: true
+    cap_add:
+      - SYS_NICE
+    ulimits:
+      rtprio: 99
+      rttime: -1
+      memlock: 8428281856
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 200M
+        reservations:
+          cpus: '1'
+          memory: 50M
+  docker_realtime_c_lpo:
+    environment:
+      TASK_TIME_PERIOD: 2
+      TASK: "LPO"
+      ITERATIONS: 100000
+    build:
+      context: ./c_lp
+      dockerfile: Dockerfile
+      args:
+        args: foo
+    container_name: realtime_docker_c_lpo
+    tty: true
+    cap_add:
+      - SYS_NICE
+    ulimits:
+      rtprio: 99
+      rttime: -1
+      memlock: 8428281856
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 200M
+        reservations:
+          cpus: '1'
+          memory: 50M
