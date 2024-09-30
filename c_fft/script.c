@@ -39,8 +39,12 @@ void verifica_tempo_esecuzione(void (*funzione)(), double tempo_massimo,int iter
                               (fine.tv_nsec - inizio.tv_nsec) / 1000000.0;  // Millisecondi
 
     //printf("Tempo di esecuzione: %.2f ms\n", tempo_esecuzione);
-
-    printf("%.i,%.2f,2\n", iterazione,tempo_esecuzione);
+    double wait = (2-tempo_esecuzione)*1000;
+    //printf("wait : %.2f us\n", wait);
+    usleep(wait);
+    double time_step = (wait/1000) + tempo_esecuzione;
+    //printf("time_step : %.2f ms\n", time_step);
+    printf("%.i,%.2f,%.2f\n", iterazione,tempo_esecuzione,time_step);
 
     /*
         if (tempo_esecuzione <= tempo_massimo) {
