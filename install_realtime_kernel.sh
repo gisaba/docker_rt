@@ -259,9 +259,7 @@ EOF
 
 cleanup() {
 
-    apt-get remove -y --auto-remove --purge libx11-.*
-    apt clean
-    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+    apt-get -y clean
     rm linux66_rt.tar.gz
     rm -rf ./linux
     
