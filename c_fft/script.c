@@ -51,6 +51,11 @@ void verifica_tempo_esecuzione(void (*funzione)(), double tempo_massimo,int iter
     */
 }
 
+double r2()
+{
+    return (double)rand() / (double)RAND_MAX ;
+}
+
 void fft_calculation() {
     int total_samples = SAMPLE_RATE * DURATION;  // Numero totale di campioni
     float sample_time;                          // Tempo per ogni campione
@@ -66,9 +71,9 @@ void fft_calculation() {
 
     for (int n = 0; n < total_samples; n++) {
         sample_time = (float)n / SAMPLE_RATE;                      // Calcolo del tempo per ogni campione
-        in[n][0] = AMPLITUDE * sin(2 * M_PI * FREQ * sample_time); // Genera il valore della sinusoide Parte reale del segnale
-        in[n][0] = in[n][0] + AMPLITUDE/10  * sin(2 * M_PI * FREQ * 2 * sample_time);
-        in[n][0] = in[n][0] + AMPLITUDE/100 * sin(2 * M_PI * FREQ * 3 * sample_time);
+        in[n][0] = AMPLITUDE * r2() * sin(2 * M_PI * FREQ * sample_time); // Genera il valore della sinusoide Parte reale del segnale
+        in[n][0] = in[n][0] + AMPLITUDE/10  * r2() * sin(2 * M_PI * FREQ * 2 * sample_time);
+        in[n][0] = in[n][0] + AMPLITUDE/100 * r2() * sin(2 * M_PI * FREQ * 3 * sample_time);
         in[n][1] = 0.0;                                            // Parte immaginaria (0 per un segnale reale)
        
        //printf("Campione %d: t = %.4f s, Valore = %.4f\n", n, sample_time, in[n][0]);
@@ -97,6 +102,8 @@ void fft_calculation() {
 
 int main() {
     double tempo_massimo_ms = 10.0;  // Tempo massimo consentito in millisecondi
+
+    srand(time(NULL));   // Initialization, should only be called once.
 
     printf("rownumber,timestep,periodo\n");
     
