@@ -104,7 +104,8 @@ update_os() {
 
 install_rt_kernel() {
 
-    
+    readonly KERNEL_SETUP_DIR=$(pwd)
+
     tar xzf linux66_rt.tar.gz 
 
     cd linux
@@ -260,6 +261,7 @@ EOF
 cleanup() {
 
     apt-get -y clean
+    cd "$KERNEL_SETUP_DIR"
     rm linux66_rt.tar.gz
     rm -rf ./linux
     
