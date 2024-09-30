@@ -5,15 +5,17 @@ clc;
 
 t_deadline = 1;
 
-test = 'lpo';
-%test = 'fft';
+%test = 'lpo';
+test = 'fft';
 profile = 'real-time';
 %profile = 'balanced';
 %linguaggio = 'python';
-linguaggio = 'csharp';
+%linguaggio = 'csharp
+linguaggio = 'c';
 
 %so = 'linux';
-so = 'macos';
+%so = 'macos';
+so = 'rasbian';
 
 path_table_misure = ['./misure/' so '/'];
 
@@ -56,7 +58,8 @@ stdOverRun = [];
     %pd = fitdist(Timestep,'Weibull');
     %pd = fitdist(Timestep,'Normal')
     
-    x_pdf = 0:0.01:max(Timestep);
+    step = 0.001;
+    x_pdf = 0:step:max(Timestep);
     y = pdf(pd,x_pdf);
 
     mediaTimestep = [mediaTimestep;  mean(pd);];
