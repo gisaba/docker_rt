@@ -146,7 +146,6 @@ disable_unnecessary_services() {
     systemctl disable cups
     systemctl disable ModemManage
     systemctl disable triggerhappy
-    systemctl disable systemd-timesyncd
     systemctl disable wpa_supplicant
 }
 
