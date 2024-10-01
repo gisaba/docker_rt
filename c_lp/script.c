@@ -23,6 +23,7 @@ void minimize_linear_function(int num_variables, int num_constraints,
                               double constraint_constants[], 
                               double min_coeff, double max_coeff) {
     // Inizializza l'ambiente GLPK
+    glp_term_out(GLP_OFF);
     glp_prob *lp;
     lp = glp_create_prob();
     glp_set_prob_name(lp, "Linear Programming Problem");
@@ -69,10 +70,12 @@ void minimize_linear_function(int num_variables, int num_constraints,
     glp_simplex(lp, NULL);
 
     // Stampa i risultati
+    /*
     printf("Valore minimo della funzione obiettivo: %g\n", glp_get_obj_val(lp));
     for (int i = 0; i < num_variables; i++) {
         printf("Variabile x%d = %g\n", i + 1, glp_get_col_prim(lp, i + 1));
     }
+    */
 
     // Libera la memoria
     glp_delete_prob(lp);
@@ -94,7 +97,7 @@ void funzione_da_testare() {
 }
 
 
-void verifica_tempo_esecuzione(void (*funzione)(), double tempo_massimo) {
+void verifica_tempo_esecuzione(void (*funzione)(), double tempo_massimo,int iterazione) {
     set_realtime_priority();
 
     struct timespec inizio, fine;
@@ -107,20 +110,34 @@ void verifica_tempo_esecuzione(void (*funzione)(), double tempo_massimo) {
     double tempo_esecuzione = (fine.tv_sec - inizio.tv_sec) * 1000.0 + 
                               (fine.tv_nsec - inizio.tv_nsec) / 1000000.0;  // Millisecondi
 
+    //printf("Tempo di esecuzione: %.2f ms\n", tempo_esecuzione);
+    
+    double wait = (2-tempo_esecuzione)*1000;
+    //printf("wait : %.2f us\n", wait);
+    
+    usleep(wait);
+    
+    double time_step = (wait/1000) + tempo_esecuzione;
+    //printf("time_step : %.2f ms\n", time_step);
+    
+    printf("%.i,%.2f,%.2f\n", iterazione,tempo_esecuzione,time_step);
+
+    /*
     printf("Tempo di esecuzione: %.2f ms\n", tempo_esecuzione);
     if (tempo_esecuzione <= tempo_massimo) {
         printf("\033[92mLa funzione è stata eseguita entro il limite di %.2f ms\033[0m\n", tempo_massimo);
     } else {
         printf("\033[91mLa funzione ha superato il limite di %.2f ms\033[0m\n", tempo_massimo);
     }
+    */
 }
 
 int main() {
     double tempo_massimo_ms = 10.0;  // Tempo massimo consentito in millisecondi
     
-    for (int i = 1; i <= 20; i++) {
-        printf("Iterazione %d\n", i);
-        verifica_tempo_esecuzione(funzione_da_testare, tempo_massimo_ms);
+    for (int i = 1; i <= 100000; i++) {
+        //printf("Iterazione %d\n", i);
+        verifica_tempo_esecuzione(funzione_da_testare, tempo_massimo_ms,i);
     }
 
     return 0;

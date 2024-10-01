@@ -1,8 +1,3 @@
- Network docker_rt_default  Creating
- Network docker_rt_default  Created
- Container realtime_docker_c_fft  Creating
- Container realtime_docker_c_fft  Created
-Attaching to realtime_docker_c_fft
 rownumber,timestep,periodo
 1,0.39,2.00
 2,0.19,2.00
@@ -100004,4 +99999,5 @@ rownumber,timestep,periodo
 99998,0.16,2.00
 99999,0.18,2.00
 100000,0.18,2.00
-[Krealtime_docker_c_fft exited with code 0
+
+[Krealtime_docker_c_fft exited with code 0
