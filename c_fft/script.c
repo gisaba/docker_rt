@@ -39,8 +39,12 @@ void verifica_tempo_esecuzione(void (*funzione)(), double tempo_massimo,int iter
                               (fine.tv_nsec - inizio.tv_nsec) / 1000000.0;  // Millisecondi
 
     //printf("Tempo di esecuzione: %.2f ms\n", tempo_esecuzione);
-
-    printf("%.i,%.2f,2\n", iterazione,tempo_esecuzione);
+    double wait = (2-tempo_esecuzione)*1000;
+    //printf("wait : %.2f us\n", wait);
+    usleep(wait);
+    double time_step = (wait/1000) + tempo_esecuzione;
+    //printf("time_step : %.2f ms\n", time_step);
+    printf("%.i,%.2f,%.2f\n", iterazione,tempo_esecuzione,time_step);
 
     /*
         if (tempo_esecuzione <= tempo_massimo) {
@@ -49,6 +53,11 @@ void verifica_tempo_esecuzione(void (*funzione)(), double tempo_massimo,int iter
             printf("\033[91mLa funzione ha superato il limite di %.2f ms\033[0m\n", tempo_massimo);
         }
     */
+}
+
+double r2()
+{
+    return (double)rand() / (double)RAND_MAX ;
 }
 
 void fft_calculation() {
@@ -65,11 +74,11 @@ void fft_calculation() {
     fftw_complex in[N], out[N];
 
     for (int n = 0; n < total_samples; n++) {
-        sample_time = (float)n / SAMPLE_RATE;                      // Calcolo del tempo per ogni campione
-        in[n][0] = AMPLITUDE * sin(2 * M_PI * FREQ * sample_time); // Genera il valore della sinusoide Parte reale del segnale
-        in[n][0] = in[n][0] + AMPLITUDE/10  * sin(2 * M_PI * FREQ * 2 * sample_time);
-        in[n][0] = in[n][0] + AMPLITUDE/100 * sin(2 * M_PI * FREQ * 3 * sample_time);
-        in[n][1] = 0.0;                                            // Parte immaginaria (0 per un segnale reale)
+        sample_time = (float)n / SAMPLE_RATE;                                               // Calcolo del tempo per ogni campione
+        in[n][0] = AMPLITUDE * r2() * sin(2 * M_PI * FREQ * sample_time);                   // Genera il valore della sinusoide Parte reale del segnale
+        in[n][0] = in[n][0] + AMPLITUDE/10  * r2() * sin(2 * M_PI * FREQ * 2 * sample_time);
+        in[n][0] = in[n][0] + AMPLITUDE/100 * r2() * sin(2 * M_PI * FREQ * 3 * sample_time);
+        in[n][1] = 0.0;                                                                     // Parte immaginaria (0 per un segnale reale)
        
        //printf("Campione %d: t = %.4f s, Valore = %.4f\n", n, sample_time, in[n][0]);
     }
@@ -97,6 +106,8 @@ void fft_calculation() {
 
 int main() {
     double tempo_massimo_ms = 10.0;  // Tempo massimo consentito in millisecondi
+
+    srand(time(NULL));   // Initialization, should only be called once.
 
     printf("rownumber,timestep,periodo\n");
     
