@@ -74,11 +74,11 @@ void fft_calculation() {
     fftw_complex in[N], out[N];
 
     for (int n = 0; n < total_samples; n++) {
-        sample_time = (float)n / SAMPLE_RATE;                      // Calcolo del tempo per ogni campione
-        in[n][0] = AMPLITUDE * r2() * sin(2 * M_PI * FREQ * sample_time); // Genera il valore della sinusoide Parte reale del segnale
+        sample_time = (float)n / SAMPLE_RATE;                                               // Calcolo del tempo per ogni campione
+        in[n][0] = AMPLITUDE * r2() * sin(2 * M_PI * FREQ * sample_time);                   // Genera il valore della sinusoide Parte reale del segnale
         in[n][0] = in[n][0] + AMPLITUDE/10  * r2() * sin(2 * M_PI * FREQ * 2 * sample_time);
         in[n][0] = in[n][0] + AMPLITUDE/100 * r2() * sin(2 * M_PI * FREQ * 3 * sample_time);
-        in[n][1] = 0.0;                                            // Parte immaginaria (0 per un segnale reale)
+        in[n][1] = 0.0;                                                                     // Parte immaginaria (0 per un segnale reale)
        
        //printf("Campione %d: t = %.4f s, Valore = %.4f\n", n, sample_time, in[n][0]);
     }
