@@ -99,7 +99,7 @@ update_os() {
     apt-get update
     dpkg --configure -a
     apt-get upgrade -y
-    apt-get install -y git wget zip unzip fdisk curl xz-utils bash vim raspi-utils
+    apt-get install -y git wget zip unzip fdisk curl xz-utils bash vim raspi-utils cpufrequtils
 }
 
 install_rt_kernel() {
@@ -146,7 +146,7 @@ disable_unnecessary_services() {
     systemctl disable cups
     systemctl disable ModemManage
     systemctl disable triggerhappy
-    systemctl disable wpa_supplicant
+    # systemctl disable wpa_supplicant
 }
 
 # Funzione per installare Docker
@@ -189,6 +189,15 @@ tune_system_for_realtime() {
 @realtime hard memlock 102400
 EOF
 
+
+    echo "force_turbo=1" >> /boot/firmware/config.txt
+    echo "arm_freq=1500" >> /boot/firmware/config.txt
+    echo "arm_freq_min=1500" >> /boot/firmware/config.txt
+
+    sed -i 's/rootwait/rootwait rcu_nocb_poll rcu_nocbs=2,3 nohz=on nohz_full=2,3 kthread_cpus=0,1 irqaffinity=0,1 isolcpus=managed_irq,domain,2,3/' /boot/firmware/cmdline.txt
+    echo 'GOVERNOR="performance"' | sudo tee /etc/default/cpufrequtils
+    systemctl disable ondemand
+    systemctl enable cpufrequtils
 }
 
 enable_ethernet_over_usbc() {

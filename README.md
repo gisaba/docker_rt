@@ -51,3 +51,19 @@ Once your cyclitest_image is built, you can run:
 ```
 docker run --rm --privileged cyclitest_image -m -Sp99 -i500 -h200 --duration=2m -q
 ``` 
+
+## RUN DOCKER CONTAINER ON RT DEDICATED CORES
+
+```bash
+# Build a test image, like c_fft
+docker build ./c_fft -t fft_c
+
+# Run code with realtime priority 99 and nice 0 on dedicated cores
+docker run \
+  --cpuset-cpus="2-3" \
+  --ulimit rtprio=99 \
+  --cap-add=sys_nice \
+  --security-opt seccomp=unconfined \
+  fft_c chrt -f 99 ./fft_prog
+```
+
