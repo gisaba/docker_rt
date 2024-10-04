@@ -62,6 +62,7 @@ RUN ./scripts/config --disable CONFIG_DEBUG_KERNEL
 RUN ./scripts/config --disable CONFIG_DEBUG_INFO
 RUN ./scripts/config --disable CONFIG_DEBUG_FS
 RUN ./scripts/config --enable CONFIG_GENERIC_IRQ_EFFECTIVE_AFF_MASK
+RUN ./scripts/config --enable CONFIG_RT_GROUP_SCHED
 
 # Abilitazione dei cgroups
 RUN ./scripts/config --enable CONFIG_CGROUPS

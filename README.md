@@ -37,6 +37,13 @@ The script will:
 
 **PLEASE NOTE** that this setup will disable WiFi on your Rasperry device so, if you need to connect to the internet, you will need to connect it via ethernet.
 
+### Building Kernel on your own device
+Clone this repo and run
+```bash
+docker build ./raspbian_rt -t rt_kernel
+docker run -v ./build:/data rt_kernel
+``` 
+
 ## RUNNING CYCLITEST ON YOUR DEVICE
 
 There's a docker image you can build from `./cyclictest` folder:
