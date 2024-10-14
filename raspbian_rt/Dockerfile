@@ -39,6 +39,7 @@ RUN echo ${RASPIOS} ${DEFCONFIG} ${KERNEL} ${CROSS_COMPILE} ${ARCH}
 
 RUN make ${DEFCONFIG}
 RUN ./scripts/config --enable CONFIG_PREEMPT_RT
+RUN ./scripts/config --enable CONFIG_PREEMPT_RT_FULL
 RUN ./scripts/config --disable CONFIG_PREEMPT_NONE
 RUN ./scripts/config --disable CONFIG_PREEMPT_VOLUNTARY
 RUN ./scripts/config --enable CONFIG_PREEMPT
@@ -52,6 +53,7 @@ RUN ./scripts/config --set-val CONFIG_NO_HZ_FULL_ALL n
 RUN ./scripts/config --enable CONFIG_CPU_ISOLATION
 RUN ./scripts/config --enable CONFIG_RCU_NOCB_CPU
 RUN ./scripts/config --enable CONFIG_IRQ_FORCED_THREADING
+RUN ./scripts/config --enable CONFIG_IRQ_TIME_ACCOUNTING
 RUN ./scripts/config --enable CONFIG_SCHED_AUTOGROUP
 RUN ./scripts/config --disable CONFIG_FAIR_GROUP_SCHED
 RUN ./scripts/config --disable CONFIG_HZ_PERIODIC
