@@ -40,6 +40,8 @@ RUN echo ${RASPIOS} ${DEFCONFIG} ${KERNEL} ${CROSS_COMPILE} ${ARCH}
 RUN make ${DEFCONFIG}
 RUN ./scripts/config --enable CONFIG_PREEMPT_RT
 RUN ./scripts/config --enable CONFIG_PREEMPT_RT_FULL
+RUN ./scripts/config --enable CONFIG_HZ_1000
+RUN ./scripts/config --disable CONFIG_HZ_250
 RUN ./scripts/config --disable CONFIG_PREEMPT_NONE
 RUN ./scripts/config --disable CONFIG_PREEMPT_VOLUNTARY
 RUN ./scripts/config --enable CONFIG_PREEMPT
