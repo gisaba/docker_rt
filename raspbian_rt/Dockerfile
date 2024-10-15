@@ -68,6 +68,10 @@ RUN ./scripts/config --disable CONFIG_DEBUG_FS
 RUN ./scripts/config --enable CONFIG_GENERIC_IRQ_EFFECTIVE_AFF_MASK
 RUN ./scripts/config --enable CONFIG_RT_GROUP_SCHED
 
+# Enable memory direct access
+RUN ./scripts/config --disable CONFIG_STRICT_DEVMEM 
+
+
 # Abilitazione dei cgroups
 RUN ./scripts/config --enable CONFIG_CGROUPS
 RUN ./scripts/config --enable CONFIG_CGROUP_DEVICE

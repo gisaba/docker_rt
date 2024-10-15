@@ -13,10 +13,6 @@ void set_realtime_priority() {
     }
 }
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <time.h>
-#include <glpk.h>  // Libreria per la programmazione lineare
 
 void minimize_linear_function(int num_variables, int num_constraints, 
                               double constraint_coefficients[][num_variables], 
