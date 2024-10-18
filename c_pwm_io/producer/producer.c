@@ -91,6 +91,7 @@ void generate_signal() {
             next.tv_sec++;
         }
         clock_nanosleep(CLOCK_MONOTONIC, TIMER_ABSTIME, &next, NULL);
+        printf("producing");
     }
 }
 

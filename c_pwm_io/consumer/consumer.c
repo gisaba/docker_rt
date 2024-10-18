@@ -7,6 +7,12 @@
 #include <time.h>
 #include <stdint.h> // Add this for intptr_t
 
+
+#include <math.h>
+#include <sched.h>
+
+
+
 #define BCM2711_PERI_BASE 0xFE000000
 #define GPIO_BASE (BCM2711_PERI_BASE + 0x200000)
 #define PAGE_SIZE 4096
@@ -66,10 +72,18 @@ void process_signal(unsigned int input) {
 }
 
 
+void set_realtime_priority() {
+    struct sched_param param;
+    param.sched_priority = 99;
+    if (sched_setscheduler(0, SCHED_FIFO, &param) != 0) {
+        perror("Errore: È necessario eseguire il programma con privilegi di root per impostare la priorità real-time.");
+    }
+}
+
 int main() {
     setup_io();
     setup_gpio();
-
+    set_realtime_priority();
     struct timespec start, end;
     long long int elapsed_ns;
     unsigned int sample_count = 0;
