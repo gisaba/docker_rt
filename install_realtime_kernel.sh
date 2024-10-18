@@ -1,4 +1,10 @@
-#!/bin/bash
+#!/bin/sh
+
+LINUX_KERNEL_VERSION=6.6
+LINUX_KERNEL_RT_PATCH=patch-6.6.30-rt30
+LINUX_KERNEL_BRANCH=stable_20240529
+HW_SPECIFIC_CONFIG=bcm2711_defconfig # Raspberry Pi 4B
+
 clear
 
 echo "
@@ -11,89 +17,93 @@ echo "
                                                       on Raspberry Pi
 "
 
+# Handle signals
+cleanup_int () {
+    echo ""
+    echo "Interruzione richiesta. Terminazione del processo."
+    if [ -n "$spinner_pid" ]; then
+        kill "$spinner_pid" 2>/dev/null  # Uccidi il processo dello spinner
+    fi
+    if [ -n "$cmd_pid" ]; then
+        kill "$cmd_pid" 2>/dev/null  # Uccidi il processo in background
+    fi
+    tput cnorm  # Ripristina il cursore
+    tput rc
+	exit 1
+	
+}
 
+init() {
 
-# Funzione per ottenere l'URL della release più recente
-get_latest_release_url() {
-    echo "Fetching latest release URL from GitHub..."
-
-    # Ottieni l'URL della release tramite l'API GitHub
-    RELEASE_URL=$(curl -s https://api.github.com/repos/antoniopicone/docker_rt/releases/latest | grep "tag_name" | cut -d '"' -f 4)
-
-    if [[ -z "$RELEASE_URL" ]]; then
-        echo "Error: Could not fetch release URL."
+    if [ "$(id -u)" -ne 0 ]; then
+        echo "This script must be executed with sudo, exiting :("
         exit 1
     fi
 
-    echo "Latest release URL: $RELEASE_URL"
+    check_rpi_version
+
 }
+
 
 check_rpi_version() {
-
+    
     MODEL=$(cat /proc/cpuinfo | grep "Model" | awk '{print $5}')
-
-}
-
-download_linux_rt() {
-    
-    # Ottenere l'URL della release più recente
-    get_latest_release_url
-    check_rpi_version
-    
-    # Controlla se il modello è Raspberry Pi 4 o 5 e scarica il file corretto
-    if [ "$MODEL" = "4" ]; then
-        echo "Raspberry Pi 4 detected. Downloading file for Raspberry Pi 4..."
-        wget -O linux66_rt.tar.gz https://github.com/antoniopicone/docker_rt/releases/download/$RELEASE_URL/linux66_rt_bcm2711_defconfig.tar.gz
-    elif [ "$MODEL" = "5" ]; then
-        echo "Raspberry Pi 5 detected. Downloading file for Raspberry Pi 5..."
-        wget -O linux66_rt.tar.gz https://github.com/antoniopicone/docker_rt/releases/download/$RELEASE_URL/linux66_rt_bcm2712_defconfig.tar.gz
+    if [ "$MODEL" = "4" ] || [ "$MODEL" = "5" ]; then
+        echo  "Raspberry Pi $MODEL detected.\n"
     else
-        echo "Unsupported Raspberry Pi model: $MODEL"
+        echo "Unsupported device, exiting :(\n"
         exit 1
     fi
 
-
 }
 
 
-# Spinner function
-spinner() {
-    local pid=$1
-    local delay=0.1
-    local spinstr='|/-\\'
+
+
+
+
+spinner () {
+  local pid=$1
+  local delay=0.1
+  local symbols="⠋ ⠙ ⠹ ⠸ ⠼ ⠴ ⠦ ⠧ ⠇ ⠏"  
+  local colornum=3 # 3=yellow
+  local reset=$(tput sgr0)
+  local description=$2
+  
+  while kill -0 $pid 2>/dev/null; do
     tput civis
-    while [ "$(ps a | awk '{print $1}' | grep $pid)" ]; do
-        local temp=${spinstr#?}
-        printf " [%c]  " "$spinstr"
-        local spinstr=$temp${spinstr%"$temp"}
-        sleep $delay
-        printf "\\b\\b\\b\\b\\b\\b"
+    for c in $symbols; do
+      color=$(tput setaf ${colornum})
+      tput sc
+      env printf "${color}${c}${reset} ${description}"
+      tput rc
+      env sleep .1
+      if ! kill -0 "$pid" 2>/dev/null; then
+        break
+      fi  
     done
-    printf "    \\b\\b\\b\\b"
-    tput cnorm
+    tput el
+  done
+  tput cnorm
+  tput rc
+  return 0
 }
 
-# Function to run commands and show spinner
 run_with_spinner() {
-    local func="$1"
+    # This tries to catch any exit, to reset cursor
+    trap cleanup_int INT QUIT TERM
+    local func=$1
     local description="$2"
-
-    printf "• %s... " "$description"
-    $func > /dev/null 2>&1 &   # Run the function in the background
-    pid=$!
-    spinner $pid
+    $func > /dev/null 2>&1 &
+    local pid=$!
+    spinner $pid "$description"
     wait $pid
     if [ $? -eq 0 ]; then
-        printf "\\e[32m✔\\e[0m\\n"  # Green checkmark after success
+        printf "\033[32m✔\033[0m %s\n" "$description"
     else
-        printf "\\e[31m✖\\e[0m\\n"  # Red cross after failure
+        printf "\033[31m✖\033[0m %s\n" "$description"
     fi
 }
-
-LINUX_KERNEL_VERSION=6.6
-LINUX_KERNEL_RT_PATCH=patch-6.6.30-rt30
-LINUX_KERNEL_BRANCH=stable_20240529
-HW_SPECIFIC_CONFIG=bcm2711_defconfig # Raspberry Pi 4B
 
 update_os() {
     apt-get update
@@ -102,29 +112,6 @@ update_os() {
     apt-get install -y git wget zip unzip fdisk curl xz-utils bash vim raspi-utils cpufrequtils
 }
 
-install_rt_kernel() {
-
-    readonly KERNEL_SETUP_DIR=$(pwd)
-
-    tar xzf linux66_rt.tar.gz 
-
-    cd linux
-
-    make -j$(nproc) modules_install
-
-    cp ./arch/arm64/boot/Image /boot/firmware/Image66_rt.img
-    cp ./arch/arm64/boot/dts/broadcom/*.dtb /boot/firmware/
-    cp ./arch/arm64/boot/dts/overlays/*.dtb* /boot/firmware/overlays/
-    cp ./arch/arm64/boot/dts/overlays/README /boot/firmware/overlays/
-    echo "kernel=Image66_rt.img" >> /boot/firmware/config.txt
-
-    # Create cpu device for realtime containers
-    mkdir -p /dev/cpu
-    mknod /dev/cpu/0 b 5 1
-
-    # Set C0 to avoid idle on CPUs
-    sed -i 's/rootwait/rootwait processor.max_cstate=0 intel_idle.max_cstate=0 idle=poll/' /boot/firmware/cmdline.txt
-}
 
 
 # Disable gui
@@ -135,6 +122,7 @@ disable_gui() {
 # Disable power management
 disable_power_mgmt() {
     systemctl mask sleep.target suspend.target hibernate.target hybrid-sleep.target
+    echo "IdleAction=ignore" >> /etc/systemd/logind.conf
 
 }
 
@@ -176,29 +164,6 @@ install_docker() {
     usermod -aG docker $SUDO_USER
 }
 
-tune_system_for_realtime() {
-
-    addgroup realtime
-    usermod -a -G realtime $SUDO_USER
-    tee /etc/security/limits.conf > /dev/null << EOF 
-@realtime soft rtprio 99
-@realtime soft priority 99
-@realtime soft memlock 102400
-@realtime hard rtprio 99
-@realtime hard priority 99
-@realtime hard memlock 102400
-EOF
-
-
-    echo "force_turbo=1" >> /boot/firmware/config.txt
-    echo "arm_freq=1500" >> /boot/firmware/config.txt
-    echo "arm_freq_min=1500" >> /boot/firmware/config.txt
-
-    sed -i 's/rootwait/rootwait rcu_nocb_poll rcu_nocbs=2,3 nohz=on nohz_full=2,3 kthread_cpus=0,1 irqaffinity=0,1 isolcpus=managed_irq,domain,2,3/' /boot/firmware/cmdline.txt
-    echo 'GOVERNOR="performance"' | sudo tee /etc/default/cpufrequtils
-    systemctl disable ondemand
-    systemctl enable cpufrequtils
-}
 
 enable_ethernet_over_usbc() {
 
@@ -266,16 +231,7 @@ EOF
 
 }
 
-cleanup() {
 
-    apt-get -y clean
-    cd "$KERNEL_SETUP_DIR"
-    rm linux66_rt.tar.gz
-    rm -rf ./linux
-    
-}
-
-# Funzione per richiedere all'utente di premere un tasto per il riavvio
 request_reboot() {
     echo ""
     echo "All done."
@@ -283,15 +239,95 @@ request_reboot() {
     
 }
 
+cleanup() {
 
+    apt-get -y clean
+    
+}
+
+get_latest_release_url() {
+    echo "Fetching latest release URL from GitHub..."
+
+    # Ottieni la versione della release tramite l'API GitHub
+    RELEASE_VER=$(curl -s https://api.github.com/repos/antoniopicone/docker_rt/releases/latest | grep "tag_name" | cut -d '"' -f 4)
+
+    if [[ -z "$RELEASE_VER" ]]; then
+        echo "Error: Could not fetch release URL."
+        exit 1
+    fi
+
+    CONFIG_MODEL="bcm2711"
+    # Controlla se il modello è Raspberry Pi 4 o 5 e scarica il file corretto
+    if [ "$MODEL" = "5" ]; then
+        CONFIG_MODEL="bcm2712"  
+    fi
+
+    KERNEL_URL="https://github.com/antoniopicone/docker_rt/releases/download/$RELEASE_VER/linux66_rt_${CONFIG_MODEL}_defconfig.tar.gz"
+    
+}
+
+install_rt_kernel() {
+
+    get_latest_release_url
+    
+    wget -O linux66_rt.tar.gz $KERNEL_URL
+    
+    readonly KERNEL_SETUP_DIR=$(pwd)
+
+    tar xzf linux66_rt.tar.gz 
+
+    cd linux
+
+    make -j$(nproc) modules_install
+
+    cp ./arch/arm64/boot/Image /boot/firmware/Image66_rt_$RELEASE_VER.img
+    cp ./arch/arm64/boot/dts/broadcom/*.dtb /boot/firmware/
+    cp ./arch/arm64/boot/dts/overlays/*.dtb* /boot/firmware/overlays/
+    cp ./arch/arm64/boot/dts/overlays/README /boot/firmware/overlays/
+    echo "kernel=Image66_rt_$RELEASE_VER.img" >> /boot/firmware/config.txt
+ 
+}
+
+tune_system_for_realtime() {
+
+    # Create cpu device for realtime containers
+    mkdir -p /dev/cpu
+    mknod /dev/cpu/0 b 5 1
+
+    addgroup realtime
+    usermod -a -G realtime $SUDO_USER
+    tee /etc/security/limits.conf > /dev/null << EOF 
+@realtime soft rtprio 99
+@realtime soft priority 99
+@realtime soft memlock 102400
+@realtime hard rtprio 99
+@realtime hard priority 99
+@realtime hard memlock 102400
+EOF
+
+    echo "consoleblank=0" >> /boot/firmware/config.txt
+    echo "force_turbo=1" >> /boot/firmware/config.txt
+    echo "arm_freq=1500" >> /boot/firmware/config.txt
+    echo "arm_freq_min=1500" >> /boot/firmware/config.txt
+    sed -i '1s/^/isolcpus=2,3 nohz_full=2,3 rcu_nocbs=2,3 /' /boot/firmware/cmdline.txt
+
+    echo " processor.max_cstate=0 intel_idle.max_cstate=0 idle=poll rcu_nocb_poll nohz=on kthread_cpus=0,1 irqaffinity=0,1 iomem=relaxed" >> /boot/firmware/cmdline.txt
+    echo 'GOVERNOR="performance"' | sudo tee /etc/default/cpufrequtils
+    systemctl disable ondemand
+    systemctl enable cpufrequtils
+
+}
+
+
+init
 run_with_spinner update_os "Updating OS"
 run_with_spinner disable_unnecessary_services "Disabling unnecessary services"
 run_with_spinner disable_gui "Disabling GUI"
 run_with_spinner disable_power_mgmt "Disabling power management"
 run_with_spinner install_docker "Installing Docker"
-run_with_spinner download_linux_rt "Downloading pre-built Linux 6.6 Realtime kernel from repository"
-run_with_spinner install_rt_kernel "Installing RT kernel (will take some minutes)"
-run_with_spinner tune_system_for_realtime "Tuning system for realtime"
 run_with_spinner enable_ethernet_over_usbc "Enabling Ethernet over USB-C"
+run_with_spinner install_rt_kernel "Installing latest real time kernel (will take some minutes)"
+run_with_spinner tune_system_for_realtime "Tuning system for realtime"
 run_with_spinner cleanup "Cleaning up the system"
 request_reboot
+

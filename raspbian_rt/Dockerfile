@@ -38,73 +38,88 @@ ENV TARGET=arm64
 RUN echo ${RASPIOS} ${DEFCONFIG} ${KERNEL} ${CROSS_COMPILE} ${ARCH}
 
 RUN make ${DEFCONFIG}
-RUN ./scripts/config --enable CONFIG_PREEMPT_RT
-RUN ./scripts/config --enable CONFIG_PREEMPT_RT_FULL
-RUN ./scripts/config --enable CONFIG_HZ_1000
-RUN ./scripts/config --disable CONFIG_HZ_250
-RUN ./scripts/config --disable CONFIG_PREEMPT_NONE
-RUN ./scripts/config --disable CONFIG_PREEMPT_VOLUNTARY
-RUN ./scripts/config --enable CONFIG_PREEMPT
-RUN ./scripts/config --enable CONFIG_RCU_PREEMPT
-RUN ./scripts/config --enable CONFIG_RCU_BOOST
-RUN ./scripts/config --set-val CONFIG_RCU_BOOST_PRIO 99
-RUN ./scripts/config --set-val CONFIG_RCU_BOOST_DELAY 0
-RUN ./scripts/config --enable CONFIG_HIGH_RES_TIMERS
-RUN ./scripts/config --enable CONFIG_NO_HZ_FULL
-RUN ./scripts/config --set-val CONFIG_NO_HZ_FULL_ALL n
-RUN ./scripts/config --enable CONFIG_CPU_ISOLATION
-RUN ./scripts/config --enable CONFIG_RCU_NOCB_CPU
-RUN ./scripts/config --enable CONFIG_IRQ_FORCED_THREADING
-RUN ./scripts/config --enable CONFIG_IRQ_TIME_ACCOUNTING
-RUN ./scripts/config --enable CONFIG_SCHED_AUTOGROUP
-RUN ./scripts/config --disable CONFIG_FAIR_GROUP_SCHED
-RUN ./scripts/config --disable CONFIG_HZ_PERIODIC
-RUN ./scripts/config --disable CONFIG_NO_HZ_IDLE
-RUN ./scripts/config --set-val CONFIG_HZ 1000
-RUN ./scripts/config --disable CONFIG_HOTPLUG_CPU
-RUN ./scripts/config --disable CONFIG_DEBUG_KERNEL
-RUN ./scripts/config --disable CONFIG_DEBUG_INFO
-RUN ./scripts/config --disable CONFIG_DEBUG_FS
-RUN ./scripts/config --enable CONFIG_GENERIC_IRQ_EFFECTIVE_AFF_MASK
-RUN ./scripts/config --enable CONFIG_RT_GROUP_SCHED
 
+
+
+RUN ./scripts/config --disable CONFIG_VIRTUALIZATION
+RUN ./scripts/config --enable CONFIG_PERF_EVENTS
+RUN ./scripts/config --enable CONFIG_RTC_CLASS
+RUN ./scripts/config --enable CONFIG_PREEMPT_RT
+RUN ./scripts/config --disable CONFIG_RCU_EXPERT
+RUN ./scripts/config --enable CONFIG_RCU_BOOST
+RUN ./scripts/config --set-val CONFIG_RCU_BOOST_DELAY 500
+RUN ./scripts/config --enable CONFIG_NO_HZ_FULL
+RUN ./scripts/config --enable CONFIG_NO_HZ_IDLE
+RUN ./scripts/config --enable CONFIG_HZ_1000
 # Enable memory direct access
 RUN ./scripts/config --disable CONFIG_STRICT_DEVMEM 
 
 
-# Abilitazione dei cgroups
-RUN ./scripts/config --enable CONFIG_CGROUPS
-RUN ./scripts/config --enable CONFIG_CGROUP_DEVICE
-RUN ./scripts/config --enable CONFIG_CGROUP_FREEZER
-RUN ./scripts/config --enable CONFIG_CGROUP_SCHED
-RUN ./scripts/config --enable CONFIG_CPUSETS
-RUN ./scripts/config --enable CONFIG_MEMCG
-RUN ./scripts/config --enable CONFIG_BLK_CGROUP
-RUN ./scripts/config --enable CONFIG_CGROUP_PERF
-# Abilitazione delle namespaces
-RUN ./scripts/config --enable CONFIG_NAMESPACES
-RUN ./scripts/config --enable CONFIG_UTS_NS
-RUN ./scripts/config --enable CONFIG_IPC_NS
-RUN ./scripts/config --enable CONFIG_PID_NS
-RUN ./scripts/config --enable CONFIG_NET_NS
-# Supporto per Device Mapper
-RUN ./scripts/config --enable CONFIG_BLK_DEV_DM
-RUN ./scripts/config --enable CONFIG_DM_THIN_PROVISIONING
-# Abilitazione di OverlayFS
-RUN ./scripts/config --enable CONFIG_OVERLAY_FS
-# Driver di rete necessari
-RUN ./scripts/config --enable CONFIG_VETH
-RUN ./scripts/config --enable CONFIG_BRIDGE
-RUN ./scripts/config --enable CONFIG_NETFILTER_ADVANCED
-RUN ./scripts/config --enable CONFIG_NETFILTER_XTABLES
-RUN ./scripts/config --enable CONFIG_NETFILTER_XT_TARGET_REDIRECT
-RUN ./scripts/config --enable CONFIG_NETFILTER_XT_MATCH_ADDRTYPE
-RUN ./scripts/config --enable CONFIG_NETFILTER_XT_MATCH_CONNTRACK
-RUN ./scripts/config --enable CONFIG_NF_NAT
-RUN ./scripts/config --enable CONFIG_NF_NAT_IPV4
-RUN ./scripts/config --enable CONFIG_NF_NAT_IPV6
-RUN ./scripts/config --enable CONFIG_IP_NF_FILTER
-RUN ./scripts/config --enable CONFIG_IP_NF_TARGET_MASQUERADE
+# RUN ./scripts/config --enable CONFIG_PREEMPT_RT
+# RUN ./scripts/config --enable CONFIG_PREEMPT_RT_FULL
+# RUN ./scripts/config --enable CONFIG_HZ_1000
+# RUN ./scripts/config --disable CONFIG_HZ_250
+# RUN ./scripts/config --disable CONFIG_PREEMPT_NONE
+# RUN ./scripts/config --disable CONFIG_PREEMPT_VOLUNTARY
+# RUN ./scripts/config --enable CONFIG_PREEMPT
+# RUN ./scripts/config --enable CONFIG_RCU_PREEMPT
+# RUN ./scripts/config --enable CONFIG_RCU_BOOST
+# RUN ./scripts/config --set-val CONFIG_RCU_BOOST_PRIO 99
+# RUN ./scripts/config --set-val CONFIG_RCU_BOOST_DELAY 0
+# RUN ./scripts/config --enable CONFIG_HIGH_RES_TIMERS
+# RUN ./scripts/config --enable CONFIG_NO_HZ_FULL
+# RUN ./scripts/config --set-val CONFIG_NO_HZ_FULL_ALL n
+# RUN ./scripts/config --enable CONFIG_CPU_ISOLATION
+# RUN ./scripts/config --enable CONFIG_RCU_NOCB_CPU
+# RUN ./scripts/config --enable CONFIG_IRQ_FORCED_THREADING
+# RUN ./scripts/config --enable CONFIG_IRQ_TIME_ACCOUNTING
+# RUN ./scripts/config --enable CONFIG_SCHED_AUTOGROUP
+# RUN ./scripts/config --disable CONFIG_FAIR_GROUP_SCHED
+# RUN ./scripts/config --disable CONFIG_HZ_PERIODIC
+# RUN ./scripts/config --disable CONFIG_NO_HZ_IDLE
+# RUN ./scripts/config --set-val CONFIG_HZ 1000
+# RUN ./scripts/config --disable CONFIG_HOTPLUG_CPU
+# RUN ./scripts/config --disable CONFIG_DEBUG_KERNEL
+# RUN ./scripts/config --disable CONFIG_DEBUG_INFO
+# RUN ./scripts/config --disable CONFIG_DEBUG_FS
+# RUN ./scripts/config --enable CONFIG_GENERIC_IRQ_EFFECTIVE_AFF_MASK
+# RUN ./scripts/config --enable CONFIG_RT_GROUP_SCHED
+
+
+
+# # Abilitazione dei cgroups
+# RUN ./scripts/config --enable CONFIG_CGROUPS
+# RUN ./scripts/config --enable CONFIG_CGROUP_DEVICE
+# RUN ./scripts/config --enable CONFIG_CGROUP_FREEZER
+# RUN ./scripts/config --enable CONFIG_CGROUP_SCHED
+# RUN ./scripts/config --enable CONFIG_CPUSETS
+# RUN ./scripts/config --enable CONFIG_MEMCG
+# RUN ./scripts/config --enable CONFIG_BLK_CGROUP
+# RUN ./scripts/config --enable CONFIG_CGROUP_PERF
+# # Abilitazione delle namespaces
+# RUN ./scripts/config --enable CONFIG_NAMESPACES
+# RUN ./scripts/config --enable CONFIG_UTS_NS
+# RUN ./scripts/config --enable CONFIG_IPC_NS
+# RUN ./scripts/config --enable CONFIG_PID_NS
+# RUN ./scripts/config --enable CONFIG_NET_NS
+# # Supporto per Device Mapper
+# RUN ./scripts/config --enable CONFIG_BLK_DEV_DM
+# RUN ./scripts/config --enable CONFIG_DM_THIN_PROVISIONING
+# # Abilitazione di OverlayFS
+# RUN ./scripts/config --enable CONFIG_OVERLAY_FS
+# # Driver di rete necessari
+# RUN ./scripts/config --enable CONFIG_VETH
+# RUN ./scripts/config --enable CONFIG_BRIDGE
+# RUN ./scripts/config --enable CONFIG_NETFILTER_ADVANCED
+# RUN ./scripts/config --enable CONFIG_NETFILTER_XTABLES
+# RUN ./scripts/config --enable CONFIG_NETFILTER_XT_TARGET_REDIRECT
+# RUN ./scripts/config --enable CONFIG_NETFILTER_XT_MATCH_ADDRTYPE
+# RUN ./scripts/config --enable CONFIG_NETFILTER_XT_MATCH_CONNTRACK
+# RUN ./scripts/config --enable CONFIG_NF_NAT
+# RUN ./scripts/config --enable CONFIG_NF_NAT_IPV4
+# RUN ./scripts/config --enable CONFIG_NF_NAT_IPV6
+# RUN ./scripts/config --enable CONFIG_IP_NF_FILTER
+# RUN ./scripts/config --enable CONFIG_IP_NF_TARGET_MASQUERADE
 
 
 RUN make -j$(nproc) Image.gz modules dtbs
