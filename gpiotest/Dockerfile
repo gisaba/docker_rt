@@ -8,7 +8,8 @@ RUN apt-get update && apt-get install -y \
     python3-libgpiod \
     python3-numpy \
     python3-pulp \
-    python3-scipy
+    python3-scipy \
+    python3-pulp
 
 # Copia lo script Python nella directory di lavoro
 COPY gpiod-test.py .
