@@ -106,7 +106,7 @@ if __name__ == "__main__":
     LED_PIN = 17  # GPIO pin number where the LED is connected
 
     # Open GPIO chip
-    chip = gpiod.Chip('gpiochip4')
+    #chip = gpiod.Chip('gpiochip4')
     chip = gpiod.Chip('/dev/gpiochip4')
 
     # Get the GPIO line for the LED
