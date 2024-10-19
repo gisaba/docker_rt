@@ -8,17 +8,6 @@ RUN apt-get update && apt-get install -y \
 # Imposta la directory di lavoro all'interno del container
 WORKDIR /usr/src/app
 
-RUN addgroup --group rtgroup --gid 2000 
-
-RUN adduser --disabled-password --home /usr/src/app --gecos '' \    
-    --uid 1000 \
-    --gid 2000 \
-    "rtuser" 
-
-RUN chown -R rtuser:rtgroup  /usr/src/app /tmp
-
-USER rtuser:rtgroup
-
 # Copia il file requirements.txt nella directory di lavoro
 COPY requirements.txt .
 
