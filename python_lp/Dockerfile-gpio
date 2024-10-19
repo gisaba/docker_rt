@@ -1,6 +1,11 @@
 # Usa un'immagine base di Python 3
 FROM python:3.9-slim
 
+# Aggiorna il sistema e installa le dipendenze
+RUN apt-get update && apt-get install -y \
+    libgpiod-dev \
+    python3-libgpiod
+
 # Imposta la directory di lavoro all'interno del container
 WORKDIR /usr/src/app
 
