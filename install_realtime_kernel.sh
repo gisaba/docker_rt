@@ -100,7 +100,7 @@ update_os() {
     apt-get update
     dpkg --configure -a
     apt-get upgrade -y
-    apt-get install -y git wget zip unzip fdisk curl xz-utils bash vim raspi-utils cpufrequtils
+    apt-get install -y git wget zip unzip fdisk curl xz-utils bash vim raspi-utils cpufrequtils lm-sensors
 }
 
 
