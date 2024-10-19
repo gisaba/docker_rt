@@ -119,6 +119,6 @@ if __name__ == "__main__":
         led_line.set_value(0)
        # Release the GPIO line and clean up resources on program exit
 
-    #led_line.release()
+    led_line.release()
 
-    #chip.close()
+    chip.close()
