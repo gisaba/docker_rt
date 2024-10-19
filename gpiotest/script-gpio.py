@@ -83,8 +83,8 @@ def funzione_da_testare():
     # time.sleep(0.1)
 
 def verifica_tempo_esecuzione(funzione, tempo_massimo):
-    #if not set_realtime_priority():
-    #    return
+    if not set_realtime_priority():
+        return
 
     inizio = time_module.perf_counter()
     funzione()
