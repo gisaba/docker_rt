@@ -6,6 +6,8 @@ RUN apt-get update && apt-get install -y \
     libgpiod-dev \
     python3-libgpiod
 
+RUN ls -ltr /dev/gpio*
+
 # Imposta la directory di lavoro all'interno del container
 WORKDIR /usr/src/app
 
@@ -15,7 +17,7 @@ COPY requirements.txt .
 # Installa le dipendenze presenti nel file requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 
-RUN addgroup --group rtgroup --gid 2000 
+RUN addgroup --group rtgroup --gid 2000
 
 RUN adduser --disabled-password --home /usr/src/app --gecos '' \    
     --uid 1000 \
