@@ -1,6 +1,7 @@
-FROM debian:latest
+#FROM debian:latest
+FROM python:3.11-slim
 
-RUN apt update && apt install -y \ 
+RUN apt-get update && apt-get install -y \ 
     python3 \ 
     python3-libgpiod \
     pip
