@@ -6,11 +6,7 @@ WORKDIR /usr/src/app
 RUN apt-get update && apt-get install -y \
     pip \
     python3 \ 
-    python3-libgpiod \
-    python3-numpy \
-    python3-pulp \
-    python3-scipy \
-    python3-pulp
+    python3-libgpiod 
 
 # Copia il file requirements.txt nella directory di lavoro
 COPY requirements.txt .
