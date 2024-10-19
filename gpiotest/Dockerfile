@@ -3,7 +3,9 @@ FROM debian:latest
 RUN apt-get update && apt-get install -y \ 
     python3 \ 
     python3-libgpiod \
-    python3-numpy
+    python3-numpy \
+    python3-pulp \
+    python3-scipy
 
 # Imposta la directory di lavoro all'interno del container
 WORKDIR /usr/src/app
