@@ -12,7 +12,7 @@ WORKDIR /usr/src/app
 COPY requirements.txt .
 
 # Installa le dipendenze presenti nel file requirements.txt
-RUN pip install --no-cache-dir -r ./requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
 # Copia lo script Python nella directory di lavoro
 COPY gpiod-test.py .
