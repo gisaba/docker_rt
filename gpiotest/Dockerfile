@@ -1,5 +1,4 @@
-#FROM debian:latest
-FROM alpine:latest
+FROM debian:latest
 
 # Imposta la directory di lavoro all'interno del container
 WORKDIR /usr/src/app
