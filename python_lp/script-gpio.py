@@ -107,6 +107,7 @@ if __name__ == "__main__":
 
     # Open GPIO chip
     chip = gpiod.Chip('gpiochip4')
+    chip = gpiod.Chip('/dev/gpiochip4')
 
     # Get the GPIO line for the LED
     led_line = chip.get_line(LED_PIN)
