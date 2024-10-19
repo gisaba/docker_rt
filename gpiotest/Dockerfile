@@ -1,6 +1,9 @@
 FROM debian:latest
 
-RUN apt update && apt install -y python3 python3-libgpiod
+RUN apt update && apt install -y \ 
+    python3 \ 
+    python3-libgpiod \
+    pip
 
 # Imposta la directory di lavoro all'interno del container
 WORKDIR /usr/src/app
@@ -9,7 +12,7 @@ WORKDIR /usr/src/app
 COPY requirements.txt .
 
 # Installa le dipendenze presenti nel file requirements.txt
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir -r ./requirements.txt
 
 # Copia lo script Python nella directory di lavoro
 COPY gpiod-test.py .
