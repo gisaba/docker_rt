@@ -5,7 +5,7 @@ from scipy.optimize import linprog
 import random
 from pulp import *
 import gpiod
-
+from time import sleep
 
 def minimize_linear_function(num_variables, constraint_coefficients, constraint_constants, min_coeff=1, max_coeff=10):
     """
@@ -98,7 +98,7 @@ def verifica_tempo_esecuzione(funzione, tempo_massimo):
     else:
         print(f"\033[91mOverRun: La funzione ha superato il limite di {tempo_massimo} ms con {tempo_esecuzione} ms\033[0m")
 
-
+    sleep(0.01-tempo_esecuzione/1000)
 
 if __name__ == "__main__":
     tempo_massimo_ms = 10  # Tempo massimo consentito in millisecondi
@@ -111,12 +111,10 @@ if __name__ == "__main__":
 
     i = 0
     for i in range(1,100000):
-        #led_line.set_value(1)  # Turn on the LED
-        led_line.set_value(1)
         i+=1
+        led_line.set_value(1) # Turn on the LED
         verifica_tempo_esecuzione(funzione_da_testare, tempo_massimo_ms)
-        #led_line.set_value(0)  # Turn off the LED
-        led_line.set_value(0)
+        led_line.set_value(0) # Turn off the LED
        # Release the GPIO line and clean up resources on program exit
 
     led_line.release()
