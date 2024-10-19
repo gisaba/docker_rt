@@ -10,17 +10,6 @@ RUN apt-get update && apt-get install -y \
     python3-pulp \
     python3-scipy
 
-RUN addgroup --group rtgroup --gid 2000 
-
-RUN adduser --disabled-password --home /usr/src/app --gecos '' \    
-    --uid 1000 \
-    --gid 2000 \
-    "rtuser" 
-
-RUN chown -R rtuser:rtgroup  /usr/src/app /tmp
-
-USER rtuser:rtgroup
-
 # Copia lo script Python nella directory di lavoro
 COPY gpiod-test.py .
 
