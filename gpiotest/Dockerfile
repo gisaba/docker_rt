@@ -16,5 +16,5 @@ COPY gpiod-test.py .
 COPY script-gpio.py .
 
 # Comando di default per eseguire lo script Python
-#CMD ["python3", "gpiod-test.py"]    
-CMD ["python3", "script-gpio.py"]    
+CMD ["python3", "gpiod-test.py"]    
+#CMD ["python3", "script-gpio.py"]    
