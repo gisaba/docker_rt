@@ -1,10 +1,5 @@
 #!/bin/sh
 
-LINUX_KERNEL_VERSION=6.6
-LINUX_KERNEL_RT_PATCH=patch-6.6.30-rt30
-LINUX_KERNEL_BRANCH=stable_20240529
-HW_SPECIFIC_CONFIG=bcm2711_defconfig # Raspberry Pi 4B
-
 clear
 
 echo "
@@ -56,10 +51,6 @@ check_rpi_version() {
     fi
 
 }
-
-
-
-
 
 
 spinner () {
@@ -325,7 +316,9 @@ run_with_spinner disable_unnecessary_services "Disabling unnecessary services"
 run_with_spinner disable_gui "Disabling GUI"
 run_with_spinner disable_power_mgmt "Disabling power management"
 run_with_spinner install_docker "Installing Docker"
-run_with_spinner enable_ethernet_over_usbc "Enabling Ethernet over USB-C"
+if [ "$MODEL" = "4" ]; then
+    run_with_spinner enable_ethernet_over_usbc "Enabling Ethernet over USB-C"
+fi
 run_with_spinner install_rt_kernel "Installing latest real time kernel (will take some minutes)"
 run_with_spinner tune_system_for_realtime "Tuning system for realtime"
 run_with_spinner cleanup "Cleaning up the system"
