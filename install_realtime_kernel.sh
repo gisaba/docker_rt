@@ -304,12 +304,36 @@ install_rt_kernel() {
 tune_system_for_realtime() {
 
     # Create cpu device for realtime containers
-    mkdir -p /dev/cpu
-    mknod /dev/cpu/0 b 5 1
+    # Verifica se la directory /dev/cpu esiste e crea il dispositivo solo se necessario
+    if [ -d "/dev/cpu" ] && [ -e "/dev/cpu/0" ]; then
+        echo "\033[90m✔️ /dev/cpu/0 already exists.\033[0m"
+    else
+        echo "Creating /dev/cpu/0 device for realtime containers..."
+        mkdir -p /dev/cpu
+        mknod /dev/cpu/0 b 5 1
+    fi
 
-    addgroup realtime
-    usermod -a -G realtime $SUDO_USER
-    tee /etc/security/limits.conf > /dev/null << EOF 
+    # Verifica se il gruppo realtime esiste e l'utente è già nel gruppo
+    if getent group realtime > /dev/null; then
+        echo "\033[90m✔️ Group 'realtime' already exists.\033[0m"
+    else
+        echo "Creating 'realtime' group..."
+        addgroup realtime
+    fi
+
+    if id -nG "$SUDO_USER" | grep -qw "realtime"; then
+        echo "\033[90m✔️ User $SUDO_USER already in 'realtime' group.\033[0m"
+    else
+        echo "Adding user $SUDO_USER to 'realtime' group..."
+        usermod -a -G realtime $SUDO_USER
+    fi
+
+    # Verifica se il file /etc/security/limits.conf contiene già le configurazioni per 'realtime'
+    if grep -q "@realtime" /etc/security/limits.conf; then
+        echo "\033[90m✔️ /etc/security/limits.conf already contains realtime limits.\033[0m"
+    else
+        echo "Adding realtime limits to /etc/security/limits.conf..."
+        tee /etc/security/limits.conf > /dev/null << EOF 
 @realtime soft rtprio 99
 @realtime soft priority 99
 @realtime soft memlock 102400
@@ -317,18 +341,44 @@ tune_system_for_realtime() {
 @realtime hard priority 99
 @realtime hard memlock 102400
 EOF
+    fi
 
-    echo "consoleblank=0" >> /boot/firmware/config.txt
-    echo "force_turbo=1" >> /boot/firmware/config.txt
-    echo "arm_freq=1500" >> /boot/firmware/config.txt
-    echo "arm_freq_min=1500" >> /boot/firmware/config.txt
-    sed -i '1s/^/isolcpus=2,3 nohz_full=2,3 rcu_nocbs=2,3 /' /boot/firmware/cmdline.txt
+    CONFIG_FILE="/boot/firmware/config.txt"
+    CMDLINE_FILE="/boot/firmware/cmdline.txt"
 
-    echo " processor.max_cstate=0 intel_idle.max_cstate=0 idle=poll rcu_nocb_poll nohz=on kthread_cpus=0,1 irqaffinity=0,1 iomem=relaxed" >> /boot/firmware/cmdline.txt
+    # Verifica se le modifiche a config.txt sono già presenti
+    if grep -q "consoleblank=0" "$CONFIG_FILE" && grep -q "force_turbo=1" "$CONFIG_FILE" && grep -q "arm_freq=1500" "$CONFIG_FILE"; then
+        echo "\033[90m✔️ Config.txt already tuned for realtime.\033[0m"
+    else
+        echo "Modifying $CONFIG_FILE for realtime performance..."
+        echo "consoleblank=0" >> "$CONFIG_FILE"
+        echo "force_turbo=1" >> "$CONFIG_FILE"
+        echo "arm_freq=1500" >> "$CONFIG_FILE"
+        echo "arm_freq_min=1500" >> "$CONFIG_FILE"
+    fi
+
+    # Verifica se le modifiche a cmdline.txt sono già presenti
+    if grep -q "isolcpus=2,3" "$CMDLINE_FILE" && grep -q "nohz_full=2,3" "$CMDLINE_FILE" && grep -q "rcu_nocbs=2,3" "$CMDLINE_FILE"; then
+        echo "\033[90m✔️ Cmdline.txt already tuned for realtime.\033[0m"
+    else
+        echo "Modifying $CMDLINE_FILE for CPU isolation..."
+        sed -i '1s/^/isolcpus=2,3 nohz_full=2,3 rcu_nocbs=2,3 /' "$CMDLINE_FILE"
+    fi
+
+    # Aggiungere ulteriori opzioni a cmdline.txt se non già presenti
+    if grep -q "processor.max_cstate=0" "$CMDLINE_FILE"; then
+        echo "\033[90m✔️ Cmdline.txt already contains power management tuning.\033[0m"
+    else
+        echo "Adding power management tuning to $CMDLINE_FILE..."
+        echo " processor.max_cstate=0 intel_idle.max_cstate=0 idle=poll rcu_nocb_poll nohz=on kthread_cpus=0,1 irqaffinity=0,1 iomem=relaxed" >> "$CMDLINE_FILE"
+    fi
+
+    # Impostazione del governor delle CPU
     echo 'GOVERNOR="performance"' | sudo tee /etc/default/cpufrequtils
     systemctl disable ondemand
     systemctl enable cpufrequtils
 
+    echo "System tuned for realtime performance. A reboot may be required."
 }
 
 generate_htop_config() {
