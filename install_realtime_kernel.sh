@@ -448,12 +448,19 @@ enable_spi() {
 disable_audio() {
     CONFIG_FILE="/boot/firmware/config.txt"
 
-    # Disabilitare l'audio nel file /boot/config.txt
-    if ! grep -q "^dtparam=audio=off" "$CONFIG_FILE"; then
-        echo "Disabling audio in $CONFIG_FILE..."
-        echo "dtparam=audio=off" >> "$CONFIG_FILE"
+    # Cercare la stringa esatta "dtparam=audio=on" e sostituirla con "dtparam=audio=off"
+    if grep -q "^dtparam=audio=on" "$CONFIG_FILE"; then
+        echo "Disabling audio by replacing 'dtparam=audio=on' with 'dtparam=audio=off' in $CONFIG_FILE..."
+        sed -i 's/^dtparam=audio=on/dtparam=audio=off/' "$CONFIG_FILE"
     else
-        echo "Audio is already disabled in $CONFIG_FILE."
+        # Se la stringa non esiste, verifica se l'audio è già disabilitato
+        if grep -q "^dtparam=audio=off" "$CONFIG_FILE"; then
+            echo "Audio is already disabled in $CONFIG_FILE."
+        else
+            # Aggiungi "dtparam=audio=off" se non c'è né "on" né "off"
+            echo "Disabling audio by adding 'dtparam=audio=off' to $CONFIG_FILE..."
+            echo "dtparam=audio=off" >> "$CONFIG_FILE"
+        fi
     fi
 
     # Rimuovere il modulo snd_bcm2835 se caricato
@@ -463,8 +470,9 @@ disable_audio() {
     else
         echo "snd_bcm2835 module is not loaded."
     fi
-
+    systemctl mask sound.target
     echo "Audio successfully disabled. A reboot is required for the changes to take effect."
+
 }
 
 
