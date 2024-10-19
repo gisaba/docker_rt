@@ -93,10 +93,10 @@ def verifica_tempo_esecuzione(funzione, tempo_massimo):
     tempo_esecuzione = (fine - inizio) * 1000  # Converti in millisecondi
 
     #print(f"Tempo di esecuzione: {tempo_esecuzione:.2f} ms")
-    if tempo_esecuzione <= tempo_massimo:
-        print(f"\033[92mOK: La funzione è stata eseguita entro il limite di {tempo_massimo} ms con {tempo_esecuzione} ms\033[0m")
-    else:
-        print(f"\033[91mOverRun: La funzione ha superato il limite di {tempo_massimo} ms con {tempo_esecuzione} ms\033[0m")
+    #if tempo_esecuzione <= tempo_massimo:
+    #    print(f"\033[92mOK: La funzione è stata eseguita entro il limite di {tempo_massimo} ms con {tempo_esecuzione} ms\033[0m")
+    #else:
+    #    print(f"\033[91mOverRun: La funzione ha superato il limite di {tempo_massimo} ms con {tempo_esecuzione} ms\033[0m")
 
 
 if __name__ == "__main__":
