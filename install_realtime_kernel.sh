@@ -42,7 +42,7 @@ init() {
 
 check_rpi_version() {
     
-    MODEL=$(cat /proc/cpuinfo | grep "Model" | awk '{print $5}')
+    MODEL=$(cat /proc/cpuinfo 2>/dev/null | grep "Model" | awk '{print $5}') 
     if [ "$MODEL" = "4" ] || [ "$MODEL" = "5" ]; then
         echo  "Raspberry Pi $MODEL detected.\n"
     else
@@ -230,6 +230,25 @@ request_reboot() {
     
 }
 
+download_docker_rt_repo() {
+    local repo_url="https://github.com/antoniopicone/docker_rt.git"
+    local target_dir="docker_rt"
+
+    # Create a temporary file for storing output
+    local temp_output=$(mktemp)
+
+    # Clone the repository
+    if git clone "$repo_url" "$target_dir" > "$temp_output" 2>&1; then
+        echo "Repository downloaded successfully."
+    else
+        echo "Error downloading repository. Check the log for details."
+        cat "$temp_output"
+    fi
+
+    # Remove the temporary file
+    rm -f "$temp_output"
+}
+
 cleanup() {
 
     apt-get -y clean
@@ -321,6 +340,7 @@ if [ "$MODEL" = "4" ]; then
 fi
 run_with_spinner install_rt_kernel "Installing latest real time kernel (will take some minutes)"
 run_with_spinner tune_system_for_realtime "Tuning system for realtime"
+run_with_spinner download_docker_rt_repo "Downloading docker_rt repository for local testing"
 run_with_spinner cleanup "Cleaning up the system"
 request_reboot
 
