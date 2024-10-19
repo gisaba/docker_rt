@@ -412,8 +412,61 @@ EOL
 
     # Impostare il proprietario corretto del file di configurazione
     chown "$SUDO_USER":"$SUDO_USER" "$CONFIG_FILE"
-    echo "Il file di configurazione di htop è stato generato/sostituito per l'utente $SUDO_USER."
+    
 }
+
+#!/bin/sh
+
+# Function to enable SPI
+enable_spi() {
+    CONFIG_FILE="/boot/firmware/config.txt"
+    MODULES_FILE="/etc/modules"
+    
+    # Enable SPI in the /boot/config.txt file
+    if ! grep -q "^dtparam=spi=on" "$CONFIG_FILE"; then
+        echo "Enabling SPI in $CONFIG_FILE..."
+        echo "dtparam=spi=on" >> "$CONFIG_FILE"
+    else
+        echo "SPI is already enabled in $CONFIG_FILE."
+    fi
+
+    # Add the spi-bcm2835 module to /etc/modules if not already present
+    if ! grep -q "^spi_bcm2835" "$MODULES_FILE"; then
+        echo "Adding the spi_bcm2835 module to $MODULES_FILE..."
+        echo "spi_bcm2835" >> "$MODULES_FILE"
+    else
+        echo "The spi-bcm2835 module is already present in $MODULES_FILE."
+    fi
+
+    # Load the SPI modules immediately without rebooting
+    echo "Loading the SPI modules..."
+    modprobe spi_bcm2835
+
+    echo "SPI successfully enabled. A reboot is required for all changes to take effect."
+}
+
+disable_audio() {
+    CONFIG_FILE="/boot/firmware/config.txt"
+
+    # Disabilitare l'audio nel file /boot/config.txt
+    if ! grep -q "^dtparam=audio=off" "$CONFIG_FILE"; then
+        echo "Disabling audio in $CONFIG_FILE..."
+        echo "dtparam=audio=off" >> "$CONFIG_FILE"
+    else
+        echo "Audio is already disabled in $CONFIG_FILE."
+    fi
+
+    # Rimuovere il modulo snd_bcm2835 se caricato
+    if lsmod | grep -q "snd_bcm2835"; then
+        echo "Removing snd_bcm2835 module..."
+        modprobe -r snd_bcm2835
+    else
+        echo "snd_bcm2835 module is not loaded."
+    fi
+
+    echo "Audio successfully disabled. A reboot is required for the changes to take effect."
+}
+
 
 init
 run_with_spinner update_os "Updating OS"
@@ -428,6 +481,8 @@ run_with_spinner install_rt_kernel "Installing latest real time kernel (will tak
 run_with_spinner tune_system_for_realtime "Tuning system for realtime"
 run_with_spinner download_docker_rt_repo "Downloading docker_rt repository for local testing"
 run_with_spinner generate_htop_config "Changing htop settings to show processors"
+run_with_spinner enable_spi "Enabling SPI interface"
+run_with_spinner disable_audio "Disabling audio"
 run_with_spinner cleanup "Cleaning up the system"
 request_reboot
 
