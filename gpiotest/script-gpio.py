@@ -98,7 +98,6 @@ def verifica_tempo_esecuzione(funzione, tempo_massimo):
     else:
         print(f"\033[91mOverRun: La funzione ha superato il limite di {tempo_massimo} ms con {tempo_esecuzione} ms\033[0m")
 
-    sleep(0.01-tempo_esecuzione/1000)
 
 if __name__ == "__main__":
     tempo_massimo_ms = 10  # Tempo massimo consentito in millisecondi
@@ -115,6 +114,7 @@ if __name__ == "__main__":
         led_line.set_value(1) # Turn on the LED
         verifica_tempo_esecuzione(funzione_da_testare, tempo_massimo_ms)
         led_line.set_value(0) # Turn off the LED
+        sleep(0.01)
        # Release the GPIO line and clean up resources on program exit
 
     led_line.release()
