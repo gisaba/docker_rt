@@ -1,5 +1,5 @@
 # Usa un'immagine base di Python 3
-FROM python:3.9-slim
+FROM python:3.11-slim
 
 # Aggiorna il sistema e installa le dipendenze
 RUN apt-get update && apt-get install -y \
