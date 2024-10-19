@@ -2,3 +2,4 @@ pulp
 scipy
 numpy
 gpiod
+gpiozero

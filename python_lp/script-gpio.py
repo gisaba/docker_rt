@@ -5,6 +5,7 @@ from scipy.optimize import linprog
 import random
 from pulp import *
 import gpiod
+from gpiozero import LED
 
 
 def minimize_linear_function(num_variables, constraint_coefficients, constraint_constants, min_coeff=1, max_coeff=10):
@@ -104,26 +105,28 @@ if __name__ == "__main__":
     tempo_massimo_ms = 10  # Tempo massimo consentito in millisecondi
     
     LED_PIN = 17  # GPIO pin number where the LED is connected
+    led = LED(LED_PIN)
 
     # Open GPIO chip
     #chip = gpiod.Chip('gpiochip4')
-    chip = gpiod.Chip('/dev/gpiochip4')
+    #chip = gpiod.Chip('/dev/gpiochip4')
 
     # Get the GPIO line for the LED
-    led_line = chip.get_line(LED_PIN)
+    #led_line = chip.get_line(LED_PIN)
 
     # Request exclusive access to the line and configure it as an output
-    led_line.request(consumer="LED", type=gpiod.LINE_REQ_DIR_OUT)
+    #led_line.request(consumer="LED", type=gpiod.LINE_REQ_DIR_OUT)
 
     i = 0
     for i in range(1,100000):
-        led_line.set_value(1)  # Turn on the LED
+        #led_line.set_value(1)  # Turn on the LED
+        led.on()
         i+=1
         verifica_tempo_esecuzione(funzione_da_testare, tempo_massimo_ms)
-        led_line.set_value(0)  # Turn off the LED
-    
+        #led_line.set_value(0)  # Turn off the LED
+        led.off()
        # Release the GPIO line and clean up resources on program exit
 
-    led_line.release()
+    #led_line.release()
 
-    chip.close()
+    #chip.close()
