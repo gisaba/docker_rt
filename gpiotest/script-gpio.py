@@ -123,7 +123,8 @@ if __name__ == "__main__":
             print(f"\033[91mOverRun: La funzione ha superato il limite di {tempo_massimo_ms} ms con {tempo_esecuzione_ms} ms\033[0m")
         else:
             sleep(t_idle)
-       # Release the GPIO line and clean up resources on program exit
+    
+    # Release the GPIO line and clean up resources on program exit
 
     led_line.release()
 
