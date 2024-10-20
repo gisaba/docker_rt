@@ -8,9 +8,10 @@ RUN apt-get update && apt-get install -y \
     libglpk-dev \
     wiringpi
 
+COPY WiringPi .
 #RUN git clone https://github.com/WiringPi/WiringPi.git
 #RUN cd WiringPi
-#RUN ./build
+RUN bash build
 #RUN cd ..
 
 # Copia il codice C all'interno del container
