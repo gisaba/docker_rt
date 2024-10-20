@@ -6,13 +6,13 @@ RUN apt-get update && apt-get install -y \
     build-essential \
     glpk-utils \
     libglpk-dev \
-    wiringpi
+    git
 
 #RUN git clone https://github.com/WiringPi/WiringPi.git
 #RUN cd WiringPi
 #RUN ./build
+#RUN cd ..
 
-RUN cd ..
 # Copia il codice C all'interno del container
 COPY script.c /usr/src/linear_prog.c
 
