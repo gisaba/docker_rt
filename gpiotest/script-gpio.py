@@ -117,7 +117,7 @@ if __name__ == "__main__":
         led_line.set_value(1) # Turn on the LED
         tempo_esecuzione = verifica_tempo_esecuzione(funzione_da_testare, tempo_massimo_ms)*1000
         led_line.set_value(0) # Turn off the LED
-        t_idle = (tempo_massimo_ms-tempo_esecuzione)
+        t_idle = (tempo_massimo_ms-tempo_esecuzione)/1000
         if t_idle < 0:
             print(f"iterazione {i}")
             print(f"\033[91mOverRun: La funzione ha superato il limite di {tempo_massimo_ms} ms con {tempo_esecuzione} ms\033[0m")
