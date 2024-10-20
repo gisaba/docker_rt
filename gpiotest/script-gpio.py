@@ -90,7 +90,10 @@ def verifica_tempo_esecuzione(funzione, tempo_massimo):
     funzione()
     fine = time_module.perf_counter()
 
-    tempo_esecuzione = (fine - inizio) * 1000  # Converti in millisecondi
+    t_exec = (fine - inizio) 
+    tempo_esecuzione = t_exec * 1000  # Converti in millisecondi
+
+    return t_exec
 
     #print(f"Tempo di esecuzione: {tempo_esecuzione:.2f} ms")
     #if tempo_esecuzione <= tempo_massimo:
@@ -112,9 +115,9 @@ if __name__ == "__main__":
     for i in range(1,100000):
         i+=1
         led_line.set_value(1) # Turn on the LED
-        verifica_tempo_esecuzione(funzione_da_testare, tempo_massimo_ms)
+        tempo_esecuzione = verifica_tempo_esecuzione(funzione_da_testare, tempo_massimo_ms)
         led_line.set_value(0) # Turn off the LED
-        sleep(0.01)
+        sleep(0.01-tempo_esecuzione)
        # Release the GPIO line and clean up resources on program exit
 
     led_line.release()
