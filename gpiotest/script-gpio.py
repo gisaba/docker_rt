@@ -6,6 +6,7 @@ import random
 from pulp import *
 import gpiod
 from time import sleep
+import gc
 
 def minimize_linear_function(num_variables, constraint_coefficients, constraint_constants, min_coeff=1, max_coeff=10):
     """
@@ -123,6 +124,9 @@ if __name__ == "__main__":
             print(f"\033[91mOverRun: La funzione ha superato il limite di {tempo_massimo_ms} ms con {tempo_esecuzione_ms} ms\033[0m")
         else:
             sleep(t_idle)
+        
+        # Force a garbage collection
+        gc.collect()
     
     # Release the GPIO line and clean up resources on program exit
 
