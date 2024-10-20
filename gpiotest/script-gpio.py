@@ -111,7 +111,7 @@ if __name__ == "__main__":
     led_line.request(consumer="LED", type=gpiod.LINE_REQ_DIR_OUT)
 
     i = 0
-    for i in range(1,100000):
+    for i in range(1,1000):
         i+=1
         led_line.set_value(1) # Turn on the LED
         tempo_esecuzione_ms = verifica_tempo_esecuzione(funzione_da_testare, tempo_massimo_ms)
