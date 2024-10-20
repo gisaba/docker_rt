@@ -115,12 +115,12 @@ if __name__ == "__main__":
     for i in range(1,100000):
         i+=1
         led_line.set_value(1) # Turn on the LED
-        tempo_esecuzione = verifica_tempo_esecuzione(funzione_da_testare, tempo_massimo_ms)
+        tempo_esecuzione = verifica_tempo_esecuzione(funzione_da_testare, tempo_massimo_ms)*1000
         led_line.set_value(0) # Turn off the LED
-        t_idle = (0.01-tempo_esecuzione)
+        t_idle = (tempo_massimo_ms-tempo_esecuzione)
         if t_idle < 0:
             print(f"iterazione {i}")
-            print(f"\033[91mOverRun: La funzione ha superato il limite di {tempo_massimo_ms} ms con {tempo_esecuzione*1000} ms\033[0m")
+            print(f"\033[91mOverRun: La funzione ha superato il limite di {tempo_massimo_ms} ms con {tempo_esecuzione} ms\033[0m")
         else:
             sleep(t_idle)
        # Release the GPIO line and clean up resources on program exit
