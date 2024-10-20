@@ -146,9 +146,9 @@ int main() {
     
     for (int i = 1; i <= 100000; i++) {
         //printf("Iterazione %d\n", i);
-        digitalWrite(LED_PIN, HIGH);
+        //digitalWrite(LED_PIN, HIGH);
         verifica_tempo_esecuzione(funzione_da_testare, tempo_massimo_ms,i);
-        digitalWrite(LED_PIN, LOW);
+        //digitalWrite(LED_PIN, LOW);
     }
 
     return 0;
