@@ -5,7 +5,8 @@ FROM ubuntu:latest
 RUN apt-get update && apt-get install -y \
     build-essential \
     glpk-utils \
-    libglpk-dev
+    libglpk-dev \
+    git
 
 RUN git clone https://github.com/WiringPi/WiringPi.git
 
