@@ -10,8 +10,8 @@ led_line.request(consumer="LED", type=gpiod.LINE_REQ_DIR_OUT)
 try:
    while True:
        led_line.set_value(1)
-       #sleep(0.01)
+       sleep(0.0000001)
        led_line.set_value(0)
-       #sleep(0.01)
+       sleep(0.0000001)
 finally:
    led_line.release()
