@@ -6,6 +6,8 @@
 #include <unistd.h>
 #include <wiringPi.h>
 
+#define LED_PIN 0 // GPIO17 corresponds to wiringPi pin 0
+
 void set_realtime_priority() {
     struct sched_param param;
     param.sched_priority = 99;
