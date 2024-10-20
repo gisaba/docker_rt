@@ -6,7 +6,7 @@ RUN apt-get update && apt-get install -y \
     build-essential \
     glpk-utils \
     libglpk-dev \
-    git
+    wiringpi
 
 #RUN git clone https://github.com/WiringPi/WiringPi.git
 #RUN cd WiringPi
