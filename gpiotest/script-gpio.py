@@ -90,10 +90,9 @@ def verifica_tempo_esecuzione(funzione, tempo_massimo):
     funzione()
     fine = time_module.perf_counter()
 
-    t_exec = (fine - inizio) 
-    tempo_esecuzione = t_exec * 1000  # Converti in millisecondi
+    tempo_esecuzione = (fine - inizio)  * 1000  # Converti in millisecondi
 
-    return t_exec
+    return tempo_esecuzione
 
     #print(f"Tempo di esecuzione: {tempo_esecuzione:.2f} ms")
     #if tempo_esecuzione <= tempo_massimo:
@@ -115,14 +114,14 @@ if __name__ == "__main__":
     for i in range(1,100000):
         i+=1
         led_line.set_value(1) # Turn on the LED
-        tempo_esecuzione = verifica_tempo_esecuzione(funzione_da_testare, tempo_massimo_ms)
+        tempo_esecuzione_ms = verifica_tempo_esecuzione(funzione_da_testare, tempo_massimo_ms)
         led_line.set_value(0) # Turn off the LED
-        t_idle = (0.01-tempo_esecuzione)
-        if t_idle < 0:
+        t_idle_ms = (tempo_massimo_ms-tempo_esecuzione_ms)
+        if t_idle_ms < 0:
             print(f"iterazione {i}")
             print(f"\033[91mOverRun: La funzione ha superato il limite di {tempo_massimo_ms} ms con {tempo_esecuzione*1000} ms\033[0m")
         else:
-            sleep(t_idle)
+            sleep(t_idle_ms/1000)
        # Release the GPIO line and clean up resources on program exit
 
     led_line.release()
