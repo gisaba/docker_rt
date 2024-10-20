@@ -4,9 +4,6 @@
 #include <glpk.h>  // Libreria per la programmazione lineare
 #include <sched.h>
 #include <unistd.h>
-#include <wiringPi.h>
-
-#define LED_PIN 0 // GPIO17 corresponds to wiringPi pin 0
 
 void set_realtime_priority() {
     struct sched_param param;
@@ -15,7 +12,6 @@ void set_realtime_priority() {
         perror("Errore: È necessario eseguire il programma con privilegi di root per impostare la priorità real-time.");
     }
 }
-
 
 void minimize_linear_function(int num_variables, int num_constraints, 
                               double constraint_coefficients[][num_variables], 
@@ -132,23 +128,11 @@ void verifica_tempo_esecuzione(void (*funzione)(), double tempo_massimo,int iter
 }
 
 int main() {
-    
-    // Initialize wiringPi
-    if (wiringPiSetup() == -1) {
-        fprintf(stderr, "Failed to initialize wiringPi\n");
-        return 1;
-    }
-
-    // Set the LED_PIN as an output
-    pinMode(LED_PIN, OUTPUT);
-
     double tempo_massimo_ms = 10.0;  // Tempo massimo consentito in millisecondi
     
     for (int i = 1; i <= 100000; i++) {
         //printf("Iterazione %d\n", i);
-        //digitalWrite(LED_PIN, HIGH);
         verifica_tempo_esecuzione(funzione_da_testare, tempo_massimo_ms,i);
-        //digitalWrite(LED_PIN, LOW);
     }
 
     return 0;
