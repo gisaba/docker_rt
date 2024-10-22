@@ -15,9 +15,7 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt --break-system-packages
 
 # Copia lo script Python nella directory di lavoro
-COPY gpiod-test.py .
-
-COPY script-gpio.py .
+COPY script-lpo-gpio.py .
 
 # Comando di default per eseguire lo script Python
 #CMD ["python3", "gpiod-test.py"]    
