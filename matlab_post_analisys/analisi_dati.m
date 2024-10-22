@@ -7,15 +7,16 @@ t_deadline = 1;
 
 %test = 'lpo';
 test = 'fft';
+
 profile = 'real-time';
 %profile = 'balanced';
+
 %linguaggio = 'python';
 %linguaggio = 'csharp
 linguaggio = 'c';
 
 %so = 'linux';
-%so = 'macos';
-so = 'rasbian';
+so = 'RaspberryPi-OS';
 
 path_table_misure = ['./misure/' so '/'];
 
@@ -43,7 +44,7 @@ stdOverRun = [];
     opts.MissingRule = "omitrow";
      
     % Import the data
-    filename = strcat(path_table_misure, [profile '_' linguaggio '_' test '.' so]);
+    filename = strcat(path_table_misure, [profile '_' linguaggio '_' test]);
     TableFile = readtable(filename, opts);
 
     disp(['Analizzo i dati del test'])

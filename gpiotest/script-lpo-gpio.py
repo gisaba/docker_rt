@@ -1,11 +1,11 @@
 import time as time_module
+from time import sleep
 import os
 import numpy as np
 from scipy.optimize import linprog
 import random
 from pulp import *
 import gpiod
-from time import sleep
 import gc
 
 def minimize_linear_function(num_variables, constraint_coefficients, constraint_constants, min_coeff=1, max_coeff=10):
@@ -49,7 +49,6 @@ def minimize_linear_function(num_variables, constraint_coefficients, constraint_
     return results
 
 
-
 def set_realtime_priority():
     try:
         os.sched_setscheduler(0, os.SCHED_FIFO, os.sched_param(99))
@@ -70,18 +69,6 @@ def funzione_da_testare():
     constraint_constants = [30, 60]
     
     result = minimize_linear_function(num_vars, constraint_coeffs, constraint_constants)
-    
-    
-    #print("Coefficienti casuali della funzione obiettivo:", result["objective_coefficients"])
-    #print("Stato della soluzione:", result["status"])
-    #print("Valore minimo della funzione obiettivo:", result["objective_value"])
-    #print("Valori ottimali delle variabili:")
-    #for var, value in result["variables"].items():
-    #    print(f"  {var} = {value}")
-
-
-    # Simula un'operazione che richiede tempo
-    # time.sleep(0.1)
 
 def verifica_tempo_esecuzione(funzione, tempo_massimo):
     if not set_realtime_priority():
@@ -94,13 +81,6 @@ def verifica_tempo_esecuzione(funzione, tempo_massimo):
     tempo_esecuzione = (fine - inizio)  * 1000  # Converti in millisecondi
 
     return tempo_esecuzione
-
-    #print(f"Tempo di esecuzione: {tempo_esecuzione:.2f} ms")
-    #if tempo_esecuzione <= tempo_massimo:
-    #    print(f"\033[92mOK: La funzione è stata eseguita entro il limite di {tempo_massimo} ms con {tempo_esecuzione} ms\033[0m")
-    #else:
-    #    print(f"\033[91mOverRun: La funzione ha superato il limite di {tempo_massimo} ms con {tempo_esecuzione} ms\033[0m")
-
 
 if __name__ == "__main__":
     tempo_massimo_ms = 10  # Tempo massimo consentito in millisecondi
