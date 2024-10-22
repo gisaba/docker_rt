@@ -8,11 +8,11 @@ t_deadline = 1;
 %test = 'lpo';
 test = 'fft';
 
-%profile = 'real-time';
-profile = 'balanced';
+profile = 'real-time';
+%profile = 'balanced';
 
 %linguaggio = 'python';
-%linguaggio = 'csharp
+%linguaggio = 'csharp'
 linguaggio = 'c';
 
 %so = 'linux';
