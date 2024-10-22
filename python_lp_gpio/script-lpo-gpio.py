@@ -91,6 +91,8 @@ if __name__ == "__main__":
     led_line = chip.get_line(LED_PIN)
     led_line.request(consumer="LED", type=gpiod.LINE_REQ_DIR_OUT)
 
+    print(f"rownumber,timestep,periodo\n");
+
     i = 0
     for i in range(1,100000):
         i+=1
@@ -98,6 +100,7 @@ if __name__ == "__main__":
         tempo_esecuzione_ms = verifica_tempo_esecuzione(funzione_da_testare, tempo_massimo_ms)
         led_line.set_value(0) # Turn off the LED
         t_idle_ms = (tempo_massimo_ms-tempo_esecuzione_ms)
+        print(f"{i},{tempo_esecuzione_ms},{tempo_massimo_ms}");
         t_idle = t_idle_ms/1000
         if t_idle < 0:
             print(f"iterazione {i}")
