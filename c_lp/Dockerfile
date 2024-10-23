@@ -14,7 +14,7 @@ COPY script.c /usr/src/linear_prog.c
 WORKDIR /usr/src
 
 # Compila il programma C
-RUN gcc -o linear_prog linear_prog.c -lglpk -lwiringPi
+RUN gcc -o linear_prog linear_prog.c -lglpk
 
 # Esegui il programma compilato
 CMD ["./linear_prog"]
