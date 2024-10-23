@@ -5,8 +5,8 @@ clc;
 
 t_deadline = 1;
 
-%test = 'lpo';
-test = 'fft';
+test = 'lpo';
+%test = 'fft';
 
 profile = 'real-time';
 %profile = 'balanced';
@@ -55,9 +55,9 @@ stdOverRun = [];
     Periodo = TableFile.periodo;
 
     Timestep(Timestep==0) = mean(Timestep);
-    pd = fitdist(Timestep,'Lognormal');
+    %pd = fitdist(Timestep,'Lognormal');
     %pd = fitdist(Timestep,'Weibull');
-    %pd = fitdist(Timestep,'Normal')
+    pd = fitdist(Timestep,'Normal')
     
     step = 0.001;
     x_pdf = 0:step:max(Timestep);
