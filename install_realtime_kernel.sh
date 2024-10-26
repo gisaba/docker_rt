@@ -123,7 +123,7 @@ disable_unnecessary_services() {
     #systemctl disable avahi-daemon
     systemctl disable irqbalance
     systemctl disable cups
-    systemctl disable ModemManage
+    systemctl disable ModemManager
     systemctl disable triggerhappy
     # systemctl disable wpa_supplicant
 }
@@ -279,26 +279,72 @@ get_latest_release_url() {
     
 }
 
+
+#FIXME: non funziona il replace della stringa kernel=Image_ , chiede di inserire il tag ma se metto un valore a caso, scarica e va in errore: aggiungere una scelta da menu
 install_rt_kernel() {
-
-    get_latest_release_url
+    CONFIG_FILE="/boot/firmware/config.txt"
     
-    wget -O linux66_rt.tar.gz $KERNEL_URL
-    
-    readonly KERNEL_SETUP_DIR=$(pwd)
+    # Verifica se è già installato un kernel realtime
+    if grep -i "kernel=Image66_rt_" "$CONFIG_FILE"; then
+        echo "A realtime kernel is already installed."
 
-    tar xzf linux66_rt.tar.gz 
+        # Scarica l'elenco delle versioni disponibili da GitHub
+        echo "Fetching available kernel versions from GitHub..."
+        RELEASES=$(curl -s https://api.github.com/repos/antoniopicone/docker_rt/releases | grep -E 'tag_name|body' | sed 's/[",]//g' | sed 's/^[ \t]*//')
+        
+        if [ -z "$RELEASES" ]; then
+            echo "No releases found."
+            return
+        fi
+        
+        # Mostra le opzioni disponibili (tag_name - body)
+        echo "Available versions:"
+        echo "$RELEASES" | awk '/tag_name/ {tag=$2} /body/ {body=$2; print tag " - " body}'
 
-    cd linux
+        # Chiede all'utente se desidera installare una versione
+        echo "Do you want to install one of these versions? (y/n)"
+        read install_choice
+        
+        if [ "$install_choice" = "y" ]; then
+            echo "Please enter the tag_name of the version you want to install:"
+            read selected_version
 
-    make -j$(nproc) modules_install
-
-    cp ./arch/arm64/boot/Image /boot/firmware/Image66_rt_$RELEASE_VER.img
-    cp ./arch/arm64/boot/dts/broadcom/*.dtb /boot/firmware/
-    cp ./arch/arm64/boot/dts/overlays/*.dtb* /boot/firmware/overlays/
-    cp ./arch/arm64/boot/dts/overlays/README /boot/firmware/overlays/
-    echo "kernel=Image66_rt_$RELEASE_VER.img" >> /boot/firmware/config.txt
- 
+            # Scarica e installa la versione selezionata
+            KERNEL_URL="https://github.com/antoniopicone/docker_rt/releases/download/$selected_version/linux66_rt.tar.gz"
+            wget -O linux66_rt.tar.gz "$KERNEL_URL"
+            
+            readonly KERNEL_SETUP_DIR=$(pwd)
+            tar xzf linux66_rt.tar.gz
+            cd linux
+            
+            make -j$(nproc) modules_install
+            cp ./arch/arm64/boot/Image /boot/firmware/Image66_rt_$selected_version.img
+            cp ./arch/arm64/boot/dts/broadcom/*.dtb /boot/firmware/
+            cp ./arch/arm64/boot/dts/overlays/*.dtb* /boot/firmware/overlays/
+            cp ./arch/arm64/boot/dts/overlays/README /boot/firmware/overlays/
+            
+            # Aggiorna config.txt
+            sed -i '/^kernel=Image66_rt_/d' /boot/firmware/config.txt
+            echo "kernel=Image66_rt_$selected_version.img" >> /boot/firmware/config.txt
+        else
+            echo "Skipping kernel installation."
+        fi
+    else
+        # Se nessun kernel realtime è installato, procede con l'installazione
+        get_latest_release_url
+        wget -O linux66_rt.tar.gz "$KERNEL_URL"
+        
+        readonly KERNEL_SETUP_DIR=$(pwd)
+        tar xzf linux66_rt.tar.gz
+        cd linux
+        
+        make -j$(nproc) modules_install
+        cp ./arch/arm64/boot/Image /boot/firmware/Image66_rt_$RELEASE_VER.img
+        cp ./arch/arm64/boot/dts/broadcom/*.dtb /boot/firmware/
+        cp ./arch/arm64/boot/dts/overlays/*.dtb* /boot/firmware/overlays/
+        cp ./arch/arm64/boot/dts/overlays/README /boot/firmware/overlays/
+        echo "kernel=Image66_rt_$RELEASE_VER.img" >> /boot/firmware/config.txt
+    fi
 }
 
 tune_system_for_realtime() {
