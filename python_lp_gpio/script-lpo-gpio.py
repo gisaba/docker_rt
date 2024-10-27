@@ -7,6 +7,7 @@ import random
 from pulp import *
 import gpiod
 import gc
+import paho.mqtt.publish as publish
 
 def minimize_linear_function(num_variables, constraint_coefficients, constraint_constants, min_coeff=1, max_coeff=10):
     """
@@ -82,6 +83,27 @@ def verifica_tempo_esecuzione(funzione, tempo_massimo):
 
     return tempo_esecuzione
 
+def publish_mqtt(messaggio):
+
+    """ 
+    Publish some messages to queue
+    """
+
+    msgs = [{'topic': "kids/yolo", 'payload': "jump"},
+            {'topic': "adult/pics", 'payload': "some photo"},
+            {'topic': "adult/news", 'payload': "extra extra"},
+            {'topic': "adult/news", 'payload': "super extra"}]
+
+    host = "localhost"
+
+
+    if __name__ == '__main__':
+        # publish a single message
+        publish.single(topic="log/python", payload=messaggio, hostname=host)
+
+        # publish multiple messages
+        publish.multiple(msgs, hostname=host)
+
 if __name__ == "__main__":
     tempo_massimo_ms = 10  # Tempo massimo consentito in millisecondi
     
@@ -94,14 +116,19 @@ if __name__ == "__main__":
     print(f"rownumber,timestep,periodo\n");
 
     i = 0
+    
     for i in range(1,100000):
         i+=1
+        
         led_line.set_value(1) # Turn on the LED
         tempo_esecuzione_ms = verifica_tempo_esecuzione(funzione_da_testare, tempo_massimo_ms)
         led_line.set_value(0) # Turn off the LED
+        
         t_idle_ms = (tempo_massimo_ms-tempo_esecuzione_ms)
-        print(f"{i},{tempo_esecuzione_ms},{tempo_massimo_ms}");
+        
+        print(f"{i},{tempo_esecuzione_ms},{tempo_massimo_ms}")
         t_idle = t_idle_ms/1000
+        
         if t_idle < 0:
             print(f"iterazione {i}")
             print(f"\033[91mOverRun: La funzione ha superato il limite di {tempo_massimo_ms} ms con {tempo_esecuzione_ms} ms\033[0m")
