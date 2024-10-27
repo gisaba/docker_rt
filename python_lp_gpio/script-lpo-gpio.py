@@ -105,7 +105,7 @@ def publish_mqtt(messaggio):
         port=1883, keepalive=60, will=None, auth={'username':"villas", 'password':"villas"}, tls=None)
 
         # publish multiple messages
-        publish.multiple(msgs, hostname=host)
+        # publish.multiple(msgs, hostname=host)
 
 if __name__ == "__main__":
     tempo_massimo_ms = 10  # Tempo massimo consentito in millisecondi
