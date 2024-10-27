@@ -102,7 +102,7 @@ def publish_mqtt(messaggio):
         #publish.single(topic="log/python", payload=messaggio, hostname=host)
 
         publish.single(topic="log/python", payload=messaggio, qos=0, retain=False, hostname=host,
-        port=1883, keepalive=60, will=None, auth={username:"villas", password:"villas"}, tls=None,
+        port=1883, keepalive=60, will=None, auth={'username':"villas", 'password':"villas"}, tls=None,
         transport="tcp")
 
         # publish multiple messages
