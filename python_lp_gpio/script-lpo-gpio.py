@@ -88,14 +88,15 @@ def publish_mqtt(messaggio):
     """ 
     Publish some messages to queue
     """
-
+    
+    """
     msgs = [{'topic': "kids/yolo", 'payload': "jump"},
             {'topic': "adult/pics", 'payload': "some photo"},
             {'topic': "adult/news", 'payload': "extra extra"},
             {'topic': "adult/news", 'payload': "super extra"}]
-
+    """
+    
     host = "192.168.1.52"
-
 
     if __name__ == '__main__':
         # publish a single message
@@ -127,7 +128,7 @@ if __name__ == "__main__":
         led_line.set_value(1) # Turn on the LED
         tempo_esecuzione_ms = verifica_tempo_esecuzione(funzione_da_testare, tempo_massimo_ms)
         led_line.set_value(0) # Turn off the LED
-        publish_mqtt(0)
+        publish_mqtt(tempo_esecuzione_ms)
         t_idle_ms = (tempo_massimo_ms-tempo_esecuzione_ms)
         
         print(f"{i},{tempo_esecuzione_ms},{tempo_massimo_ms}")
