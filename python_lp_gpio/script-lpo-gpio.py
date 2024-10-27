@@ -140,7 +140,7 @@ if __name__ == "__main__":
             print(f"\033[91mOverRun: La funzione ha superato il limite di {tempo_massimo_ms} ms con {tempo_esecuzione_ms} ms\033[0m")
         else:
         """
-        sleep(t_idle)
+        sleep(abs(t_idle))
         
         # Force a garbage collection
         gc.collect()
