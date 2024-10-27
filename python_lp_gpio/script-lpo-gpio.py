@@ -132,7 +132,7 @@ if __name__ == "__main__":
         
         t_idle_ms = (tempo_massimo_ms-tempo_esecuzione_ms)
         
-        print(f"{i},{tempo_esecuzione_ms},{tempo_massimo_ms}")
+        #print(f"{i},{tempo_esecuzione_ms},{tempo_massimo_ms}")
         t_idle = t_idle_ms/1000
         
         if t_idle < 0:
