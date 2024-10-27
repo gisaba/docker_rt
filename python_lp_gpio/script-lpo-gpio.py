@@ -49,7 +49,6 @@ def minimize_linear_function(num_variables, constraint_coefficients, constraint_
     
     return results
 
-
 def set_realtime_priority():
     try:
         os.sched_setscheduler(0, os.SCHED_FIFO, os.sched_param(99))
