@@ -128,7 +128,7 @@ if __name__ == "__main__":
         led_line.set_value(1) # Turn on the LED
         tempo_esecuzione_ms = verifica_tempo_esecuzione(funzione_da_testare, tempo_massimo_ms)
         led_line.set_value(0) # Turn off the LED
-        publish_mqtt(tempo_esecuzione_ms)
+        publish_mqtt(0)
         t_idle_ms = (tempo_massimo_ms-tempo_esecuzione_ms)
         
         print(f"{i},{tempo_esecuzione_ms},{tempo_massimo_ms}")
