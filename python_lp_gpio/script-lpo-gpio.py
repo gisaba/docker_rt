@@ -109,7 +109,7 @@ def publish_mqtt(messaggio):
         # publish.multiple(msgs, hostname=host)
 
 if __name__ == "__main__":
-    tempo_massimo_ms = 100  # Tempo massimo consentito in millisecondi
+    tempo_massimo_ms = 1000  # Tempo massimo consentito in millisecondi
     
     LED_PIN = 17
 
