@@ -124,11 +124,11 @@ if __name__ == "__main__":
     for i in range(1,100000):
         i+=1
         
-        #publish_mqtt(1)
+        publish_mqtt(1)
         led_line.set_value(1) # Turn on the LED
         tempo_esecuzione_ms = verifica_tempo_esecuzione(funzione_da_testare, tempo_massimo_ms)
         led_line.set_value(0) # Turn off the LED
-        #publish_mqtt(0) 
+        publish_mqtt(0) 
         
         t_idle_ms = (tempo_massimo_ms-tempo_esecuzione_ms)
         
