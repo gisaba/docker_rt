@@ -109,7 +109,7 @@ def publish_mqtt(messaggio):
         # publish.multiple(msgs, hostname=host)
 
 if __name__ == "__main__":
-    tempo_massimo_ms = 50  # Tempo massimo consentito in millisecondi
+    tempo_massimo_ms = 100  # Tempo massimo consentito in millisecondi
     
     LED_PIN = 17
 
@@ -124,14 +124,11 @@ if __name__ == "__main__":
     for i in range(1,100000):
         i+=1
         
-        led_line.set_value(1) # Turn on the LED
         publish_mqtt(1)
+        led_line.set_value(1) # Turn on the LED
         tempo_esecuzione_ms = verifica_tempo_esecuzione(funzione_da_testare, tempo_massimo_ms)
-        publish_mqtt(0) 
         led_line.set_value(0) # Turn off the LED
-        
         t_idle_ms = (tempo_massimo_ms-tempo_esecuzione_ms)
-        
         #print(f"{i},{tempo_esecuzione_ms},{tempo_massimo_ms}")
         t_idle = t_idle_ms/1000
         """
@@ -140,6 +137,7 @@ if __name__ == "__main__":
             print(f"\033[91mOverRun: La funzione ha superato il limite di {tempo_massimo_ms} ms con {tempo_esecuzione_ms} ms\033[0m")
         else:
         """
+        publish_mqtt(0) 
         sleep(abs(t_idle))
         
         # Force a garbage collection
