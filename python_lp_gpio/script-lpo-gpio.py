@@ -95,7 +95,8 @@ def publish_mqtt(messaggio):
             {'topic': "adult/news", 'payload': "super extra"}]
     """
     
-    host = "192.168.1.52"
+    #host = "192.168.1.52"
+    host = "localhost"
 
     if __name__ == '__main__':
         # publish a single message
