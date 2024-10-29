@@ -96,7 +96,7 @@ def publish_mqtt(messaggio):
     """
     
     #host = "192.168.1.52"
-    host = "localhost"
+    host = "127.0.0.1"
 
     if __name__ == '__main__':
         # publish a single message
