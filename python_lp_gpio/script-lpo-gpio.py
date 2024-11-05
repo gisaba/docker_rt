@@ -131,17 +131,15 @@ if __name__ == "__main__":
         t_idle_ms = (tempo_massimo_ms-tempo_esecuzione_ms)
         #print(f"{i},{tempo_esecuzione_ms},{tempo_massimo_ms}")
         t_idle = t_idle_ms/1000
-        """
+        
         if t_idle < 0:
             print(f"iterazione {i}")
             print(f"\033[91mOverRun: La funzione ha superato il limite di {tempo_massimo_ms} ms con {tempo_esecuzione_ms} ms\033[0m")
         else:
-        """
+            led_line.set_value(0) # Turn off the LED
+            sleep(abs(t_idle))
+        
         #publish_mqtt(0) 
-        
-        led_line.set_value(0) # Turn off the LED
-        sleep(abs(t_idle))
-        
         # Force a garbage collection
         # gc.collect()
     
