@@ -126,7 +126,7 @@ if __name__ == "__main__":
         
         led_line.set_value(1) # Turn on the LED
        
-        publish_mqtt(1)
+        #publish_mqtt(1)
         tempo_esecuzione_ms = verifica_tempo_esecuzione(funzione_da_testare, tempo_massimo_ms)
         t_idle_ms = (tempo_massimo_ms-tempo_esecuzione_ms)
         #print(f"{i},{tempo_esecuzione_ms},{tempo_massimo_ms}")
@@ -137,7 +137,7 @@ if __name__ == "__main__":
             print(f"\033[91mOverRun: La funzione ha superato il limite di {tempo_massimo_ms} ms con {tempo_esecuzione_ms} ms\033[0m")
         else:
         """
-        publish_mqtt(0) 
+        #publish_mqtt(0) 
         
         led_line.set_value(0) # Turn off the LED
         sleep(abs(t_idle))
