@@ -3,8 +3,7 @@ FROM debian:latest
 RUN apt-get update && apt-get install -y \
     pip \
     python3 \ 
-    python3-libgpiod \
-    python-setuptools
+    python3-libgpiod
 
 # Imposta la directory di lavoro all'interno del container
 WORKDIR /usr/src/app
@@ -13,7 +12,7 @@ WORKDIR /usr/src/app
 COPY requirements.txt .
 
 # Installa le dipendenze presenti nel file requirements.txt
-#RUN pip install --no-cache-dir -r requirements.txt --break-system-packages
+RUN pip install --no-cache-dir -r requirements.txt --break-system-packages
 
 # Copia lo script Python nella directory di lavoro
 COPY script-pwm.py .
