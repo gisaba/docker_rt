@@ -3,7 +3,8 @@ FROM debian:latest
 RUN apt-get update && apt-get install -y \
     pip \
     python3 \ 
-    python3-libgpiod
+    python3-libgpiod \
+    python3-rpi.gpio
 
 # Imposta la directory di lavoro all'interno del container
 WORKDIR /usr/src/app
