@@ -1,12 +1,20 @@
-from RPIO import PWM
+"""
+This example uses lower-level PWM control methods of RPIO.PWM. The default
+settings include a subcycle time of 20ms and a pulse-width increment
+granularity of 10us.
 
-servo = PWM.Servo()
+RPIO Documentation: http://pythonhosted.org/RPIO
+"""
+import RPIO.PWM as PWM
 
-# Set servo on GPIO17 to 1200µs (1.2ms)
-servo.set_servo(17, 1200)
+GPIO = 17
+CHANNEL = 0
 
-# Set servo on GPIO17 to 2000µs (2.0ms)
-servo.set_servo(17, 2000)
+PWM.set_loglevel(PWM.LOG_LEVEL_DEBUG)
 
-# Clear servo on GPIO17
-servo.stop_servo(17)
+PWM.setup()
+PWM.init_channel(CHANNEL)
+PWM.print_channel(CHANNEL)
+
+PWM.add_channel_pulse(CHANNEL, GPIO, 0, 50)
+PWM.add_channel_pulse(CHANNEL, GPIO, 100, 50)
