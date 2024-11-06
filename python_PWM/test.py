@@ -1,4 +1,4 @@
-from RPIO import PWM
+from RPi.GPIO import PWM
 
 # Setup PWM and DMA channel 0
 PWM.setup()
