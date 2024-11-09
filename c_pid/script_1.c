@@ -86,7 +86,7 @@ int main() {
         double time_step = (wait/1000) + tempo_esecuzione;
         //printf("time_step : %.2f ms\n", time_step);
         
-        printf("%.i,%.2f,%.2f\n", iterazione,tempo_esecuzione,time_step);
+        printf("%.i,%.2f,%.2f\n", i,tempo_esecuzione,time_step);
 
         // Stampa l'errore e la risposta
         printf("Setpoint: %.2f, Measured Value: %.2f, Control Output: %.2f\n", setpoint, measured_value, control_output);
