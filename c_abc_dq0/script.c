@@ -70,7 +70,7 @@ void abc_to_dq0(float I_a, float I_b, float I_c, float theta, float *I_d, float 
 }
 
 int main() {
-    double tempo_massimo_ms = 100.0;  // Tempo massimo consentito in millisecondi
+    double tempo_massimo_ms = 1.0;  // Tempo massimo consentito in millisecondi
 
     // Correnti di ingresso nel sistema ABC
     float I_a = 10.0;  // Corrente A
@@ -101,6 +101,9 @@ int main() {
         // Calcolare l'uscita del PID
         control_output = PID_compute(&pid, setpoint, measured_value);
 
+        // Simulazione di un sistema: supponiamo che il valore misurato risponda all'uscita del PID
+        measured_value += control_output;
+
         // Chiamata alla funzione di trasformazione
         abc_to_dq0(I_a, I_b, I_c, theta, &I_d, &I_q, &I_0);
 
@@ -108,10 +111,6 @@ int main() {
         //printf("Componente D (I_d): %.2f\n", I_d);
         //printf("Componente Q (I_q): %.2f\n", I_q);
         //printf("Componente 0 (I_0): %.2f\n", I_0);
-
-        // Simulazione di un sistema: supponiamo che il valore misurato risponda all'uscita del PID
-        measured_value += control_output;
-
 
         clock_gettime(CLOCK_MONOTONIC, &fine);  // Fine cronometro
 
@@ -127,7 +126,7 @@ int main() {
         printf("%.i,%.2f,%.2f\n", i,tempo_esecuzione,time_step);
 
         // Stampa l'errore e la risposta
-        printf("Setpoint: %.2f, Measured Value: %.2f, Control Output: %.2f\n", setpoint, measured_value, control_output);
+        // printf("Setpoint: %.2f, Measured Value: %.2f, Control Output: %.2f\n", setpoint, measured_value, control_output);
 
         // Aggiungi un piccolo ritardo per simulare un loop di controllo
         // usleep(100000);  // 100 ms
