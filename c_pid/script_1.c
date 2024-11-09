@@ -50,41 +50,6 @@ float PID_compute(PID_Controller *pid, float setpoint, float measured_value) {
     return output;
 }
 
-void verifica_tempo_esecuzione(float (*funzione)(), double tempo_massimo,int iterazione) {
-    set_realtime_priority();
-
-    struct timespec inizio, fine;
-    clock_gettime(CLOCK_MONOTONIC, &inizio);  // Inizio cronometro
-
-    funzione();
-
-    clock_gettime(CLOCK_MONOTONIC, &fine);  // Fine cronometro
-
-    double tempo_esecuzione = (fine.tv_sec - inizio.tv_sec) * 1000.0 + 
-                              (fine.tv_nsec - inizio.tv_nsec) / 1000000.0;  // Millisecondi
-
-    //printf("Tempo di esecuzione: %.2f ms\n", tempo_esecuzione);
-    
-    double wait = (2-tempo_esecuzione)*1000;
-    //printf("wait : %.2f us\n", wait);
-    
-    usleep(wait);
-    
-    double time_step = (wait/1000) + tempo_esecuzione;
-    //printf("time_step : %.2f ms\n", time_step);
-    
-    printf("%.i,%.2f,%.2f\n", iterazione,tempo_esecuzione,time_step);
-
-    /*
-    printf("Tempo di esecuzione: %.2f ms\n", tempo_esecuzione);
-    if (tempo_esecuzione <= tempo_massimo) {
-        printf("\033[92mLa funzione è stata eseguita entro il limite di %.2f ms\033[0m\n", tempo_massimo);
-    } else {
-        printf("\033[91mLa funzione ha superato il limite di %.2f ms\033[0m\n", tempo_massimo);
-    }
-    */
-}
-
 int main() {
     double tempo_massimo_ms = 10.0;  // Tempo massimo consentito in millisecondi
 
@@ -94,10 +59,11 @@ int main() {
     float setpoint = 100.0f;  // Obiettivo, per esempio una temperatura di 100°C
     float measured_value = 0.0f;  // Valore misurato inizialmente
     float control_output = 0.0f;  // Uscita del controllo PID
-    
-    for (int i = 1; i <= 100; i++) {
-        //printf("Iterazione %d\n", i);
-        verifica_tempo_esecuzione(PID_compute(&pid, setpoint, measured_value), tempo_massimo_ms,i);
+
+    // Eseguiamo il controllo per un certo numero di iterazioni
+    for (int i = 0; i < 100; i++) {
+        // Calcolare l'uscita del PID
+        control_output = PID_compute(&pid, setpoint, measured_value);
 
         // Simulazione di un sistema: supponiamo che il valore misurato risponda all'uscita del PID
         measured_value += control_output;
