@@ -3,7 +3,8 @@ FROM ubuntu:latest
 
 # Aggiorna il sistema e installa le dipendenze
 RUN apt-get update && apt-get install -y \
-    build-essential
+    build-essential \
+    libglpk-dev 
 
 # Copia il codice C all'interno del container
 COPY script.c /usr/src/pid_controller.c
