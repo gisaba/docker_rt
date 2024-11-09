@@ -50,32 +50,7 @@ float PID_compute(PID_Controller *pid, float setpoint, float measured_value) {
     return output;
 }
 
-// Funzione di test del controllo PID
-void test_PID() {
-    PID_Controller pid;
-    PID_init(&pid, 1.0f, 0.1f, 0.01f);  // Impostiamo i guadagni (tune questi valori)
-
-    float setpoint = 100.0f;  // Obiettivo, per esempio una temperatura di 100°C
-    float measured_value = 0.0f;  // Valore misurato inizialmente
-    float control_output = 0.0f;  // Uscita del controllo PID
-
-    // Eseguiamo il controllo per un certo numero di iterazioni
-    for (int i = 0; i < 100; i++) {
-        // Calcolare l'uscita del PID
-        control_output = PID_compute(&pid, setpoint, measured_value);
-
-        // Simulazione di un sistema: supponiamo che il valore misurato risponda all'uscita del PID
-        measured_value += control_output;
-
-        // Stampa l'errore e la risposta
-        printf("Setpoint: %.2f, Measured Value: %.2f, Control Output: %.2f\n", setpoint, measured_value, control_output);
-
-        // Aggiungi un piccolo ritardo per simulare un loop di controllo
-        usleep(100000);  // 100 ms
-    }
-}
-
-void verifica_tempo_esecuzione(float (*funzione)(PID_Controller *pid, float setpoint, float measured_value), double tempo_massimo,int iterazione) {
+void verifica_tempo_esecuzione(float (*funzione)(), double tempo_massimo,int iterazione) {
     set_realtime_priority();
 
     struct timespec inizio, fine;
