@@ -80,11 +80,20 @@ int main() {
         double tempo_esecuzione = (fine.tv_sec - inizio.tv_sec) * 1000.0 + 
                               (fine.tv_nsec - inizio.tv_nsec) / 1000000.0;  // Millisecondi
 
+        double wait = (100-tempo_esecuzione)*1000;
+        //printf("wait : %.2f us\n", wait);
+        
+        double time_step = (wait/1000) + tempo_esecuzione;
+        //printf("time_step : %.2f ms\n", time_step);
+        
+        printf("%.i,%.2f,%.2f\n", iterazione,tempo_esecuzione,time_step);
+
         // Stampa l'errore e la risposta
         printf("Setpoint: %.2f, Measured Value: %.2f, Control Output: %.2f\n", setpoint, measured_value, control_output);
 
         // Aggiungi un piccolo ritardo per simulare un loop di controllo
-        usleep(100000);  // 100 ms
+        // usleep(100000);  // 100 ms
+        usleep(wait);
     }
 
     return 0;
