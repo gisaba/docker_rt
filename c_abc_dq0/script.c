@@ -86,7 +86,7 @@ int main() {
     float control_output = 0.0f;  // Uscita del controllo PID
 
     // Eseguiamo il controllo per un certo numero di iterazioni
-    for (int i = 0; i < 100; i++) {
+    for (int i = 0; i < 1000000; i++) {
 
         set_realtime_priority();
 
