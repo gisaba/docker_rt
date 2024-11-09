@@ -73,9 +73,9 @@ int main() {
     double tempo_massimo_ms = 0.1;  // Tempo massimo consentito in millisecondi
 
     // Correnti di ingresso nel sistema ABC
-    float I_a = 10.0;  // Corrente A
-    float I_b = 5.0;   // Corrente B
-    float I_c = -3.0;  // Corrente C
+    float I_a = (double)rand(); // 10.0;  // Corrente A
+    float I_b = (double)rand() + 5.0;   // Corrente B
+    float I_c = (double)rand() - 3.0;  // Corrente C
 
     // Angolo di rotazione (ad esempio 30 gradi convertito in radianti)
     float theta = M_PI / 6.0;  // 30° in radianti
