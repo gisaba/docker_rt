@@ -32,18 +32,6 @@ void PID_init(PID_Controller *pid, float kp, float ki, float kd) {
 
 // Funzione che calcola il valore di controllo PID
 float PID_compute(PID_Controller *pid, float setpoint, float measured_value) {
-    set_realtime_priority();
-
-    struct timespec inizio, fine;
-    clock_gettime(CLOCK_MONOTONIC, &inizio);  // Inizio cronometro
-
-    funzione();
-
-    clock_gettime(CLOCK_MONOTONIC, &fine);  // Fine cronometro
-
-    double tempo_esecuzione = (fine.tv_sec - inizio.tv_sec) * 1000.0 + 
-                              (fine.tv_nsec - inizio.tv_nsec) / 1000000.0;  // Millisecondi
-    
     // Calcolare l'errore
     float error = setpoint - measured_value;
 
@@ -74,11 +62,23 @@ int main() {
 
     // Eseguiamo il controllo per un certo numero di iterazioni
     for (int i = 0; i < 100; i++) {
+
+        set_realtime_priority();
+
+        struct timespec inizio, fine;
+        clock_gettime(CLOCK_MONOTONIC, &inizio);  // Inizio cronometro
+
         // Calcolare l'uscita del PID
         control_output = PID_compute(&pid, setpoint, measured_value);
 
         // Simulazione di un sistema: supponiamo che il valore misurato risponda all'uscita del PID
         measured_value += control_output;
+
+
+        clock_gettime(CLOCK_MONOTONIC, &fine);  // Fine cronometro
+
+        double tempo_esecuzione = (fine.tv_sec - inizio.tv_sec) * 1000.0 + 
+                              (fine.tv_nsec - inizio.tv_nsec) / 1000000.0;  // Millisecondi
 
         // Stampa l'errore e la risposta
         printf("Setpoint: %.2f, Measured Value: %.2f, Control Output: %.2f\n", setpoint, measured_value, control_output);
