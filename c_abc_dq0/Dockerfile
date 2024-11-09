@@ -13,8 +13,8 @@ COPY script.c /usr/src/pid_controller.c
 WORKDIR /usr/src
 
 # Compila il programma C
-RUN gcc -o pid_controller pid_controller.c -lmglpk
-#RUN gcc -o pid_controller pid_controller.c -lm
+#RUN gcc -o pid_controller pid_controller.c -lmglpk
+RUN gcc -o pid_controller pid_controller.c -lm
 
 
 # Esegui il programma compilato
