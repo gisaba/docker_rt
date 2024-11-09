@@ -7,7 +7,7 @@ RUN apt-get update && apt-get install -y \
     libglpk-dev 
 
 # Copia il codice C all'interno del container
-COPY script1.c /usr/src/pid_controller.c
+COPY script_1.c /usr/src/pid_controller.c
 
 # Imposta la directory di lavoro
 WORKDIR /usr/src
