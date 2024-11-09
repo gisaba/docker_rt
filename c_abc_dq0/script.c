@@ -72,11 +72,6 @@ void abc_to_dq0(float I_a, float I_b, float I_c, float theta, float *I_d, float 
 int main() {
     double tempo_massimo_ms = 0.1;  // Tempo massimo consentito in millisecondi
 
-    // Correnti di ingresso nel sistema ABC
-    float I_a = (double)rand(); // 10.0;  // Corrente A
-    float I_b = (double)rand() + 5.0;   // Corrente B
-    float I_c = (double)rand() - 3.0;  // Corrente C
-
     // Angolo di rotazione (ad esempio 30 gradi convertito in radianti)
     float theta = M_PI / 6.0;  // 30° in radianti
 
@@ -103,6 +98,11 @@ int main() {
 
         // Simulazione di un sistema: supponiamo che il valore misurato risponda all'uscita del PID
         measured_value += control_output;
+
+        // Correnti di ingresso nel sistema ABC
+        float I_a = (double)rand(); // 10.0;  // Corrente A
+        float I_b = (double)rand() + 5.0;   // Corrente B
+        float I_c = (double)rand() - 3.0;  // Corrente C
 
         // Chiamata alla funzione di trasformazione
         abc_to_dq0(I_a, I_b, I_c, theta, &I_d, &I_q, &I_0);
