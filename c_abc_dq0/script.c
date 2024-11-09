@@ -108,9 +108,9 @@ int main() {
         abc_to_dq0(I_a, I_b, I_c, theta, &I_d, &I_q, &I_0);
 
         // Stampa i risultati
-        printf("Componente D (I_d): %.2f\n", I_d);
-        printf("Componente Q (I_q): %.2f\n", I_q);
-        printf("Componente 0 (I_0): %.2f\n", I_0);
+        //printf("Componente D (I_d): %.2f\n", I_d);
+        //printf("Componente Q (I_q): %.2f\n", I_q);
+        //printf("Componente 0 (I_0): %.2f\n", I_0);
 
         clock_gettime(CLOCK_MONOTONIC, &fine);  // Fine cronometro
 
