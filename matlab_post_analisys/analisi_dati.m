@@ -5,11 +5,13 @@ clc;
 
 t_deadline = 1;
 
-test = 'lpo';
+%test = 'lpo';
 %test = 'fft';
+test = 'pid_abcdq0';
 
 profile = 'real-time';
 %profile = 'balanced';
+
 
 %linguaggio = 'python';
 %linguaggio = 'csharp'
@@ -97,7 +99,7 @@ opts.MissingRule = "omitrow";
 % Import the data
 TableFile = readtable(filename, opts);
 
-step = 0.001;
+step = 0.00001;
 dati = TableFile.timestep;
 TypeDist = 'Lognormal';
 %pd = fitdist(dati,'Weibull');

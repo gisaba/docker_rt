@@ -86,7 +86,7 @@ int main() {
     float control_output = 0.0f;  // Uscita del controllo PID
 
     // Eseguiamo il controllo per un certo numero di iterazioni
-    for (int i = 0; i < 1000000; i++) {
+    for (int i = 0; i < 100; i++) {
 
         set_realtime_priority();
 
@@ -108,9 +108,9 @@ int main() {
         abc_to_dq0(I_a, I_b, I_c, theta, &I_d, &I_q, &I_0);
 
         // Stampa i risultati
-        //printf("Componente D (I_d): %.2f\n", I_d);
-        //printf("Componente Q (I_q): %.2f\n", I_q);
-        //printf("Componente 0 (I_0): %.2f\n", I_0);
+        printf("Componente D (I_d): %.2f\n", I_d);
+        printf("Componente Q (I_q): %.2f\n", I_q);
+        printf("Componente 0 (I_0): %.2f\n", I_0);
 
         clock_gettime(CLOCK_MONOTONIC, &fine);  // Fine cronometro
 
