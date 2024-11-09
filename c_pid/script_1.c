@@ -32,6 +32,18 @@ void PID_init(PID_Controller *pid, float kp, float ki, float kd) {
 
 // Funzione che calcola il valore di controllo PID
 float PID_compute(PID_Controller *pid, float setpoint, float measured_value) {
+    set_realtime_priority();
+
+    struct timespec inizio, fine;
+    clock_gettime(CLOCK_MONOTONIC, &inizio);  // Inizio cronometro
+
+    funzione();
+
+    clock_gettime(CLOCK_MONOTONIC, &fine);  // Fine cronometro
+
+    double tempo_esecuzione = (fine.tv_sec - inizio.tv_sec) * 1000.0 + 
+                              (fine.tv_nsec - inizio.tv_nsec) / 1000000.0;  // Millisecondi
+    
     // Calcolare l'errore
     float error = setpoint - measured_value;
 
