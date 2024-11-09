@@ -70,7 +70,7 @@ void abc_to_dq0(float I_a, float I_b, float I_c, float theta, float *I_d, float 
 }
 
 int main() {
-    double tempo_massimo_ms = 1.0;  // Tempo massimo consentito in millisecondi
+    double tempo_massimo_ms = 0.1;  // Tempo massimo consentito in millisecondi
 
     // Correnti di ingresso nel sistema ABC
     float I_a = 10.0;  // Corrente A
