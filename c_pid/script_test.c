@@ -1,8 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include <time.h>
-#include <sched.h>
 
 // Struttura per memorizzare i parametri del PID
 typedef struct {
@@ -12,14 +10,6 @@ typedef struct {
     float prev_error;  // Errore precedente
     float integral;    // Somma dell'errore integrato
 } PID_Controller;
-
-void set_realtime_priority() {
-    struct sched_param param;
-    param.sched_priority = 99;
-    if (sched_setscheduler(0, SCHED_FIFO, &param) != 0) {
-        perror("Errore: È necessario eseguire il programma con privilegi di root per impostare la priorità real-time.");
-    }
-}
 
 // Funzione di inizializzazione del PID
 void PID_init(PID_Controller *pid, float kp, float ki, float kd) {
@@ -50,9 +40,8 @@ float PID_compute(PID_Controller *pid, float setpoint, float measured_value) {
     return output;
 }
 
-int main() {
-    double tempo_massimo_ms = 10.0;  // Tempo massimo consentito in millisecondi
-
+// Funzione di test del controllo PID
+void test_PID() {
     PID_Controller pid;
     PID_init(&pid, 1.0f, 0.1f, 0.01f);  // Impostiamo i guadagni (tune questi valori)
 
@@ -62,39 +51,21 @@ int main() {
 
     // Eseguiamo il controllo per un certo numero di iterazioni
     for (int i = 0; i < 100; i++) {
-
-        set_realtime_priority();
-
-        struct timespec inizio, fine;
-        clock_gettime(CLOCK_MONOTONIC, &inizio);  // Inizio cronometro
-
         // Calcolare l'uscita del PID
         control_output = PID_compute(&pid, setpoint, measured_value);
 
         // Simulazione di un sistema: supponiamo che il valore misurato risponda all'uscita del PID
         measured_value += control_output;
 
-
-        clock_gettime(CLOCK_MONOTONIC, &fine);  // Fine cronometro
-
-        double tempo_esecuzione = (fine.tv_sec - inizio.tv_sec) * 1000.0 + 
-                              (fine.tv_nsec - inizio.tv_nsec) / 1000000.0;  // Millisecondi
-
-        double wait = (100-tempo_esecuzione)*1000;
-        //printf("wait : %.2f us\n", wait);
-        
-        double time_step = (wait/1000) + tempo_esecuzione;
-        //printf("time_step : %.2f ms\n", time_step);
-        
-        printf("%.i,%.2f,%.2f\n", i,tempo_esecuzione,time_step);
-
         // Stampa l'errore e la risposta
         printf("Setpoint: %.2f, Measured Value: %.2f, Control Output: %.2f\n", setpoint, measured_value, control_output);
 
         // Aggiungi un piccolo ritardo per simulare un loop di controllo
-        // usleep(100000);  // 100 ms
-        usleep(wait);
+        usleep(100000);  // 100 ms
     }
+}
 
+int main() {
+    test_PID();
     return 0;
 }
