@@ -6,16 +6,19 @@ clc;
 t_deadline = 1;
 
 %test = 'lpo';
-test = 'fft';
+%test = 'fft';
+test = 'pid_abcdq0';
+
 profile = 'real-time';
 %profile = 'balanced';
+
+
 %linguaggio = 'python';
-%linguaggio = 'csharp
+%linguaggio = 'csharp'
 linguaggio = 'c';
 
 %so = 'linux';
-%so = 'macos';
-so = 'rasbian';
+so = 'RaspberryPi-OS';
 
 path_table_misure = ['./misure/' so '/'];
 
@@ -43,7 +46,7 @@ stdOverRun = [];
     opts.MissingRule = "omitrow";
      
     % Import the data
-    filename = strcat(path_table_misure, [profile '_' linguaggio '_' test '.' so]);
+    filename = strcat(path_table_misure, [profile '_' linguaggio '_' test]);
     TableFile = readtable(filename, opts);
 
     disp(['Analizzo i dati del test'])
@@ -54,9 +57,9 @@ stdOverRun = [];
     Periodo = TableFile.periodo;
 
     Timestep(Timestep==0) = mean(Timestep);
-    pd = fitdist(Timestep,'Lognormal');
+    %pd = fitdist(Timestep,'Lognormal');
     %pd = fitdist(Timestep,'Weibull');
-    %pd = fitdist(Timestep,'Normal')
+    pd = fitdist(Timestep,'Normal')
     
     step = 0.001;
     x_pdf = 0:step:max(Timestep);
@@ -96,7 +99,7 @@ opts.MissingRule = "omitrow";
 % Import the data
 TableFile = readtable(filename, opts);
 
-step = 0.001;
+step = 0.00001;
 dati = TableFile.timestep;
 TypeDist = 'Lognormal';
 %pd = fitdist(dati,'Weibull');

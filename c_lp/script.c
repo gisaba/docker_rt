@@ -13,7 +13,6 @@ void set_realtime_priority() {
     }
 }
 
-
 void minimize_linear_function(int num_variables, int num_constraints, 
                               double constraint_coefficients[][num_variables], 
                               double constraint_constants[], 

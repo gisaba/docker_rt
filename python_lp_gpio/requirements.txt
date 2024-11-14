@@ -1,0 +1,4 @@
+pulp
+scipy
+numpy
+paho-mqtt==1.1
