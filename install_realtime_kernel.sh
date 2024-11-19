@@ -128,7 +128,7 @@ disable_unnecessary_services() {
     # systemctl disable wpa_supplicant
 }
 
-# Funzione per installare Docker
+# Funzione per installare Docker 
 install_docker() {
     # Add Docker's official GPG key:
     apt-get update
@@ -176,13 +176,61 @@ leasefile-ro
 EOF
 
     
-    tee /etc/network/interfaces.d/usb0 > /dev/null << EOF
+if systemctl is-active --quiet networking; then
+   # Configure with networking service
+   tee /etc/network/interfaces.d/usb0 > /dev/null << EOF
 auto usb0
 allow-hotplug usb0
 iface usb0 inet static
 address 10.55.0.1
 netmask 255.255.255.248    
 EOF
+
+elif systemctl is-active --quiet NetworkManager; then
+   # Configure with NetworkManager
+   tee /etc/NetworkManager/system-connections/usb0.nmconnection > /dev/null << EOF
+[connection]
+id=usb0
+type=ethernet
+interface-name=usb0
+autoconnect=true
+autoconnect-priority=1
+
+[ipv4]
+method=manual
+addresses=10.55.0.1/29
+
+[ethernet]
+EOF
+    chmod 600 /etc/NetworkManager/system-connections/usb0.nmconnection
+    systemctl restart NetworkManager
+
+    # Add boot script to enable the interface
+    cat > /etc/systemd/system/usb0-up.service << 'EOF'
+[Unit]
+Description=Activate USB0 network interface
+After=NetworkManager.service
+Wants=NetworkManager.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/nmcli connection up usb0
+RemainAfterExit=yes
+Restart=on-failure
+RestartSec=5s
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+    chmod 644 /etc/systemd/system/usb0-up.service
+    systemctl daemon-reload
+    systemctl enable usb0-up.service
+
+else
+    echo "Neither networking nor NetworkManager service is active"
+    exit 1
+fi
     
     tee /root/usb.sh > /dev/null << EOF
 #!/bin/bash
