@@ -227,11 +227,12 @@ EOF
     systemctl daemon-reload
     systemctl enable usb0-up.service
 
-else
-    echo "Neither networking nor NetworkManager service is active"
-    exit 1
-fi
+    else
+        echo "Neither networking nor NetworkManager service is active"
+        exit 1
+    fi
     
+    # Prima creiamo lo script usb.sh
     tee /root/usb.sh > /dev/null << EOF
 #!/bin/bash
 cd /sys/kernel/config/usb_gadget/
@@ -265,7 +266,26 @@ ls /sys/class/udc > UDC
 ifup usb0
 service dnsmasq restart
 EOF
+
     chmod +x /root/usb.sh
+
+    # Creiamo /etc/rc.local se non esiste
+    if [ ! -f /etc/rc.local ]; then
+        tee /etc/rc.local > /dev/null << EOF
+#!/bin/sh -e
+#
+# rc.local
+#
+# This script is executed at the end of each multiuser runlevel.
+# Make sure that the script will "exit 0" on success or any other
+# value on error.
+
+exit 0
+EOF
+        chmod +x /etc/rc.local
+    fi
+
+    # Modifichiamo rc.local per includere il nostro script
     sed -i 's|exit 0|/root/usb.sh\nexit 0|' /etc/rc.local
 
 }
