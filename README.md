@@ -35,7 +35,12 @@ The script will:
 
 3. Reboot your device and you are ready to go!
 
-**PLEASE NOTE** that this setup will disable WiFi on your Rasperry device so, if you need to connect to the internet, you will need to connect it via ethernet.
+If something goes wrong, you can run the script in *debug mode* by running:
+
+```bash
+curl -sSL https://raw.githubusercontent.com/antoniopicone/docker_rt/main/install_realtime_kernel.sh --debug | sudo sh
+```
+
 
 ### Building Kernel on your own device
 Clone this repo and run

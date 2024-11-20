@@ -1,4 +1,11 @@
 #!/bin/sh
+DEBUG=0
+for arg in "$@"; do
+    if [ "$arg" = "--debug" ]; then
+        DEBUG=1
+        break
+    fi
+done
 
 clear
 
@@ -85,9 +92,15 @@ run_with_spinner() {
     trap cleanup_int INT QUIT TERM
     local func=$1
     local description="$2"
-    $func > /dev/null 2>&1 &
+    if [ "$DEBUG" -eq 1 ]; then
+        $func &
+    else
+        $func > /dev/null 2>&1 &
+    fi
     local pid=$!
-    spinner $pid "$description"
+    if [ "$DEBUG" -eq 0 ]; then
+        spinner $pid "$description"
+    fi
     wait $pid
     if [ $? -eq 0 ]; then
         printf "\033[32m✔\033[0m %s\n" "$description"
@@ -119,13 +132,16 @@ disable_power_mgmt() {
 
 # Disable unnecessary services
 disable_unnecessary_services() {
-    systemctl disable bluetooth
-    #systemctl disable avahi-daemon
-    systemctl disable irqbalance
-    systemctl disable cups
-    systemctl disable ModemManager
-    systemctl disable triggerhappy
-    # systemctl disable wpa_supplicant
+    
+    # services="bluetooth avahi-daemon irqbalance cups ModemManager triggerhappy wpa_supplicant"
+    services="bluetooth irqbalance cups ModemManager triggerhappy ondemand"
+   
+    for service in $services; do
+       if systemctl is-enabled "$service" >/dev/null 2>&1; then
+           systemctl disable "$service"
+       fi
+    done
+
 }
 
 # Funzione per installare Docker 
@@ -326,7 +342,10 @@ cleanup() {
     
 }
 
-get_latest_release_url() {
+
+
+install_rt_kernel() {
+
     echo "Fetching latest release URL from GitHub..."
 
     # Ottieni la versione della release tramite l'API GitHub
@@ -345,12 +364,6 @@ get_latest_release_url() {
 
     KERNEL_URL="https://github.com/antoniopicone/docker_rt/releases/download/$RELEASE_VER/linux66_rt_${CONFIG_MODEL}_defconfig.tar.gz"
     
-}
-
-
-install_rt_kernel() {
-
-    get_latest_release_url
     
     wget -O linux66_rt.tar.gz $KERNEL_URL
     
@@ -360,6 +373,8 @@ install_rt_kernel() {
 
     cd linux
 
+    echo "Setting up real time kernel $RELEASE_VER"
+    
     make -j$(nproc) modules_install
 
     cp ./arch/arm64/boot/Image /boot/firmware/Image66_rt_$RELEASE_VER.img
@@ -444,7 +459,6 @@ EOF
 
     # Impostazione del governor delle CPU
     echo 'GOVERNOR="performance"' | sudo tee /etc/default/cpufrequtils
-    systemctl disable ondemand
     systemctl enable cpufrequtils
 
     echo "System tuned for realtime performance. A reboot may be required."
@@ -600,16 +614,16 @@ run_with_spinner update_os "Updating OS"
 run_with_spinner disable_unnecessary_services "Disabling unnecessary services"
 run_with_spinner disable_gui "Disabling GUI"
 run_with_spinner disable_power_mgmt "Disabling power management"
-run_with_spinner install_docker "Installing Docker"
-if [ "$MODEL" = "4" ]; then
-    run_with_spinner enable_ethernet_over_usbc "Enabling Ethernet over USB-C"
-fi
 run_with_spinner install_rt_kernel "Installing latest real time kernel (will take some minutes)"
 run_with_spinner tune_system_for_realtime "Tuning system for realtime"
+run_with_spinner install_docker "Installing Docker"
 run_with_spinner download_docker_rt_repo "Downloading docker_rt repository for local testing"
 run_with_spinner generate_htop_config "Changing htop settings to show processors"
 run_with_spinner enable_spi "Enabling SPI interface"
 run_with_spinner disable_audio "Disabling audio"
+if [ "$MODEL" = "4" ]; then
+    run_with_spinner enable_ethernet_over_usbc "Enabling Ethernet over USB-C"
+fi
 run_with_spinner cleanup "Cleaning up the system"
 request_reboot
 
