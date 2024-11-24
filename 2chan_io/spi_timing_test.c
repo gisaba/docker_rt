@@ -144,6 +144,7 @@ static void *read_thread(void *arg) {
         
         // Invece di leggere da SPI, generiamo un pattern di test
         #ifdef USE_REAL_SPI
+            printf("Lettura reale SPI (commentata per test)");
             // Lettura reale SPI (commentata per test)
             if (wiringPiSPIDataRW(SPI_CHANNEL_IN, spi_buffers.read_buffer.bytes, BUFFER_SIZE_BYTES) < 0) {
                 perror("SPI read failed");
