@@ -164,7 +164,7 @@ static void *read_thread(void *arg) {
             //spi_buffers.read_buffer.value = (1ULL << (test_counter++ % 64));
             
             // Simula il tempo di lettura SPI
-            usleep(1000); // 1 microsecondo di delay
+            usleep(1); // 1 microsecondo di delay
         #endif
 
         pthread_mutex_lock(&spi_buffers.write_mutex);
