@@ -276,8 +276,9 @@ static void print_stats(const char* operation, timing_stats_t *stats) {
 }
 
 int main(void) {
-     // Set the CE0_PIN as an input
-    pinMode(CE0_PIN, INPUT);
+    
+    // Set the CE0_PIN as an input
+    // pinMode(CE0_PIN, INPUT);
 
     // Inizializzazione mutex e condition variables
     pthread_mutex_init(&spi_buffers.read_mutex, NULL);
