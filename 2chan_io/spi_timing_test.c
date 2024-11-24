@@ -24,7 +24,7 @@
 #define BITS_PER_TRANSFER 8
 #define BUFFER_SIZE_BITS 8
 #define BUFFER_SIZE_BYTES (BUFFER_SIZE_BITS / 8)
-#define TEST_DURATION   10
+#define TEST_DURATION  100
 #define TIMESLOT_NS    100000    // 0.1ms
 #define SAMPLE_COUNT   10000
 #define READ_CORE      2         // Core dedicato alla lettura
@@ -248,11 +248,11 @@ static void *process_write_thread(void *arg) {
         if (elapsed > write_stats.max_time) write_stats.max_time = elapsed;
         if (elapsed > TIMESLOT_NS) write_stats.overruns++;
 
-        // Output di debug
-        //if (write_stats.iterations % 1000 == 0) {
-        //    printf("Process/Write [Core %d] - Original: 0x%016lX, Inverted: 0x%016lX\n",
-        //           PROCESS_CORE, spi_buffers.process_buffer.value, spi_buffers.write_buffer.value);
-        //}
+        Output di debug
+        if (write_stats.iterations % 1000 == 0) {
+            printf("Process/Write [Core %d] - Original: 0x%016lX, Inverted: 0x%016lX\n",
+                   PROCESS_CORE, spi_buffers.process_buffer.value, spi_buffers.write_buffer.value);
+        }
     }
 
     return NULL;
