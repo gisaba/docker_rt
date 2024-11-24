@@ -30,6 +30,7 @@
 #define READ_CORE      2         // Core dedicato alla lettura
 #define PROCESS_CORE   3         // Core dedicato a elaborazione e scrittura
 #define USE_REAL_SPI   1
+#define CE0_PIN 1               // GPIO10 corresponds to wiringPi pin 1
 
 // Struttura per i buffer SPI con triple buffering e sincronizzazione
 typedef struct __attribute__((aligned(64))) {
@@ -275,6 +276,9 @@ static void print_stats(const char* operation, timing_stats_t *stats) {
 }
 
 int main(void) {
+     // Set the CE0_PIN as an input
+    pinMode(CE0_PIN, INPUT);
+
     // Inizializzazione mutex e condition variables
     pthread_mutex_init(&spi_buffers.read_mutex, NULL);
     //pthread_mutex_init(&spi_buffers.write_mutex, NULL);
