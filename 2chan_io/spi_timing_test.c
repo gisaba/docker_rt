@@ -18,7 +18,7 @@
 #include <stdint.h>
 
 // Configurazione CPU e SPI
-#define SPI_CHANNEL_IN    0       // CE0 (GPIO8)  - Canale di lettura
+#define SPI_CHANNEL_IN    1       // CE0 (GPIO8)  - Canale di lettura
 #define SPI_CHANNEL_OUT   1       // CE1 (GPIO7)  - Canale di scrittura
 #define SPI_SPEED       2000000   // 2MHz compatibile con Arduino
 #define BITS_PER_TRANSFER 8
