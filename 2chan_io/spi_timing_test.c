@@ -29,7 +29,7 @@
 #define SAMPLE_COUNT   10000
 #define READ_CORE      2         // Core dedicato alla lettura
 #define PROCESS_CORE   3         // Core dedicato a elaborazione e scrittura
-#define USE_REAL_SPI   1
+#define USE_REAL_SPI   0
 
 // Struttura per i buffer SPI con triple buffering e sincronizzazione
 typedef struct __attribute__((aligned(64))) {
@@ -144,7 +144,7 @@ static void *read_thread(void *arg) {
         
         // Invece di leggere da SPI, generiamo un pattern di test
         #ifdef USE_REAL_SPI
-            //printf("Lettura reale SPI (commentata per test)\n");
+            printf("Lettura reale SPI (commentata per test)\n");
             // Lettura reale SPI (commentata per test)
             if (wiringPiSPIDataRW(SPI_CHANNEL_IN, spi_buffers.read_buffer.bytes, BUFFER_SIZE_BYTES) < 0) {
                 perror("SPI read failed");
