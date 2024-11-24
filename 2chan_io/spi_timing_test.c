@@ -29,7 +29,7 @@
 #define SAMPLE_COUNT   10000
 #define READ_CORE      2         // Core dedicato alla lettura
 #define PROCESS_CORE   3         // Core dedicato a elaborazione e scrittura
-#define USE_REAL_SPI   0
+//#define USE_REAL_SPI   0
 
 // Struttura per i buffer SPI con triple buffering e sincronizzazione
 typedef struct __attribute__((aligned(64))) {
