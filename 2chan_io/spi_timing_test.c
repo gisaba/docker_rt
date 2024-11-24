@@ -20,7 +20,7 @@
 // Configurazione CPU e SPI
 #define SPI_CHANNEL_IN    0       // CE0 (GPIO8)  - Canale di lettura
 #define SPI_CHANNEL_OUT   1       // CE1 (GPIO7)  - Canale di scrittura
-#define SPI_SPEED       1000000   // 4MHz compatibile con Arduino
+#define SPI_SPEED       4000000   // 4MHz compatibile con Arduino
 #define BITS_PER_TRANSFER 8
 #define BUFFER_SIZE_BITS 8
 #define BUFFER_SIZE_BYTES (BUFFER_SIZE_BITS / 8)
@@ -29,7 +29,6 @@
 #define SAMPLE_COUNT   10000
 #define READ_CORE      2         // Core dedicato alla lettura
 #define PROCESS_CORE   3         // Core dedicato a elaborazione e scrittura
-#define USE_REAL_SPI   1
 
 // Struttura per i buffer SPI con triple buffering e sincronizzazione
 typedef struct __attribute__((aligned(64))) {
@@ -311,15 +310,15 @@ int main(void) {
         return 1;
     }
 
-//    if (wiringPiSPISetup(SPI_CHANNEL_OUT, SPI_SPEED) < 0) {
-//        fprintf(stderr, "Failed to initialize SPI output channel\n");
-//        return 1;
-//    }
+    if (wiringPiSPISetup(SPI_CHANNEL_OUT, SPI_SPEED) < 0) {
+        fprintf(stderr, "Failed to initialize SPI output channel\n");
+        return 1;
+    }
 
     // Creazione thread
-    pthread_t read_thread_id; //, process_write_thread_id;
+    pthread_t read_thread_id, process_write_thread_id;
     pthread_create(&read_thread_id, NULL, read_thread, NULL);
-    //pthread_create(&process_write_thread_id, NULL, process_write_thread, NULL);
+    pthread_create(&process_write_thread_id, NULL, process_write_thread, NULL);
 
     // Attesa per la durata del test
     sleep(TEST_DURATION);
@@ -328,15 +327,15 @@ int main(void) {
     should_stop = 1;
     pthread_cond_broadcast(&spi_buffers.data_ready);
     pthread_join(read_thread_id, NULL);
-    //pthread_join(process_write_thread_id, NULL);
+    pthread_join(process_write_thread_id, NULL);
 
     // Stampa statistiche finali
     print_stats("Lettura (Core 2)", &read_stats);
-    //print_stats("Elaborazione e Scrittura (Core 3)", &write_stats);
+    print_stats("Elaborazione e Scrittura (Core 3)", &write_stats);
 
     // Cleanup
     pthread_mutex_destroy(&spi_buffers.read_mutex);
-    //pthread_mutex_destroy(&spi_buffers.write_mutex);
+    pthread_mutex_destroy(&spi_buffers.write_mutex);
     pthread_cond_destroy(&spi_buffers.data_ready);
 
     printf("\nTest completato.\n");
