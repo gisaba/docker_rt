@@ -20,7 +20,7 @@
 // Configurazione CPU e SPI
 #define SPI_CHANNEL_IN    0       // CE0 (GPIO8)  - Canale di lettura
 #define SPI_CHANNEL_OUT   1       // CE1 (GPIO7)  - Canale di scrittura
-#define SPI_SPEED       2000000   // 4MHz compatibile con Arduino
+#define SPI_SPEED       4000000   // 4MHz compatibile con Arduino
 #define BITS_PER_TRANSFER 8
 #define BUFFER_SIZE_BITS 8
 #define BUFFER_SIZE_BYTES (BUFFER_SIZE_BITS / 8)
@@ -144,7 +144,7 @@ static void *read_thread(void *arg) {
         
         // Invece di leggere da SPI, generiamo un pattern di test
         #ifdef USE_REAL_SPI
-            printf("Lettura reale SPI (commentata per test)\n");
+            // printf("Lettura reale SPI (commentata per test)\n");
             // Lettura reale SPI (commentata per test)
             if (wiringPiSPIDataRW(SPI_CHANNEL_IN, spi_buffers.read_buffer.bytes, BUFFER_SIZE_BYTES) < 0) {
                 perror("SPI read failed");
