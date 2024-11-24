@@ -144,7 +144,7 @@ static void *read_thread(void *arg) {
         
         // Invece di leggere da SPI, generiamo un pattern di test
         #ifdef USE_REAL_SPI
-            printf("Lettura reale SPI (commentata per test)");
+            //printf("Lettura reale SPI (commentata per test)\n");
             // Lettura reale SPI (commentata per test)
             if (wiringPiSPIDataRW(SPI_CHANNEL_IN, spi_buffers.read_buffer.bytes, BUFFER_SIZE_BYTES) < 0) {
                 perror("SPI read failed");
@@ -183,10 +183,10 @@ static void *read_thread(void *arg) {
         if (elapsed > read_stats.max_time) read_stats.max_time = elapsed;
         if (elapsed > TIMESLOT_NS) read_stats.overruns++;
 
-        //if (read_stats.iterations % 1000 == 0) {
-        //    printf("Read [Core %d] - Test Pattern: 0x%016lX\n", 
-        //           READ_CORE, spi_buffers.read_buffer.value);
-        //}
+        if (read_stats.iterations % 1000 == 0) {
+            printf("Read [Core %d] - Test Pattern: 0x%016lX\n", 
+                   READ_CORE, spi_buffers.read_buffer.value);
+        }
     }
 
     return NULL;
