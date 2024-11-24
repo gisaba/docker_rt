@@ -305,7 +305,7 @@ int main(void) {
         return 1;
     }
 
-    if (wiringPiSPIxSetupMode(SPI_CHANNEL_IN, SPI_SPEED, 0) < 0) {
+    if (wiringPiSPIxSetupMode(0,SPI_CHANNEL_IN, SPI_SPEED, 0) < 0) {
         fprintf(stderr, "Failed to initialize SPI input channel\n");
         return 1;
     }
