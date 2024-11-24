@@ -248,7 +248,7 @@ static void *process_write_thread(void *arg) {
         if (elapsed > write_stats.max_time) write_stats.max_time = elapsed;
         if (elapsed > TIMESLOT_NS) write_stats.overruns++;
 
-        Output di debug
+        // Output di debug
         if (write_stats.iterations % 1000 == 0) {
             printf("Process/Write [Core %d] - Original: 0x%016lX, Inverted: 0x%016lX\n",
                    PROCESS_CORE, spi_buffers.process_buffer.value, spi_buffers.write_buffer.value);
