@@ -384,10 +384,6 @@ static void print_stats(const char* operation, timing_stats_t *stats) {
 }
 
 int main(void) {
-
-    // Set the LED_PIN as an output
-    pinMode(LED_PIN, OUTPUT);
-
     // Inizializzazione mutex e condition variables
     pthread_mutex_init(&spi_buffers.read_mutex, NULL);
     //pthread_mutex_init(&spi_buffers.write_mutex, NULL);
@@ -418,6 +414,9 @@ int main(void) {
         fprintf(stderr, "Failed to initialize WiringPi\n");
         return 1;
     }
+
+    // Set the LED_PIN as an output
+    pinMode(LED_PIN, OUTPUT);
 
     if (wiringPiSPISetup(SPI_CHANNEL_IN, SPI_SPEED) < 0) {
         fprintf(stderr, "Failed to initialize SPI input channel\n");
