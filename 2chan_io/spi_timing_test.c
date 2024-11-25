@@ -25,7 +25,7 @@
 #define BITS_PER_TRANSFER 8
 #define BUFFER_SIZE_BITS 8
 #define BUFFER_SIZE_BYTES (BUFFER_SIZE_BITS / 8)
-#define TEST_DURATION   10
+#define TEST_DURATION   1000
 #define TIMESLOT_NS    100000    // 0.1ms
 #define SAMPLE_COUNT   10000
 #define READ_CORE      2         // Core dedicato alla lettura
