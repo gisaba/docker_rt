@@ -207,9 +207,7 @@ void abc_to_dq0(float I_a, float I_b, float I_c, float theta, float *I_d, float 
 
 // Thread di lettura (Core 2)
 static void *read_thread(void *arg) {
-    
-    // Set the LED_PIN as an output
-    pinMode(LED_PIN, OUTPUT);
+
         
     // Correnti di ingresso nel sistema ABC
     float I_a = 10.0;  // Corrente A
@@ -237,15 +235,16 @@ static void *read_thread(void *arg) {
 
     while (!should_stop) {
 
-        // Turn the LED on
-        digitalWrite(LED_PIN, HIGH);
-
         clock_gettime(CLOCK_MONOTONIC_RAW, &start);
 
         pthread_mutex_lock(&spi_buffers.read_mutex);
         
         // Invece di leggere da SPI, generiamo un pattern di test
         #ifdef USE_REAL_SPI
+
+            // Turn the LED on
+            digitalWrite(LED_PIN, HIGH);
+            
             // Lettura reale SPI (commentata per test)
             if (wiringPiSPIDataRW(SPI_CHANNEL_IN, spi_buffers.read_buffer.bytes, BUFFER_SIZE_BYTES) < 0) {
                 perror("SPI read failed");
@@ -257,6 +256,9 @@ static void *read_thread(void *arg) {
             abc_to_dq0(I_a, I_b, I_c, theta, &I_d, &I_q, &I_0);
 
             test_PID();
+
+            // Turn the LED off
+            digitalWrite(LED_PIN, LOW);
         #else
             // Genera pattern di test (scegli uno dei pattern seguenti)
             
@@ -281,9 +283,6 @@ static void *read_thread(void *arg) {
         pthread_mutex_unlock(&spi_buffers.read_mutex);
 
         clock_gettime(CLOCK_MONOTONIC_RAW, &end);
-
-        // Turn the LED off
-        digitalWrite(LED_PIN, LOW);
         
         long elapsed = timespec_diff_ns(&start, &end);
         read_stats.total_time += elapsed;
@@ -385,6 +384,9 @@ static void print_stats(const char* operation, timing_stats_t *stats) {
 }
 
 int main(void) {
+
+    // Set the LED_PIN as an output
+    pinMode(LED_PIN, OUTPUT);
 
     // Inizializzazione mutex e condition variables
     pthread_mutex_init(&spi_buffers.read_mutex, NULL);
