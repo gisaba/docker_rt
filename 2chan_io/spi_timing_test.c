@@ -31,6 +31,7 @@
 #define READ_CORE      2         // Core dedicato alla lettura
 #define PROCESS_CORE   3         // Core dedicato a elaborazione e scrittura
 #define USE_REAL_SPI   1
+#define LED_PIN 0               // GPIO17 corresponds to wiringPi pin 0
 
 // Struttura per memorizzare i parametri del PID
 typedef struct {
@@ -207,6 +208,9 @@ void abc_to_dq0(float I_a, float I_b, float I_c, float theta, float *I_d, float 
 // Thread di lettura (Core 2)
 static void *read_thread(void *arg) {
     
+    // Set the LED_PIN as an output
+    pinMode(LED_PIN, OUTPUT);
+        
     // Correnti di ingresso nel sistema ABC
     float I_a = 10.0;  // Corrente A
     float I_b = 5.0;   // Corrente B
@@ -232,6 +236,10 @@ static void *read_thread(void *arg) {
     }
 
     while (!should_stop) {
+
+        // Turn the LED on
+        digitalWrite(LED_PIN, HIGH);
+
         clock_gettime(CLOCK_MONOTONIC_RAW, &start);
 
         pthread_mutex_lock(&spi_buffers.read_mutex);
@@ -249,7 +257,6 @@ static void *read_thread(void *arg) {
             abc_to_dq0(I_a, I_b, I_c, theta, &I_d, &I_q, &I_0);
 
             test_PID();
-            
         #else
             // Genera pattern di test (scegli uno dei pattern seguenti)
             
@@ -274,6 +281,9 @@ static void *read_thread(void *arg) {
         pthread_mutex_unlock(&spi_buffers.read_mutex);
 
         clock_gettime(CLOCK_MONOTONIC_RAW, &end);
+
+        // Turn the LED off
+        digitalWrite(LED_PIN, LOW);
         
         long elapsed = timespec_diff_ns(&start, &end);
         read_stats.total_time += elapsed;
