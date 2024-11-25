@@ -139,7 +139,7 @@ void test_PID() {
     float control_output = 0.0f;  // Uscita del controllo PID
 
     // Eseguiamo il controllo per un certo numero di iterazioni
-    for (int i = 0; i < 100; i++) {
+    for (int i = 0; i < 1++) {
         // Calcolare l'uscita del PID
         control_output = PID_compute(&pid, setpoint, measured_value);
 
@@ -147,7 +147,7 @@ void test_PID() {
         measured_value += control_output;
 
         // Stampa l'errore e la risposta
-        printf("Setpoint: %.2f, Measured Value: %.2f, Control Output: %.2f\n", setpoint, measured_value, control_output);
+        //printf("Setpoint: %.2f, Measured Value: %.2f, Control Output: %.2f\n", setpoint, measured_value, control_output);
 
         // Aggiungi un piccolo ritardo per simulare un loop di controllo
         usleep(1);  // 1 us
