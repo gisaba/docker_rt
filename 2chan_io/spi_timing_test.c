@@ -150,7 +150,7 @@ void test_PID() {
         printf("Setpoint: %.2f, Measured Value: %.2f, Control Output: %.2f\n", setpoint, measured_value, control_output);
 
         // Aggiungi un piccolo ritardo per simulare un loop di controllo
-        usleep(100000);  // 100 ms
+        usleep(1);  // 1 us
     }
 }
 
