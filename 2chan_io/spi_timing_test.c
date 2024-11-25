@@ -16,6 +16,7 @@
 #include <sys/resource.h>
 #include <sys/time.h>
 #include <stdint.h>
+#include <math.h>
 
 // Configurazione CPU e SPI
 #define SPI_CHANNEL_IN    0       // CE0 (GPIO8)  - Canale di lettura
