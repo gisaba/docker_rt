@@ -291,10 +291,10 @@ static void *read_thread(void *arg) {
         if (elapsed > read_stats.max_time) read_stats.max_time = elapsed;
         if (elapsed > TIMESLOT_NS) read_stats.overruns++;
 
-        if (read_stats.iterations % 1000 == 0) {
-            printf("Read [Core %d] - Test Pattern: 0x%016lX\n", 
-                   READ_CORE, spi_buffers.read_buffer.value);
-        }
+       // if (read_stats.iterations % 1000 == 0) {
+       //     printf("Read [Core %d] - Test Pattern: 0x%016lX\n", 
+       //            READ_CORE, spi_buffers.read_buffer.value);
+       // }
     }
 
     return NULL;
