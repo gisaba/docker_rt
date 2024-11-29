@@ -140,7 +140,7 @@ void test_PID() {
     float control_output = 0.0f;  // Uscita del controllo PID
 
     // Eseguiamo il controllo per un certo numero di iterazioni
-    for (int i = 0; i < 2; i++) {
+    for (int i = 0; i < 5; i++) {
         // Calcolare l'uscita del PID
         control_output = PID_compute(&pid, setpoint, measured_value);
 
@@ -258,7 +258,6 @@ static void *read_thread(void *arg) {
             }
 
             // Chiamata alla funzione di trasformazione
-            abc_to_dq0(I_a, I_b, I_c, theta, &I_d, &I_q, &I_0);
             abc_to_dq0(I_a, I_b, I_c, theta, &I_d, &I_q, &I_0);
 
             test_PID();
