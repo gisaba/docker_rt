@@ -140,7 +140,7 @@ void test_PID() {
     float control_output = 0.0f;  // Uscita del controllo PID
 
     // Eseguiamo il controllo per un certo numero di iterazioni
-    for (int i = 0; i < 10; i++) {
+    for (int i = 0; i < 1; i++) {
         // Calcolare l'uscita del PID
         control_output = PID_compute(&pid, setpoint, measured_value);
 
@@ -151,7 +151,7 @@ void test_PID() {
         //printf("Setpoint: %.2f, Measured Value: %.2f, Control Output: %.2f\n", setpoint, measured_value, control_output);
 
         // Aggiungi un piccolo ritardo per simulare un loop di controllo
-        usleep(1);  // 1 us
+        usleep(5);  // 5 us
     }
 }
 
@@ -295,6 +295,8 @@ static void *read_thread(void *arg) {
         if (elapsed < read_stats.min_time) read_stats.min_time = elapsed;
         if (elapsed > read_stats.max_time) read_stats.max_time = elapsed;
         if (elapsed > TIMESLOT_NS) read_stats.overruns++;
+
+        usleep(elapsed);
 
        // if (read_stats.iterations % 1000 == 0) {
        //     printf("Read [Core %d] - Test Pattern: 0x%016lX\n", 
