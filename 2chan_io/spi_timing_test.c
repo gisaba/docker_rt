@@ -140,7 +140,7 @@ void test_PID() {
     float control_output = 0.0f;  // Uscita del controllo PID
 
     // Eseguiamo il controllo per un certo numero di iterazioni
-    for (int i = 0; i < 1; i++) {
+    for (int i = 0; i < 10; i++) {
         // Calcolare l'uscita del PID
         control_output = PID_compute(&pid, setpoint, measured_value);
 
