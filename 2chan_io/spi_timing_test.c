@@ -259,7 +259,9 @@ static void *read_thread(void *arg) {
 
             // Chiamata alla funzione di trasformazione
             abc_to_dq0(I_a, I_b, I_c, theta, &I_d, &I_q, &I_0);
+            abc_to_dq0(I_a, I_b, I_c, theta, &I_d, &I_q, &I_0);
 
+            test_PID();
             test_PID();
 
             // Turn the LED off
