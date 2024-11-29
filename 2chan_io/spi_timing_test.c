@@ -151,7 +151,7 @@ void test_PID() {
         //printf("Setpoint: %.2f, Measured Value: %.2f, Control Output: %.2f\n", setpoint, measured_value, control_output);
 
         // Aggiungi un piccolo ritardo per simulare un loop di controllo
-        usleep(5);  // 5 us
+        usleep(1);  // 5 us
     }
 }
 
@@ -296,7 +296,7 @@ static void *read_thread(void *arg) {
         if (elapsed > read_stats.max_time) read_stats.max_time = elapsed;
         if (elapsed > TIMESLOT_NS) read_stats.overruns++;
 
-        usleep(elapsed);
+        usleep((TIMESLOT_NS-elapsed)/ 1000.0);
 
        // if (read_stats.iterations % 1000 == 0) {
        //     printf("Read [Core %d] - Test Pattern: 0x%016lX\n", 
