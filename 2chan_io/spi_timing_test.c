@@ -261,9 +261,6 @@ static void *read_thread(void *arg) {
             abc_to_dq0(I_a, I_b, I_c, theta, &I_d, &I_q, &I_0);
 
             test_PID();
-
-            // Turn the LED off
-            digitalWrite(LED_PIN, LOW);
         #else
             // Genera pattern di test (scegli uno dei pattern seguenti)
             
@@ -295,7 +292,9 @@ static void *read_thread(void *arg) {
         if (elapsed < read_stats.min_time) read_stats.min_time = elapsed;
         if (elapsed > read_stats.max_time) read_stats.max_time = elapsed;
         if (elapsed > TIMESLOT_NS) read_stats.overruns++;
-
+        
+        // Turn the LED off
+        digitalWrite(LED_PIN, LOW);
         usleep((TIMESLOT_NS-elapsed)/ 1000.0);
 
        // if (read_stats.iterations % 1000 == 0) {
