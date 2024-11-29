@@ -287,11 +287,11 @@ static void *read_thread(void *arg) {
         clock_gettime(CLOCK_MONOTONIC_RAW, &end);
         
         long elapsed = timespec_diff_ns(&start, &end);
-        //read_stats.total_time += elapsed;
-        //read_stats.iterations++;
-        //if (elapsed < read_stats.min_time) read_stats.min_time = elapsed;
-        //if (elapsed > read_stats.max_time) read_stats.max_time = elapsed;
-        //if (elapsed > TIMESLOT_NS) read_stats.overruns++;
+        read_stats.total_time += elapsed;
+        read_stats.iterations++;
+        if (elapsed < read_stats.min_time) read_stats.min_time = elapsed;
+        if (elapsed > read_stats.max_time) read_stats.max_time = elapsed;
+        if (elapsed > TIMESLOT_NS) read_stats.overruns++;
         
         // Turn the LED off
         digitalWrite(LED_PIN, LOW);
