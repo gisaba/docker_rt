@@ -16,8 +16,8 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt --break-system-packages
 
 # Copia lo script Python nella directory di lavoro
-COPY spi_test.py .
+COPY spi_master.py .
 
 # Comando di default per eseguire lo script Python
 #CMD ["python3", "gpiod-test.py"]    
-CMD ["python3", "spi_test.py"]    
+CMD ["python3", "spi_master.py"]    
