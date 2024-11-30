@@ -39,7 +39,7 @@ if __name__ == "__main__":
         spi_master = SPIMaster(SPI_BUS, SPI_DEVICE)
         
         # Invia un array di byte al dispositivo slave
-        data_to_send = [0x01, 0x02, 0x03, 0x04]  # Dati da inviare
+        data_to_send = [0x01] #, 0x02, 0x03, 0x04]  # Dati da inviare
         response = spi_master.transfer(data_to_send)
         
         # Attendi un po' prima di inviare altri dati
