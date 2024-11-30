@@ -1,4 +1,5 @@
-import pigpio
+import RPi.GPIO as GPIO
+import time
 
 # Definizione dei pin GPIO
 MISO = 19  # Pin GPIO usato per il Master In Slave Out
@@ -7,8 +8,7 @@ SCLK = 21  # Pin GPIO usato per il Clock SPI
 CS = 18    # Pin GPIO usato per Chip Select (Slave Select)
 
 class SPISlave:
-    def __init__(self, pi, miso, mosi, sclk, cs):
-        self.pi = pi
+    def __init__(self, miso, mosi, sclk, cs):
         self.miso = miso
         self.mosi = mosi
         self.sclk = sclk
@@ -17,31 +17,30 @@ class SPISlave:
         self.transmit_data = []
 
         # Configurazione dei pin
-        pi.set_mode(miso, pigpio.OUTPUT)
-        pi.set_mode(mosi, pigpio.INPUT)
-        pi.set_mode(sclk, pigpio.INPUT)
-        pi.set_mode(cs, pigpio.INPUT)
+        GPIO.setmode(GPIO.BCM)
+        GPIO.setup(self.miso, GPIO.OUT)
+        GPIO.setup(self.mosi, GPIO.IN)
+        GPIO.setup(self.sclk, GPIO.IN)
+        GPIO.setup(self.cs, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
-        # Impostazione callback
-        self.cb_cs = pi.callback(cs, pigpio.EITHER_EDGE, self.cs_callback)
-        self.cb_sclk = pi.callback(sclk, pigpio.RISING_EDGE, self.sclk_callback)
+    def listen(self):
+        """
+        Ascolta il bus SPI per la comunicazione con il master.
+        """
+        self.received_data = []
+        while GPIO.input(self.cs) == GPIO.LOW:  # CS attivo (LOW)
+            if GPIO.input(self.sclk) == GPIO.HIGH:  # Flusso dati
+                bit = GPIO.input(self.mosi)
+                self.received_data.append(bit)
+                print(f"Bit ricevuto: {bit}")
 
-    def cs_callback(self, gpio, level, tick):
-        if level == 0:  # Chip Select attivo (LOW)
-            self.received_data = []
-        else:  # Chip Select inattivo (HIGH)
-            print("Dati ricevuti:", self.received_data)
-            self.transmit_data = []  # Reset dei dati da trasmettere
+                # Invio del prossimo bit al master (se disponibile)
+                if self.transmit_data:
+                    next_bit = self.transmit_data.pop(0)
+                    GPIO.output(self.miso, next_bit)
+                time.sleep(0.001)  # Breve ritardo per la sincronizzazione
 
-    def sclk_callback(self, gpio, level, tick):
-        if self.pi.read(self.cs) == 0:  # Solo se CS è attivo
-            bit = self.pi.read(self.mosi)
-            self.received_data.append(bit)
-            
-            # Invio del bit successivo (se disponibile)
-            if self.transmit_data:
-                next_bit = self.transmit_data.pop(0)
-                self.pi.write(self.miso, next_bit)
+        print("Dati ricevuti:", self.received_data)
 
     def send_data(self, data):
         """
@@ -49,24 +48,23 @@ class SPISlave:
         """
         self.transmit_data = data[:]
 
-    def close(self):
-        self.cb_cs.cancel()
-        self.cb_sclk.cancel()
-        self.pi.stop()
+    def cleanup(self):
+        GPIO.cleanup()
 
-# Inizializzazione
-pi = pigpio.pi()
-if not pi.connected:
-    raise RuntimeError("Impossibile connettersi al demone pigpio")
-
-try:
-    spi_slave = SPISlave(pi, MISO, MOSI, SCLK, CS)
-    
-    # Simulazione: dati da trasmettere al master
-    spi_slave.send_data([1, 0, 1, 1, 0, 0, 1, 0])  # Esempio: byte 0b10110010
-    
-    print("SPI slave in esecuzione. In attesa di dati...")
-    input("Premi INVIO per terminare...")
-finally:
-    spi_slave.close()
-    print("SPI slave terminato.")
+# Esecuzione principale
+if __name__ == "__main__":
+    spi_slave = SPISlave(MISO, MOSI, SCLK, CS)
+    try:
+        # Simulazione: dati da trasmettere al master
+        spi_slave.send_data([1, 0, 1, 1, 0, 0, 1, 0])  # Esempio: byte 0b10110010
+        print("SPI slave in esecuzione. In attesa di dati...")
+        
+        while True:
+            if GPIO.input(CS) == GPIO.LOW:  # CS attivo
+                spi_slave.listen()
+            time.sleep(0.1)  # Evita utilizzo CPU al 100%
+    except KeyboardInterrupt:
+        print("Terminazione manuale.")
+    finally:
+        spi_slave.cleanup()
+        print("SPI slave terminato.")
