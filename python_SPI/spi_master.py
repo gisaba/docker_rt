@@ -38,13 +38,17 @@ if __name__ == "__main__":
     try:
         spi_master = SPIMaster(SPI_BUS, SPI_DEVICE)
         
-        # Invia un array di byte al dispositivo slave
-        data_to_send = [0x01] #, 0x02, 0x03, 0x04]  # Dati da inviare
-        response = spi_master.transfer(data_to_send)
-        
-        # Attendi un po' prima di inviare altri dati
-        time.sleep(1)
-
+        # Loop continuo per trasmissione SPI
+        print("Inizio trasmissione SPI (premi Ctrl+C per interrompere)...")
+        while True:
+            # Dati da inviare
+            data_to_send = [0x01, 0x02, 0x03, 0x04]
+            
+            # Trasferimento dati
+            response = spi_master.transfer(data_to_send)
+            
+            # Attesa di 1 secondo prima del prossimo ciclo
+            time.sleep(1)
     except KeyboardInterrupt:
         print("\nTerminazione manuale.")
     finally:
