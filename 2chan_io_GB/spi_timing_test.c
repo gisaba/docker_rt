@@ -22,8 +22,8 @@
 #define SPI_CHANNEL_IN    0       // CE0 (GPIO8)  - Canale di lettura
 #define SPI_CHANNEL_OUT   1       // CE1 (GPIO7)  - Canale di scrittura
 #define SPI_SPEED       1000000   // 2MHz compatibile con Arduino
-#define BITS_PER_TRANSFER 16
-#define BUFFER_SIZE_BITS 16
+#define BITS_PER_TRANSFER 8
+#define BUFFER_SIZE_BITS 8
 #define BUFFER_SIZE_BYTES (BUFFER_SIZE_BITS / 8)
 #define TEST_DURATION   100
 #define TIMESLOT_NS    100000    // 0.1ms
