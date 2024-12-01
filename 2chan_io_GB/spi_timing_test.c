@@ -195,6 +195,12 @@ static void *read_thread(void *arg) {
     float I_a = (double)rand(); // 10.0;  // Corrente A
     float I_b = (double)rand() + 5.0;   // Corrente B
     float I_c = (double)rand() - 3.0;  // Corrente C
+
+    // Angolo di rotazione (ad esempio 30 gradi convertito in radianti)
+    float theta = M_PI / 6.0;  // 30° in radianti
+
+    // Variabili per i risultati
+    float I_d, I_q, I_0;
     
     if (set_thread_affinity(READ_CORE) != 0) {
         return NULL;
