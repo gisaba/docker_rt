@@ -155,6 +155,24 @@ void test_PID() {
     }
 }
 
+// Funzione per la trasformazione ABC a DQ0
+void abc_to_dq0(float I_a, float I_b, float I_c, float theta, float *I_d, float *I_q, float *I_0) {
+    // Calcolare le componenti della trasformazione
+    float cos_theta = cos(theta);
+    float sin_theta = sin(theta);
+
+    float cos_theta_minus_2pi_3 = cos(theta - 2 * M_PI / 3);
+    float sin_theta_minus_2pi_3 = sin(theta - 2 * M_PI / 3);
+
+    float cos_theta_plus_2pi_3 = cos(theta + 2 * M_PI / 3);
+    float sin_theta_plus_2pi_3 = sin(theta + 2 * M_PI / 3);
+
+    // Combinazione della matrice di trasformazione
+    *I_d = (2.0 / 3.0) * (cos_theta * I_a + cos_theta_minus_2pi_3 * I_b + cos_theta_plus_2pi_3 * I_c);
+    *I_q = (2.0 / 3.0) * (sin_theta * I_a + sin_theta_minus_2pi_3 * I_b + sin_theta_plus_2pi_3 * I_c);
+    *I_0 = (1.0 / sqrt(3.0)) * (I_a + I_b + I_c);
+}
+
 // Funzione per il calcolo della differenza temporale
 static inline long timespec_diff_ns(struct timespec *start, struct timespec *end) {
     return (end->tv_sec - start->tv_sec) * 1000000000L + 
