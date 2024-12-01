@@ -92,6 +92,24 @@ static inline uint64_t invert_bits(uint64_t value) {
     return value;
 }
 
+// Struttura per memorizzare i parametri del PID
+typedef struct {
+    float kp;  // Costante proporzionale
+    float ki;  // Costante integrale
+    float kd;  // Costante derivativa
+    float prev_error;  // Errore precedente
+    float integral;    // Somma dell'errore integrato
+} PID_Controller;
+
+// Funzione di inizializzazione del PID
+void PID_init(PID_Controller *pid, float kp, float ki, float kd) {
+    pid->kp = kp;
+    pid->ki = ki;
+    pid->kd = kd;
+    pid->prev_error = 0.0f;
+    pid->integral = 0.0f;
+}
+
 // Funzione che calcola il valore di controllo PID
 float PID_compute(PID_Controller *pid, float setpoint, float measured_value) {
     // Calcolare l'errore
