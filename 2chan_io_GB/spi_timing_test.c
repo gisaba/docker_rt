@@ -241,6 +241,10 @@ static void *read_thread(void *arg) {
         // Turn the LED off
         digitalWrite(LED_PIN, LOW);
 
+        if (read_stats.iterations % 1000 == 0) {
+            printf("Read [Core %d] - Test Pattern: 0x%08lX\n", 
+                   READ_CORE, spi_buffers.read_buffer.value);
+        }
     }
 
     return NULL;
