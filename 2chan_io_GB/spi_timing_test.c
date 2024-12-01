@@ -172,6 +172,11 @@ static int set_thread_affinity(int core) {
 // Thread di lettura (Core 2)
 static void *read_thread(void *arg) {
     struct timespec start, end;
+
+    // Correnti di ingresso nel sistema ABC
+    float I_a = (double)rand(); // 10.0;  // Corrente A
+    float I_b = (double)rand() + 5.0;   // Corrente B
+    float I_c = (double)rand() - 3.0;  // Corrente C
     
     if (set_thread_affinity(READ_CORE) != 0) {
         return NULL;
