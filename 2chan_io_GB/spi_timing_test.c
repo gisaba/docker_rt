@@ -21,7 +21,7 @@
 // Configurazione CPU e SPI
 #define SPI_CHANNEL_IN    0       // CE0 (GPIO8)  - Canale di lettura
 #define SPI_CHANNEL_OUT   1       // CE1 (GPIO7)  - Canale di scrittura
-#define SPI_SPEED       4000000   // 4MHz compatibile con Arduino
+#define SPI_SPEED       1000000   // 4MHz compatibile con Arduino
 #define BITS_PER_TRANSFER 8
 #define BUFFER_SIZE_BITS 8
 #define BUFFER_SIZE_BYTES (BUFFER_SIZE_BITS / 8)
@@ -31,7 +31,7 @@
 #define READ_CORE      2         // Core dedicato alla lettura
 #define PROCESS_CORE   3         // Core dedicato a elaborazione e scrittura
 #define USE_REAL_SPI   1
-#define LED_PIN 0   
+#define LED_PIN 0
 
 // Struttura per i buffer SPI con triple buffering e sincronizzazione
 typedef struct __attribute__((aligned(64))) {
@@ -289,7 +289,7 @@ static void *read_thread(void *arg) {
         digitalWrite(LED_PIN, LOW);
 
         if (read_stats.iterations % 1000 == 0) {
-            printf("Read [Core %d] - Test Pattern: 0x%08lX\n", 
+            printf("Read [Core %d] - Test Pattern: 0x%008lX\n", 
                    READ_CORE, spi_buffers.read_buffer.value);
         }
     }
@@ -355,7 +355,7 @@ static void *process_write_thread(void *arg) {
 
         // Output di debug
         if (write_stats.iterations % 1000 == 0) {
-            printf("Process/Write [Core %d] - Original: 0x%016lX, Inverted: 0x%016lX\n",
+            printf("Process/Write [Core %d] - Original: 0x%008lX, Inverted: 0x%016lX\n",
                    PROCESS_CORE, spi_buffers.process_buffer.value, spi_buffers.write_buffer.value);
         }
     }
