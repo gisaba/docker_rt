@@ -297,10 +297,10 @@ static void *read_thread(void *arg) {
         digitalWrite(LED_PIN, LOW);
         usleep((TIMESLOT_NS-elapsed)/ 1000.0);
 
-       // if (read_stats.iterations % 1000 == 0) {
-       //     printf("Read [Core %d] - Test Pattern: 0x%016lX\n", 
-       //            READ_CORE, spi_buffers.read_buffer.value);
-       // }
+        if (read_stats.iterations % 1000 == 0) {
+            printf("Read [Core %d] - Test Pattern: 0x%016lX\n", 
+                   READ_CORE, spi_buffers.read_buffer.value);
+        }
     }
 
     return NULL;
