@@ -299,7 +299,7 @@ static void *read_thread(void *arg) {
         
         
         if (read_stats.iterations % 1000 == 0) {
-            printf("Read [Core %d] - Test Pattern: 0x%032lX\n", 
+            printf("Read [Core %d] - Test Pattern: 0x%016lX\n", 
                    READ_CORE, spi_buffers.read_buffer.value);
         }
         
