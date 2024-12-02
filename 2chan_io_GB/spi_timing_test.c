@@ -23,7 +23,7 @@
 #define SPI_CHANNEL_OUT   1       // CE1 (GPIO7)  - Canale di scrittura
 #define SPI_SPEED       1000000   // 2MHz compatibile con Arduino
 #define BITS_PER_TRANSFER 8
-#define BUFFER_SIZE_BITS 8
+#define BUFFER_SIZE_BITS 32
 #define BUFFER_SIZE_BYTES (BUFFER_SIZE_BITS / 8)
 #define TEST_DURATION   100
 #define TIMESLOT_NS    100000    // 0.1ms
@@ -299,7 +299,7 @@ static void *read_thread(void *arg) {
         
         
         if (read_stats.iterations % 1000 == 0) {
-            printf("Read [Core %d] - Test Pattern: 0x%08lX\n", 
+            printf("Read [Core %d] - Test Pattern: 0x%032lX\n", 
                    READ_CORE, spi_buffers.read_buffer.value);
         }
         
