@@ -277,6 +277,9 @@ static void *read_thread(void *arg) {
             usleep(1); // 1 microsecondo di delay
         #endif
 
+        // Turn the LED off
+        digitalWrite(LED_PIN, LOW);
+
         //pthread_mutex_lock(&spi_buffers.write_mutex);
         spi_buffers.new_data_available = 1;
         pthread_cond_signal(&spi_buffers.data_ready);
@@ -293,8 +296,6 @@ static void *read_thread(void *arg) {
         if (elapsed > read_stats.max_time) read_stats.max_time = elapsed;
         if (elapsed > TIMESLOT_NS) read_stats.overruns++;
         
-        // Turn the LED off
-        digitalWrite(LED_PIN, LOW);
         usleep((TIMESLOT_NS-elapsed)/ 1000.0);
         
         /*
