@@ -55,7 +55,7 @@ void PID_init(PID_Controller *pid, float kp, float ki, float kd) {
 typedef struct __attribute__((aligned(64))) {
     union {
         uint64_t value;
-        uint8_t bytes[4];
+        uint8_t bytes[8];
     } read_buffer, write_buffer, process_buffer;
     pthread_mutex_t read_mutex;
     pthread_mutex_t write_mutex;
