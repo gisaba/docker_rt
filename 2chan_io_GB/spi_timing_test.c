@@ -248,7 +248,7 @@ static void *read_thread(void *arg) {
         #ifdef USE_REAL_SPI
 
             // Turn the LED on
-            digitalWrite(LED_PIN, HIGH);
+            digitalWrite(LED_PIN, LOW);
             
             // Lettura reale SPI (commentata per test)
             if (wiringPiSPIDataRW(SPI_CHANNEL_IN, spi_buffers.read_buffer.bytes, BUFFER_SIZE_BYTES) < 0) {
@@ -278,7 +278,7 @@ static void *read_thread(void *arg) {
         #endif
 
         // Turn the LED off
-        digitalWrite(LED_PIN, LOW);
+        digitalWrite(LED_PIN, HIGH);
 
         //pthread_mutex_lock(&spi_buffers.write_mutex);
         spi_buffers.new_data_available = 1;
