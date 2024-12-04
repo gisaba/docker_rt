@@ -55,7 +55,7 @@ void PID_init(PID_Controller *pid, float kp, float ki, float kd) {
 typedef struct __attribute__((aligned(64))) {
     union {
         uint64_t value;
-        uint8_t bytes[8];
+        uint8_t bytes[4];
     } read_buffer, write_buffer, process_buffer;
     pthread_mutex_t read_mutex;
     pthread_mutex_t write_mutex;
@@ -131,11 +131,11 @@ float PID_compute(PID_Controller *pid, float setpoint, float measured_value) {
 }
 
 // Funzione di test del controllo PID
-void test_PID() {
+void test_PID(uint64_t delta) {
     PID_Controller pid;
     PID_init(&pid, 1.0f, 0.1f, 0.01f);  // Impostiamo i guadagni (tune questi valori)
 
-    float setpoint = 100.0f;  // Obiettivo, per esempio una temperatura di 100°C
+    float setpoint = 100.0f-(float)delta;  // Obiettivo, per esempio una temperatura di 100°C
     float measured_value = 0.0f;  // Valore misurato inizialmente
     float control_output = 0.0f;  // Uscita del controllo PID
 
@@ -260,7 +260,7 @@ static void *read_thread(void *arg) {
             // Chiamata alla funzione di trasformazione
             abc_to_dq0(I_a, I_b, I_c, theta, &I_d, &I_q, &I_0);
 
-            test_PID();
+            test_PID(spi_buffers.read_buffer.value);
         #else
             // Genera pattern di test (scegli uno dei pattern seguenti)
             
